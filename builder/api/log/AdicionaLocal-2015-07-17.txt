@@ -1,0 +1,12 @@
+SQLSTATE[28000] [1045] Access denied for user 'root'@'10.1.2.19' (using password: YES)
+-----------------------------------------------------------------------------------------
+
+SQLSTATE[28000] [1045] Access denied for user 'u138894269_onrng'@'10.1.2.19' (using password: YES)
+-----------------------------------------------------------------------------------------
+
+SQLSTATE[28000] [1045] Access denied for user 'u138894269_onrng'@'10.1.2.19' (using password: YES)
+-----------------------------------------------------------------------------------------
+
+SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`u138894269_api`.`LOCAL`, CONSTRAINT `fk_LOCAL_USUARIO1` FOREIGN KEY (`ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`) ON DELETE NO ACTION ON UPDATE NO ACTION)
+-----------------------------------------------------------------------------------------
+

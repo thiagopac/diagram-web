@@ -1,0 +1,10 @@
+QB-Token: a50b6576ea7283ed70298a21edb8c377773d25b9
+Occupant: 3491751
+
+
+
+Resposta: {"_id":"55b2b8b4535c12a1740015c0","attachments":[],"chat_dialog_id":"55b2b8b4535c12a1740015bf","created_at":null,"date_sent":1437776052,"message":"Combinamos!","read_ids":[3491768],"recipient_id":3491751,"sender_id":3491768,"updated_at":null,"read":0}
+
+
+-----------------------------------------------------------------------------------------
+

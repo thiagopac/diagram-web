@@ -1,0 +1,18 @@
+SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`u138894269_api`.`LOCAL`, CONSTRAINT `fk_LOCAL_USUARIO1` FOREIGN KEY (`ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`) ON DELETE NO ACTION ON UPDATE NO ACTION)
+-----------------------------------------------------------------------------------------
+
+{"nome":"Teste Log","latitude":"-19.967914","longitude":"-43.957695","id_usuario":"ABCD","tipo_local":"1"}
+SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`u138894269_api`.`LOCAL`, CONSTRAINT `fk_LOCAL_USUARIO1` FOREIGN KEY (`ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`) ON DELETE NO ACTION ON UPDATE NO ACTION)
+-----------------------------------------------------------------------------------------
+
+2015-07-24 08:17:44
+{
+  "nome":"Teste Log",
+  "latitude":"-19.967914",
+  "longitude":"-43.957695",
+  "id_usuario":"ABCD",
+  "tipo_local":"1"
+}
+SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`u138894269_api`.`LOCAL`, CONSTRAINT `fk_LOCAL_USUARIO1` FOREIGN KEY (`ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`) ON DELETE NO ACTION ON UPDATE NO ACTION)
+-----------------------------------------------------------------------------------------
+
