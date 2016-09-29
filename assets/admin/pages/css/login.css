@@ -3,7 +3,7 @@ Login page
 ***/
 /* bg color */
 .login {
-  background-color: #364150 !important;
+  background-color: #FFFFFF !important;
 }
 
 .login .logo {
@@ -14,7 +14,7 @@ Login page
 }
 
 .login .content {
-  background-color: #eceef1;
+  background-color: #f8f8f8;
   -webkit-border-radius: 7px;
   -moz-border-radius: 7px;
   -ms-border-radius: 7px;
@@ -29,7 +29,7 @@ Login page
 }
 
 .login .content h3 {
-  color: #4db3a5;
+  color: #666;
   text-align: center;
   font-size: 28px;
   font-weight: 400 !important;
