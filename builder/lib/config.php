@@ -25,7 +25,7 @@ date_default_timezone_set('America/Sao_Paulo');
 #ACESSO MYSQL
 	$MYSQL_HOST  = "localhost";
 	$MYSQL_LOGIN = "root";
-	$MYSQL_SENHA = 'root';
+	$MYSQL_SENHA = 'mysql';
 	$MYSQL_PORTA = 3306;
 	$MYSQL_DATABASE = 'diagramchess-homologacao';
 //	var_dump($_SERVER['SERVER_NAME']);die;
@@ -33,7 +33,7 @@ date_default_timezone_set('America/Sao_Paulo');
 		{
 		$MYSQL_HOST  = "localhost";
 		$MYSQL_LOGIN = "root";
-		$MYSQL_SENHA = "root";
+		$MYSQL_SENHA = "mysql";
 		$MYSQL_PORTA = 3306;
 		$MYSQL_DATABASE = 'diagramchess-dev';
 		}
