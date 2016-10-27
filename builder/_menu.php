@@ -1,6 +1,8 @@
 	<!-- BEGIN SIDEBAR -->
   <?
 		$GLOBALS['rootpath'] = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+
+    // echo $rootpath;
 	?>
 	<div class="page-sidebar-wrapper">
 		<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->

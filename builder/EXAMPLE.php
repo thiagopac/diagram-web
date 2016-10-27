@@ -3,7 +3,7 @@
    require_once ('../../lib/config.php');
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ( 'buildpgn' );
+   fnInicia_Sessao ( 'modulename' );
    include('../../imports/header.php');
    ?>
 <!-- BEGIN CONTENT -->
