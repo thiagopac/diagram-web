@@ -1,4 +1,7 @@
 	<!-- BEGIN SIDEBAR -->
+  <?
+		$GLOBALS['rootpath'] = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+	?>
 	<div class="page-sidebar-wrapper">
 		<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
 		<!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
@@ -32,7 +35,7 @@
 				</li>
 				<? if (fnVerifica_Grant('dashboard')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'dashboard') echo 'active'; ?>">
-					<a href="../dashboard/">
+					<a href="<?=$rootpath?>/dashboard/">
 					<i class="icon-home"></i>
 					<span class="title">Resumo</span>
 					<span class="selected"></span>
@@ -41,7 +44,7 @@
 				<? } ?>
 				<? if (fnVerifica_Grant('administradores')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'administradores') echo 'active'; ?>">
-					<a href="../administradores/">
+					<a href="<?=$rootpath?>/administradores/">
 					<i class="icon-user"></i>
 					<span class="title">Administradores</span>
 					<span class="selected"></span>
@@ -50,7 +53,7 @@
 				<? } ?>
 				<? if (fnVerifica_Grant('auditoria')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'auditoria') echo 'active'; ?>">
-					<a href="../auditoria/">
+					<a href="<?=$rootpath?>/auditoria/">
 					<i class="icon-briefcase"></i>
 					<span class="title">Auditoria</span>
 					<span class="selected"></span>
@@ -59,94 +62,41 @@
 				<? } ?>
 				<? if (fnVerifica_Grant('configuracoes')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'configuracoes') echo 'active'; ?>">
-					<a href="../configuracoes/">
+					<a href="<?=$rootpath?>/configuracoes/">
 					<i class="fa fa-cogs"></i>
 					<span class="title">Configurações</span>
 					<span class="selected"></span>
 					</a>
 				</li>
 				<? } ?>
-				<? if (fnVerifica_Grant('sanitizacaolocal')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'sanitizacaolocal') echo 'active'; ?>">
-					<a href="../sanitizacaolocal/">
-					<i class="fa fa-code-fork"></i>
-					<span class="title">Sanitização de local</span>
-					<span class="selected"></span>
-					</a>
-				</li>
-				<? } ?>
-				<? if (fnVerifica_Grant('clientes')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'clientes') echo 'active'; ?>">
-					<a href="../clientes/">
-					<i class="fa fa-users"></i>
-					<span class="title">Clientes</span>
-					<span class="selected"></span>
-					</a>
-				</li>
-				<? } ?>
-				<? if (fnVerifica_Grant('locais')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'locais') echo 'active'; ?>">
-					<a href="../locais/">
-					<i class="fa fa-map-marker"></i>
-					<span class="title">Locais</span>
-					<span class="selected"></span>
-					</a>
-				</li>
-				<? } ?>
-				<? if (fnVerifica_Grant('clienteslocais')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'clienteslocais') echo 'active'; ?>">
-					<a href="../clienteslocais/">
-					<i class="fa fa-link"></i>
-					<span class="title">Clientes &#8596; Locais</span>
-					<span class="selected"></span>
-					</a>
-				</li>
-				<? } ?>
-				<? if ((fnVerifica_Grant('gerarpromos')) || (fnVerifica_Grant('listapromos')) ){ ?>
-				<li class="last <? if (in_array($MENU_ATIVO,array('gerarpromos','listarpromos'))) echo 'active'; ?>">
+				<? if ((fnVerifica_Grant('buildpgn')) || (fnVerifica_Grant('buildfen')) || (fnVerifica_Grant('listboards'))){ ?>
+				<li class="last <? if (in_array($MENU_ATIVO,array('buildpgn','buildfen','listboards'))) echo 'active'; ?>">
 				<a href="javascript:;">
-						<i class="fa fa-tags"></i>
-						<span class="title">Promos</span>
+						<i class="fa fa-files-o"></i>
+						<span class="title">Boards</span>
 						<span class="arrow"></span>
 						<span class="selected"></span>
 						</a>
 						<ul class="sub-menu">
 						<!-- BEGIN REPORT OPTION -->
-							<? if (fnVerifica_Grant('gerarpromos')) { ?>
-							<li class="<? if ($MENU_ATIVO == 'gerarpromos') echo 'active'; ?>">
-								<a href="../promos/gerarpromos.php">
-								Gerar promos</a>
+							<? if (fnVerifica_Grant('listboards')) { ?>
+							<li class="<? if ($MENU_ATIVO == 'listboards') echo 'active'; ?>">
+								<a href="<?=$rootpath?>/boards/list/"><i class="fa fa-angle-right"></i>List boards</a>
 							</li>
 							<? } ?>
-							<? if (fnVerifica_Grant('listarpromos')) { ?>
-							<li class="<? if ($MENU_ATIVO == 'listarpromos') echo 'active'; ?>">
-								<a href="../promos/listarpromos.php">
-								Listar promos</a>
+							<? if (fnVerifica_Grant('buildpgn')) { ?>
+							<li class="<? if ($MENU_ATIVO == 'buildpgn') echo 'active'; ?>">
+								<a href="<?=$rootpath?>/boards/buildpgn/"><i class="fa fa-angle-right"></i>Build PGN</a>
+							</li>
+							<? } ?>
+							<? if (fnVerifica_Grant('buildfen')) { ?>
+							<li class="<? if ($MENU_ATIVO == 'buildfen') echo 'active'; ?>">
+								<a href="<?=$rootpath?>/boards/buildfen/"><i class="fa fa-angle-right"></i>Build FEN</a>
 							</li>
 							<? } ?>
 						<!-- END REPORT OPTION -->
 						</ul>
 					</li>
-				<? } ?>
-				<? if ((fnVerifica_Grant('confirmacoes_diarias')) || (fnVerifica_Grant('consumo_sms')) || (fnVerifica_Grant('visao_confirmacoes')) || (fnVerifica_Grant('visao_alunos_confirmados')) || (fnVerifica_Grant('respostas_robo')) || (fnVerifica_Grant('historico_aluno')) || (fnVerifica_Grant('confirmacoes_e_senhas')) || (fnVerifica_Grant('logs_no_sistema'))) { ?>
-				<li class="last <? if (in_array($MENU_ATIVO,array('confirmacoes_diarias','consumo_sms','mensagens_enviadas','visao_confirmacoes','visao_alunos_confirmados','respostas_robo','historico_aluno','confirmacoes_e_senhas','logs_no_sistema'))) echo 'active'; ?>">
-					<a href="javascript:;">
-					<i class="icon-bar-chart"></i>
-					<span class="title">Relatórios</span>
-					<span class="selected"></span>
-					<span class="arrow"></span>
-					</a>
-					<ul class="sub-menu">
-					<!-- BEGIN REPORT OPTION -->
-						<? if (fnVerifica_Grant('logs_no_sistema')) { ?>
-						<li class="<? if ($MENU_ATIVO == 'logs_no_sistema') echo 'active'; ?>">
-							<a href="../relatorios/logs_no_sistema.php">
-							Logs no Sistema</a>
-						</li>
-						<? } ?>
-					<!-- END REPORT OPTION -->
-					</ul>
-				</li>
 				<? } ?>
 			</ul>
 			<!-- END SIDEBAR MENU -->
