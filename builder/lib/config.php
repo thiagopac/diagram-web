@@ -43,17 +43,12 @@ date_default_timezone_set('America/Sao_Paulo');
 
 #MENU
 	$MENU_GRANT[]  = array('dashboard');
-	$MENU_GRANT[]  = array('administradores');
-	$MENU_GRANT[]  = array('configuracoes');
-	$MENU_GRANT[]  = array('auditoria');
-	$MENU_GRANT[]  = array('clientes');
-	$MENU_GRANT[]  = array('locais');
-	$MENU_GRANT[]  = array('clienteslocais');
-	$MENU_GRANT[]  = array('gerarpromos');
-	$MENU_GRANT[]  = array('listarpromos');
-	$MENU_GRANT[]  = array('logs_no_sistema');
-
-
+	$MENU_GRANT[]  = array('administrators');
+	$MENU_GRANT[]  = array('settings');
+	$MENU_GRANT[]  = array('audit');
+	$MENU_GRANT[]  = array('listboards');
+	$MENU_GRANT[]  = array('buildpgn');
+	$MENU_GRANT[]  = array('buildfen');
 
 //VARIAVEIS
 	$TITULO = "Diagram Chess";

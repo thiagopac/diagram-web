@@ -44,27 +44,27 @@
 					</a>
 				</li>
 				<? } ?>
-				<? if (fnVerifica_Grant('administradores')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'administradores') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/administradores/">
+				<? if (fnVerifica_Grant('administrators')) { ?>
+				<li class="last <? if ($MENU_ATIVO == 'administrators') echo 'active'; ?>">
+					<a href="<?=$rootpath?>/administrators/">
 					<i class="icon-user"></i>
 					<span class="title">Administradores</span>
 					<span class="selected"></span>
 					</a>
 				</li>
 				<? } ?>
-				<? if (fnVerifica_Grant('auditoria')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'auditoria') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/auditoria/">
+				<? if (fnVerifica_Grant('audit')) { ?>
+				<li class="last <? if ($MENU_ATIVO == 'audit') echo 'active'; ?>">
+					<a href="<?=$rootpath?>/audit/">
 					<i class="icon-briefcase"></i>
 					<span class="title">Auditoria</span>
 					<span class="selected"></span>
 					</a>
 				</li>
 				<? } ?>
-				<? if (fnVerifica_Grant('configuracoes')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'configuracoes') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/configuracoes/">
+				<? if (fnVerifica_Grant('settings')) { ?>
+				<li class="last <? if ($MENU_ATIVO == 'settings') echo 'active'; ?>">
+					<a href="<?=$rootpath?>/settings/">
 					<i class="fa fa-cogs"></i>
 					<span class="title">Configurações</span>
 					<span class="selected"></span>
@@ -83,17 +83,17 @@
 						<!-- BEGIN REPORT OPTION -->
 							<? if (fnVerifica_Grant('listboards')) { ?>
 							<li class="<? if ($MENU_ATIVO == 'listboards') echo 'active'; ?>">
-								<a href="<?=$rootpath?>/boards/list/"><i class="fa fa-angle-right"></i>List boards</a>
+								<a href="<?=$rootpath?>/boards/list.php"><i class="fa fa-angle-right"></i>List boards</a>
 							</li>
 							<? } ?>
 							<? if (fnVerifica_Grant('buildpgn')) { ?>
 							<li class="<? if ($MENU_ATIVO == 'buildpgn') echo 'active'; ?>">
-								<a href="<?=$rootpath?>/boards/buildpgn/"><i class="fa fa-angle-right"></i>Build PGN</a>
+								<a href="<?=$rootpath?>/boards/buildpgn.php"><i class="fa fa-angle-right"></i>Build PGN</a>
 							</li>
 							<? } ?>
 							<? if (fnVerifica_Grant('buildfen')) { ?>
 							<li class="<? if ($MENU_ATIVO == 'buildfen') echo 'active'; ?>">
-								<a href="<?=$rootpath?>/boards/buildfen/"><i class="fa fa-angle-right"></i>Build FEN</a>
+								<a href="<?=$rootpath?>/boards/buildfen.php"><i class="fa fa-angle-right"></i>Build FEN</a>
 							</li>
 							<? } ?>
 						<!-- END REPORT OPTION -->

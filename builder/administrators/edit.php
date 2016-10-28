@@ -1,35 +1,35 @@
 <?
-##INCLUDES
+##INCLUDES.
 	require_once('../lib/config.php');
-	
+
 #CONTROLE SESSAO
-	fnInicia_Sessao('auditoria');
+	fnInicia_Sessao('administrators');
 
 #INPUTS
-	$PESQUISA     = addslashes($_REQUEST['pesquisa']);
-	$DAT_INICIO   = addslashes($_REQUEST['dat_inicio']);
-	$DAT_FIM 	= addslashes($_REQUEST['dat_fim']);
-	$DAT_COMPLETA = addslashes($_REQUEST['dat_completa']);
+	$MSG = addslashes($_REQUEST['msg']);
+	$ID  = (int)$_REQUEST['id'];
 
-	$menos30dias = time( ) - 86400 * 30; 
-	
-	if ($DAT_INICIO == '') 	$DAT_INICIO = date('Y-m-d',$menos30dias);
-	if ($DAT_FIM == '') 		$DAT_FIM = date('Y-m-d');
-	if ($DAT_COMPLETA == '')	$DAT_COMPLETA = date('d/m/Y',$menos30dias).' - '.date('d/m/Y');
-	
 #INICIO LOGICA
 	$DB = fnDBConn();
-	$SQL = "SELECT ADMINISTRADOR.NOME,ADMINISTRADOR.LOGIN,AUDITORIA.IP, AUDITORIA.ACAO_DESC,DATE_FORMAT(AUDITORIA.DIN,'%d/%m/%Y<br>%h:%i:%s') DIN FROM AUDITORIA, ADMINISTRADOR
-			WHERE ADMINISTRADOR.ID = AUDITORIA.ID_USER
-			  AND (AUDITORIA.ACAO_DESC LIKE '%$PESQUISA%' OR
-				  ADMINISTRADOR.NOME LIKE '%$PESQUISA%' OR
-				  ADMINISTRADOR.LOGIN LIKE '%$PESQUISA%')
-			  AND AUDITORIA.DIN_REF BETWEEN '$DAT_INICIO' AND '$DAT_FIM'
-			ORDER BY AUDITORIA.ID DESC";
-	$RET = fnDB_DO_SELECT_WHILE($DB,$SQL);
+
+	if ($ID == -1)
+		{
+		$GRANTS = '|';
+		foreach($MENU_GRANT as $ROW)
+			$GRANTS .= $ROW[0].'|';
+
+		$SQL = "INSERT INTO ADMINISTRADOR (ID_TIPO_ADMIN, LOGIN, SENHA, NOME, GRANTS, STATUS, DIN) VALUES (1, NULL, NULL, NULL, '{$GRANTS}', 0, NOW())";
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+		$ID = (int)$RET[1];
+		if ($ID == 0)
+			die('Falha geral. ID nao foi criado');
+		}
+
+	$SQL = "SELECT * FROM ADMINISTRADOR WHERE ID = $ID";
+	$RET = fnDB_DO_SELECT($DB,$SQL);
 ?>
 <!DOCTYPE html>
-<!-- 
+<!--
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
 Version: 3.1
 Author: KeenThemes
@@ -69,8 +69,6 @@ License: You must have a valid license purchased only from themeforest(the above
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/jquery-tags-input/jquery.tagsinput.css"/>
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css">
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/typeahead/typeahead.css">
-<link rel="stylesheet" type="text/css" href="../../assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
-<link rel="stylesheet" type="text/css" href="../../assets/global/plugins/bootstrap-datetimepicker/css/datetimepicker.css"/>
 <!-- END PAGE LEVEL STYLES -->
 <!-- BEGIN THEME STYLES -->
 <link href="../../assets/global/css/components.css" rel="stylesheet" type="text/css"/>
@@ -125,124 +123,75 @@ License: You must have a valid license purchased only from themeforest(the above
 	<div class="page-content-wrapper">
 		<div class="page-content">
 			<!-- BEGIN PAGE HEADER-->
-
 			<div class="row">
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Auditoria <small></small>
+					Dados do administrador <small></small>
 					</h3>
-					<!--button type="button" class="btn red" style="right: 15px; position: absolute; margin-top: -40px" onClick="parent.location='novo.php'">Novo Cliente</button-->
+
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
 			</div>
 			<!-- END PAGE HEADER-->
 
-
-
-<!-- ------------------ -->
-<div class="portlet box red">
+					<div class="portlet box red">
 						<div class="portlet-title_sem_titulo">
 						</div>
 						<div class="portlet-body form">
-							<form role="form">
-							<input type="hidden" name="dat_inicio" id="dat_inicio" value="" />
-							<input type="hidden" name="dat_fim" id="dat_fim" value="" />
-							<input type="hidden" name="dat_completa" id="dat_completa" value="" />
+							<!-- BEGIN FORM-->
+							<form method="post" action="../exec/" id="form_sample_2" class="form-horizontal" novalidate="novalidate">
+							<input type="hidden" name="e" id="e" value="adm_edit" />
+							<input type="hidden" name="id" id="id" value="<?=$ID?>" />
 								<div class="form-body">
-								<div class="row form-group">
-													<div class="col-md-8">
-														<label>Pesquisa</label>
-														<input type="text" name="pesquisa" class="form-control" placeholder="Digite o termo de pesquisa..." value="<?=$PESQUISA?>">
-													</div>
-														
-																										
-													
-												</div>
-												
-												
-								<div class="row form-group">
-															
-													
-													<div class="col-md-4">
-														<label>Período da Pesquisa</label>
-														<div id="reportrange" class="form-control">
-															<i class="fa fa-calendar"></i>
-															&nbsp; <span>June 1, 2014 - June 30, 2014</span>
-															<b class="fa fa-angle-down"></b>
-														</div>
-													</div>
-													
-										
-													
-													
-													
-												</div>
-								
+									<? if ($MSG != '') { ?>
+									<div class="alert alert-danger display">
+										<button class="close" data-close="alert"></button>
+										<?=$MSG?>
+									</div>
+									<? } ?>
+									<div class="form-group">
+										<label class="control-label col-md-3">Nome</label>
+										<div class="col-md-4">
+											<div class="input-icon right">
+												<input type="text" class="form-control" name="nome" aria-required="true" aria-invalid="false" value="<?=$RET['NOME']?>">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Login</span>
+										</label>
+										<div class="col-md-4">
+											<div class="input-icon right">
+												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$RET['LOGIN']?>">
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group last password-strength">
+										<label class="control-label col-md-3">Senha</label>
+										<div class="col-md-4">
+											<input type="password" class="form-control" name="password" id="password_strength">
+										</div>
+										<label for="chkShowPassword" style="margin:5px;">
+							                <input type="checkbox" id="chkShowPassword" />
+							                Mostrar senha
+							             </label>
+									</div>
 								</div>
-								<div class="form-actions2">
-																	<button type="submit" class="btn red">Pesquisar</button>
+
+
+
+								<div class="form-actions fluid">
+									<div class="col-md-offset-3 col-md-9">
+										<button type="submit" class="btn green">Salvar</button>
+										<button type="button" class="btn default" onClick="parent.location='index.php';">Voltar</button>
+									</div>
 								</div>
 							</form>
+							<!-- END FORM-->
 						</div>
 					</div>
-<!-- ------------------ -->
-			
-			
-					<!-- BEGIN SAMPLE TABLE PORTLET-->
-<div class="portlet box red">
-						<div class="portlet-title_sem_titulo">
-						</div>
-						<div class="portlet-body flip-scroll">
-							<table class="table table-bordered table-striped table-condensed flip-content">
-							<thead class="flip-content">
-							<tr>
-								<th width="20%">
-									 Usuário
-								</th>
-								<th>
-									 IP
-								</th>
-								<th class="numeric">
-									 Ação
-								</th>
-								<th class="numeric">
-									 Hora
-								</th>
-							</tr>
-							</thead>
-							<tbody>
-							<?
-							foreach($RET as $KEY => $ROW)
-								{
-								$ROW['NOME'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['NOME']);
-								$ROW['LOGIN'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['LOGIN']);
-								$ROW['ACAO_DESC'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['ACAO_DESC']);
-									
-								?>
-								<tr>
-									<td>
-										 <?=$ROW['NOME']?><br><?=$ROW['LOGIN']?>
-									</td>
-									<td>
-										 <?=$ROW['IP']?>
-									</td>
-									<td>
-										 <?=$ROW['ACAO_DESC']?>
-									</td>
-									<td>
-										 <?=$ROW['DIN']?>
-									</td>
-								</tr>
-								<?
-								}
-							?>
-							</tbody>
-							</table>
-						</div>
-					</div>
-					<!-- END SAMPLE TABLE PORTLET-->
-			
 		</div>
 	</div>
 	<!-- END CONTENT -->
@@ -264,7 +213,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -279,34 +228,50 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="../../assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script type="text/javascript" src="../../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script type="text/javascript" src="../../assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
-<script type="text/javascript" src="../../assets/global/plugins/clockface/js/clockface.js"></script>
-<script type="text/javascript" src="../../assets/global/plugins/bootstrap-daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="../../assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="../../assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="../../assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="../../assets/global/plugins/fuelux/js/spinner.min.js"></script>
+<script type="text/javascript" src="../../assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+<script type="text/javascript" src="../../assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+<script type="text/javascript" src="../../assets/global/plugins/jquery.input-ip-address-control-1.0.min.js"></script>
+<script src="../../assets/global/plugins/bootstrap-pwstrength/pwstrength-bootstrap.min.js" type="text/javascript"></script>
+<script src="../../assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="../../assets/global/plugins/jquery-tags-input/jquery.tagsinput.min.js" type="text/javascript"></script>
+<script src="../../assets/global/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
+<script src="../../assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js" type="text/javascript"></script>
+<script src="../../assets/global/plugins/typeahead/handlebars.min.js" type="text/javascript"></script>
+<script src="../../assets/global/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="../../assets/global/plugins/ckeditor/ckeditor.js"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="../../assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="../../assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
 <script src="../../assets/admin/layout/scripts/quick-sidebar.js" type="text/javascript"></script>
-<script src="../../assets/admin/pages/scripts/components-pickers.js"></script>
+<script src="../../assets/admin/pages/scripts/components-form-tools.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-        jQuery(document).ready(function() {       
-			// initiate layout and plugins
-			Metronic.init(); // init metronic core components
+        jQuery(document).ready(function() {
+           // initiate layout and plugins
+           Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
 			QuickSidebar.init() // init quick sidebar
-			ComponentsPickers.init();
-			
-			$('#reportrange span').html('<?=$DAT_COMPLETA?>');
-			$('#dat_inicio').val('<?=$DAT_INICIO?>');
-			$('#dat_fim').val('<?=$DAT_FIM?>');
-			$('#dat_completa').val('<?=$DAT_COMPLETA?>');
-		});   
-		
+           ComponentsFormTools.init();
+        });
+
+        $(function () {
+            $("#chkShowPassword").bind("click", function () {
+                var txtPassword = $("[id*=password_strength]");
+                if ($(this).is(":checked")) {
+                    txtPassword.after('<input onchange = "PasswordChanged(this);" id = "txt_' + txtPassword.attr("id") + '" class="form-control" name="password" type = "text" value = "' + txtPassword.val() + '" />');
+                    txtPassword.hide();
+                } else {
+                    txtPassword.val(txtPassword.next().val());
+                    txtPassword.next().remove();
+                    txtPassword.show();
+                }
+            });
+        });
+        function PasswordChanged(txt) {
+            $(txt).prev().val($(txt).val());
+        }
     </script>
 <!-- END JAVASCRIPTS -->
 </body>

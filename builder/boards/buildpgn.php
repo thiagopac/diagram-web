@@ -1,16 +1,16 @@
 <?
    // #INCLUDES
-   require_once ('../../lib/config.php');
+   require_once ('../lib/config.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'buildpgn' );
-   include('../../imports/header.php');
+   include('../imports/header.php');
    ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">
 
-	 <? include('../../imports/alert.php'); ?>
+	 <? include('../imports/alert.php'); ?>
 
 	 <!-- BEGIN PAGE TITLE & BREADCRUMB-->
    <div class="row">
@@ -25,8 +25,8 @@
 
 <!-- END CONTENT -->
 </div>
-<? include('../../imports/footer.php'); ?>
-<? include('../../imports/metronic_core.php'); ?>
+<? include('../imports/footer.php'); ?>
+<? include('../imports/metronic_core.php'); ?>
 <script>
    jQuery(document).ready(function() {
    // initiate layout and plugins

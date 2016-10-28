@@ -32,7 +32,6 @@
    // initiate layout and plugins
    Metronic.init(); // init metronic core components
    Layout.init(); // init current layou
-   TableManaged.init();
    });
 </script>
 </body>

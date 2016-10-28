@@ -1,45 +1,42 @@
-<?
-##INCLUDES.
+<?php
+##INCLUDES
 	require_once('../lib/config.php');
-	
-#CONTROLE SESSAO
-	fnInicia_Sessao('administradores');
 
-#INPUTS
-	$MSG = addslashes($_REQUEST['msg']);
-	$ID  = (int)$_REQUEST['id'];
+#CONTROLE SESSAO
+	fnInicia_Sessao('settings');
+
+#PEGA O RESULTADO DA FUNÇÃO
+if(($_POST[txt_t_checkin]!='') || ($_POST[txt_t_local]!='')){
+	$DB = fnDBConn();
+	$MSG = alteraTempo($DB, $_POST[txt_t_local], $_POST[txt_t_checkin]);
+}
 
 #INICIO LOGICA
-	$DB = fnDBConn();
-	
-	if ($ID == -1)
-		{
-		$GRANTS = '|';
-		foreach($MENU_GRANT as $ROW)
-			$GRANTS .= $ROW[0].'|';
-			
-		$SQL = "INSERT INTO ADMINISTRADOR (ID_TIPO_ADMIN, LOGIN, SENHA, NOME, GRANTS, STATUS, DIN) VALUES (1, NULL, NULL, NULL, '{$GRANTS}', 0, NOW())";
-		$RET = fnDB_DO_EXEC($DB,$SQL);
-		$ID = (int)$RET[1];
-		if ($ID == 0)
-			die('Falha geral. ID nao foi criado');
-		}
-		
-	$SQL = "SELECT * FROM ADMINISTRADOR WHERE ID = $ID";
-	$RET = fnDB_DO_SELECT($DB,$SQL);
+$DB = fnDBConn();
+$SQL = "SELECT T_LOCAL, T_CHECKIN FROM CONFIGURACAO";
+$RET = fnDB_DO_SELECT_WHILE($DB,$SQL);
+
+foreach($RET as $KEY => $ROW){
+	$VALUE_LOCAL = $ROW['T_LOCAL'];
+	$VALUE_CHECKIN = $ROW['T_CHECKIN'];
+}
+// if(!ISSET($_GET['msg'])){
+// 	$MSG = $MSG;
+// }else{
+// 	$MSG = $_GET['msg'];
+// }
+
+
+
 ?>
-<!DOCTYPE html>
-<!-- 
-Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
-Version: 3.1
-Author: KeenThemes
-Website: http://www.keenthemes.com/
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Like: www.facebook.com/keenthemes
-Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
-License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+<!--
+CONSULTAS SQL:
+<?
+if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
+	echo $SQL_DUMP;
+?>
 -->
+<!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
@@ -47,12 +44,13 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
-<meta charset="utf-8"/>
+<meta charset="utf-8" />
 <title><?=$TITULO?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="" name="description"/>
-<meta content="" name="author"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<meta content="" name="description" />
+<meta content="" name="author" />
+
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
 <link href="../../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
@@ -61,15 +59,17 @@ License: You must have a valid license purchased only from themeforest(the above
 <link href="../../assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
 <link href="../../assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
+
+
 <!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="../../assets/global/plugins/select2/select2.css"/>
-<link rel="stylesheet" type="text/css" href="../../assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css"/>
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css"/>
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css"/>
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/jquery-tags-input/jquery.tagsinput.css"/>
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css">
 <link rel="stylesheet" type="text/css" href="../../assets/global/plugins/typeahead/typeahead.css">
 <!-- END PAGE LEVEL STYLES -->
+
+
 <!-- BEGIN THEME STYLES -->
 <link href="../../assets/global/css/components.css" rel="stylesheet" type="text/css"/>
 <link href="../../assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
@@ -77,7 +77,19 @@ License: You must have a valid license purchased only from themeforest(the above
 <link id="style_color" href="../../assets/admin/layout/css/themes/darkblue.css" rel="stylesheet" type="text/css"/>
 <link href="../../assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
 <!-- END THEME STYLES -->
-<link rel="shortcut icon" href="favicon.ico"/>
+
+
+<!-- BEGIN THEME STYLES -->
+<link href="../../assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/plugins.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+<link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+<!-- END THEME STYLES -->
+
+
+<link rel="shortcut icon" href="favicon.ico" />
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -91,112 +103,143 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
 <!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
 <body class="page-header-fixed page-quick-sidebar-over-content">
-<!-- BEGIN HEADER -->
-<div class="page-header navbar navbar-fixed-top">
-	<!-- BEGIN HEADER INNER -->
-	<div class="page-header-inner">
-		<!-- BEGIN LOGO -->
-		<div class="page-logo">
-			<a href="../dashboard/">
-			<img src="../../assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/>
-			</a>
-			<div class="menu-toggler sidebar-toggler hide">
-				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-			</div>
-		</div>
-		<!-- END LOGO -->
-		<!-- BEGIN RESPONSIVE MENU TOGGLER -->
-		<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-		</a>
-		<!-- END RESPONSIVE MENU TOGGLER -->
-		<? include('../_top.php'); ?>
-	</div>
-	<!-- END HEADER INNER -->
-</div>
-<!-- END HEADER -->
-<div class="clearfix">
-</div>
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-	<? include('../_menu.php'); ?>
-	<!-- BEGIN CONTENT -->
-	<div class="page-content-wrapper">
-		<div class="page-content">
-			<!-- BEGIN PAGE HEADER-->
-			<div class="row">
-				<div class="col-md-12">
-					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
-					<h3 class="page-title">
-					Dados do administrador <small></small>
-					</h3>
-					
-					<!-- END PAGE TITLE & BREADCRUMB-->
+	<!-- BEGIN HEADER -->
+	<div class="page-header navbar navbar-fixed-top">
+		<!-- BEGIN HEADER INNER -->
+		<div class="page-header-inner">
+			<!-- BEGIN LOGO -->
+			<div class="page-logo">
+				<a href="../dashboard/"> <img
+					src="../../assets/admin/layout/img/logo.png" alt="logo"
+					class="logo-default" />
+				</a>
+				<div class="menu-toggler sidebar-toggler hide">
+					<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
 				</div>
 			</div>
-			<!-- END PAGE HEADER-->
+			<!-- END LOGO -->
+			<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+			<a href="javascript:;" class="menu-toggler responsive-toggler"
+				data-toggle="collapse" data-target=".navbar-collapse"> </a>
+			<!-- END RESPONSIVE MENU TOGGLER -->
+		<? include('../_top.php'); ?>
+	</div>
+		<!-- END HEADER INNER -->
+	</div>
+	<!-- END HEADER -->
+	<div class="clearfix"></div>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+	<? include('../_menu.php'); ?>
+	<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
 
-					<div class="portlet box red">
-						<div class="portlet-title_sem_titulo">
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+						<h3 class="page-title">
+							Configurações
+						</h3>
+					</div>
+				</div>
+
+				<? if ($MSG != '') { ?>
+								<div class="alert alert-danger display">
+									<button class="close" data-close="alert"></button>
+									<i class="fa-lg fa fa-warning"></i>
+									<?=$MSG?>
+								</div>
+								<? } ?>
+
+
+				<!-- BEGIN PORTLET-->
+				<div class="portlet box green">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-clock-o"></i>Tempo mínimo
+							</div>
+							<div class="tools">
+								<a href="javascript:;" class="collapse">
+								</a>
+							</div>
 						</div>
 						<div class="portlet-body form">
 							<!-- BEGIN FORM-->
-							<form method="post" action="../exec/" id="form_sample_2" class="form-horizontal" novalidate="novalidate">
-							<input type="hidden" name="e" id="e" value="adm_edit" />
-							<input type="hidden" name="id" id="id" value="<?=$ID?>" />
+							<form action="index.php" class="form-horizontal form-bordered" method="post">
 								<div class="form-body">
-									<? if ($MSG != '') { ?>
-									<div class="alert alert-danger display">
-										<button class="close" data-close="alert"></button>
-										<?=$MSG?>
-									</div>
-									<? } ?>
+
 									<div class="form-group">
-										<label class="control-label col-md-3">Nome</label>
-										<div class="col-md-4">
-											<div class="input-icon right">
-												<input type="text" class="form-control" name="nome" aria-required="true" aria-invalid="false" value="<?=$RET['NOME']?>">
+										<label class="control-label col-md-3">Criar novo local</label>
+										<div class="col-md-9">
+											<div id="spinner4">
+												<div class="input-group" style="width:150px;">
+													<div class="spinner-buttons input-group-btn">
+														<button type="button" class="btn spinner-up blue">
+														<i class="fa fa-plus"></i>
+														</button>
+													</div>
+													<input type="text" class="spinner-input form-control"  value="<?=$VALUE_LOCAL?>" maxlength="3" readonly  id="txt_t_local" name="txt_t_local">
+													<div class="spinner-buttons input-group-btn">
+														<button type="button" class="btn spinner-down red">
+														<i class="fa fa-minus"></i>
+														</button>
+													</div>
+												</div>
 											</div>
+											<span class="help-block">
+											Em minutos (0 para nenhum limite) </span>
 										</div>
 									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">Login</span>
-										</label>
-										<div class="col-md-4">
-											<div class="input-icon right">
-												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$RET['LOGIN']?>">
+
+
+									<div class="form-group last">
+										<label class="control-label col-md-3">Fazer novo checkin</label>
+										<div class="col-md-9">
+											<div id="spinner5">
+												<div class="input-group" style="width:150px;">
+													<div class="spinner-buttons input-group-btn">
+														<button type="button" class="btn spinner-up blue">
+														<i class="fa fa-plus"></i>
+														</button>
+													</div>
+													<input type="text" class="spinner-input form-control" value="<?=$VALUE_CHECKIN?>" maxlength="3" readonly id="txt_t_checkin" name="txt_t_checkin">
+													<div class="spinner-buttons input-group-btn">
+														<button type="button" class="btn spinner-down red">
+														<i class="fa fa-minus"></i>
+														</button>
+													</div>
+												</div>
 											</div>
+											<span class="help-block">
+											Em minutos (0 para nenhum limite) </span>
 										</div>
 									</div>
-									
-									<div class="form-group last password-strength">
-										<label class="control-label col-md-3">Senha</label>
-										<div class="col-md-4">
-											<input type="password" class="form-control" name="password" id="password_strength">
-										</div>
-										<label for="chkShowPassword" style="margin:5px;">
-							                <input type="checkbox" id="chkShowPassword" />
-							                Mostrar senha
-							             </label>
-									</div>
+
+
+
 								</div>
-								
-								
-									
 								<div class="form-actions fluid">
-									<div class="col-md-offset-3 col-md-9">
-										<button type="submit" class="btn green">Salvar</button>
-										<button type="button" class="btn default" onClick="parent.location='index.php';">Voltar</button>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="col-md-offset-3 col-md-9">
+												<button type="submit" class="btn green"><i class="fa fa-check"></i> Salvar</button>
+												<button type="button" class="btn default">Cancelar</button>
+											</div>
+										</div>
 									</div>
 								</div>
 							</form>
 							<!-- END FORM-->
 						</div>
 					</div>
+					<!-- END PORTLET-->
+
+
+			</div>
 		</div>
 	</div>
-	<!-- END CONTENT -->
-</div>
-<!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
 	<div class="page-footer-inner">
@@ -209,11 +252,12 @@ License: You must have a valid license purchased only from themeforest(the above
 	</div>
 </div>
 <!-- END FOOTER -->
-<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-<!-- BEGIN CORE PLUGINS -->
-<!--[if lt IE 9]>
+	<!-- END FOOTER -->
+	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+	<!-- BEGIN CORE PLUGINS -->
+	<!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -245,33 +289,16 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="../../assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="../../assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
 <script src="../../assets/admin/layout/scripts/quick-sidebar.js" type="text/javascript"></script>
+<script src="../../assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
 <script src="../../assets/admin/pages/scripts/components-form-tools.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-        jQuery(document).ready(function() {       
+        jQuery(document).ready(function() {
            // initiate layout and plugins
-           Metronic.init(); // init metronic core components
+           	Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
-			QuickSidebar.init() // init quick sidebar
-           ComponentsFormTools.init();
+          	ComponentsFormTools.init();
         });
-
-        $(function () {
-            $("#chkShowPassword").bind("click", function () {
-                var txtPassword = $("[id*=password_strength]");
-                if ($(this).is(":checked")) {
-                    txtPassword.after('<input onchange = "PasswordChanged(this);" id = "txt_' + txtPassword.attr("id") + '" class="form-control" name="password" type = "text" value = "' + txtPassword.val() + '" />');
-                    txtPassword.hide();
-                } else {
-                    txtPassword.val(txtPassword.next().val());
-                    txtPassword.next().remove();
-                    txtPassword.show();
-                }
-            });
-        });
-        function PasswordChanged(txt) {
-            $(txt).prev().val($(txt).val());
-        }
     </script>
 <!-- END JAVASCRIPTS -->
 </body>
