@@ -1,0 +1,678 @@
+div.whole:focus {
+    /* The following suppresses the outline of the element that has the focus. Only when
+       that focus is set, the keyboard mappings work. You may of course enable the outline
+       for debugging purposes. */
+    outline: 0;
+}
+
+div.edit .gray, div.buttons .gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+/** Font Awesome buttons (see http://fontawesome.io/)
+    Used only with the class default for the spans. */
+
+div.error {
+    color: red;
+}
+div.buttons, div.edit {
+    /* margin-top: 10px; */
+}
+div.buttons > i.button.default, div.edit > i.button.default {
+    font-size: 16px;
+    line-height: 1.4em;
+    color: #656565;
+    margin: 5px;
+    padding: 4px;
+    width: 45px;
+    height: 20px;
+    text-align: center;
+    border: solid lightgrey 1px;
+    border-radius: 2px;
+}
+div.buttons> span.button.default:before, div.edit> span.button.default:before {
+    display: inline-block;
+    line-height: 2em;
+    font-weight: normal;
+    font-variant: normal;
+    font-style: normal;
+    font-size: 18px;
+    font-family: FontAwesome;
+    color: #656565;
+    text-rendering: auto;
+    /*vertical-align: 50%;*/
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+div.buttons > span.button.default, div.edit > span.button.default, div.edit > button {
+    margin: 5px;
+    padding: 4px;
+    border: solid lightgrey 1px;
+    border-radius: 4px;
+}
+
+div.buttons > i.button:hover,div.edit > i.button:hover  {
+    cursor: pointer;
+    border: solid dimgrey 1px;
+}
+
+/** The following are all font-awesome buttons.
+  Where known, I have added their short names (to find them later again). **/
+div.buttons > .button.flipper.default:before { /* fa-adjust */
+    content: "\f042";
+}
+div.buttons > .button.first.default:before { /* fa-fast-backward */
+    content: "\f049";
+}
+div.buttons > .button.prev.default:before {    /* fa-step-backward */
+    content: "\f048";
+}
+div.buttons > .button.next.default:before {    /* fa-step-forward */
+    content: "\f051";
+}
+div.buttons > .button.last.default:before {    /* fa-fast-forward */
+    content: "\f050";
+}
+div.buttons > .button.play.default:before {    /* fa-play-circle */
+    content: "\f144";
+}
+div.buttons > .button.stop.default:before {     /* fa-pause */
+    content: "\f04c";
+}
+
+/** ff buttons as images, built different. */
+div.buttons.blue > .button, div.edit.blue > .button {
+    margin: 5px;
+    width: 20px;
+    height: 20px;
+    background: no-repeat 50%;
+    display: inline-block;
+    border: solid lightgrey 1px;
+    border-radius: 4px;
+}
+div.buttons > .button.flipper.blue {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/blackwhite-flipper.vers1.png");
+}
+../../assets/admin/custom/
+div.buttons > .button.prev.blue {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/resultset_previous.png");
+}
+div.buttons > .button.next.blue {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/resultset_next.png");
+}
+
+div.buttons > .button.first.blue {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/resultset_first.png");
+}
+
+div.buttons > .button.last.blue {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/resultset_last.png");
+}
+
+div.buttons > .button.play.blue {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/control_play_blue.png");
+}
+
+div.buttons > .button.stop.blue {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/control_pause_blue.png");
+}
+
+div.edit > .button.promoteVar.default:before { /* hand-o-up */
+    content: "\f0a6";
+}
+div.edit > .button.deleteMoves.default:before { /* scissors  */
+    content: "\f0c4";
+}
+
+/* div.edit > .button.deleteMoves {
+    background-image: url("../img/buttons/ff/edit-cut.png");
+} */
+
+div.edit > .button.pgn.default:before {
+    /* background-image: url("../img/buttons/ff/script_save.png"); */
+    content: "\f02f";  /* fa-print */
+}
+
+.button.fa-times {
+   color: red;
+}
+
+.button.fa-times:hover {
+    border: red 2px solid;
+}
+
+div.outerpgn {
+    padding: 6px;
+    border: 1px solid grey;
+}
+
+/* Green buttons from the tango theme. */
+div.buttons.green > .button, div.edit.green > .button {
+    margin: 5px;
+    width: 30px;
+    height: 30px;
+    background: no-repeat 50%;
+    display: inline-block;
+    border: solid lightgrey 1px;
+    border-radius: 4px;
+}
+div.green > .green.flipper {
+    background-image: url("../../assets/admin/custom/img/buttons/ff/blackwhite-flipper.vers1.png");
+}
+div.green > .green.prev {
+    background-image: url("../../assets/admin/custom/img/buttons/tango/go-previous.png");
+}
+div.green > .green.next {
+    background-image: url("../../assets/admin/custom/img/buttons/tango/go-next.png");
+}
+
+div.green > .green.first {
+    background-image: url("../../assets/admin/custom/img/buttons/tango/go-first.png");
+}
+
+div.green > .green.last {
+    background-image: url("../../assets/admin/custom/img/buttons/tango/go-last.png");
+}
+div.green > .green.play {
+    background-image: url("../../assets/admin/custom/img/buttons/tango/media-playback-start.png");
+}
+
+div.green > .green.stop {
+    background-image: url("../../assets/admin/custom/img/buttons/tango/media-playback-pause.png");
+}
+
+div.buttons > span.button.ff, div.edit > span.button {
+    margin: 5px;
+    width: 20px;
+    height: 20px;
+    background: no-repeat 50%;
+    display: inline-block;
+}
+
+.ui-widget {
+    font-size: 1em;
+}
+
+div.commentRadio label {
+    display: inline;
+}
+div.comment > textarea.comment {
+    width: 100%;
+    height: 50px;
+}
+div.green > span.button {
+    margin: 5px;
+    width: 36px;
+    height: 36px;
+}
+
+.moves a {
+    text-decoration: underline;
+}
+
+.moves .move a.yellow {
+    background-color: rgba(255, 255, 153, 1.0);
+    padding: 2px 0px 2px 0px;
+    box-shadow: 3px 3px 5px #cacaca;
+}
+
+.currentComment {
+
+    box-shadow: 3px 3px 5px #cacaca;
+    background-color: rgba(255, 255, 153, 0.1);
+    color: #e67e22 !important;
+}
+
+.moves .move a {
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+
+.moves .move a:hover {
+    border: 1px yellow dotted;
+    background-color: rgba(255, 255, 153, 1.0);
+    cursor: copy;
+}
+
+.moves .move {
+    font-size: 15px;
+    font-family: "Courier New", Courier, monospace;
+    color: black;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.moves .move.var {
+    font-weight: 100;
+    color: #2f6bff;
+    border-bottom: 1px dashed #2f6bff;
+    text-decoration: none;
+}
+
+.moves .variation {
+    font-size: 100%;
+    display: block;
+    padding: 5px;
+}
+.moves .variation:before {
+    content: ' ( ';
+}
+
+.moves .variation .variation:before {
+    content: ' ( ';
+}
+
+.moves .variation .variation {
+    font-size: 90%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.moves .variation .variation:after {
+    content: ' ) ';
+}
+
+.moves .variation:after {
+    content: ' ) ';
+}
+
+.moves > .varblock .white:before {
+    display: inline;
+}
+
+.moves .move .moveNumber {
+/*    font-size: 24px;*/
+}
+
+.moves .move .comment {
+    color: #aaaaaa;
+    font-weight: 400;
+}
+
+.moves .white:before {
+    content: '\A';
+    display: inline-block;
+}
+
+div.pgn {
+    font-family: 'Droid Sans Mono', 'Courier New', monospace;
+    font-size: 16px;
+    /*border: dotted 2px #696969;*/
+}
+/* Pattern of the Zeit journal */
+/* board */
+.zeit .board-b72b1 {
+    /*    border: 2px solid #404040; */
+    border-color: #6494b1;
+    /*border-width: 20px;*/
+}
+
+/* white square */
+.zeit .white-1e1d7 {
+    background-color: #ccc;
+    color: #6494b1;
+}
+
+/* black square */
+.zeit .black-3c85d {
+    color: #ccc;
+    background-color: #6494b1;
+}
+
+/* Pattern of the Chess.com similar */
+/* board */
+.chesscom.whole {
+    /*    border: 2px solid #404040; */
+    border: 2px #f3f3f3 solid;
+}
+
+.chesscom .headers {
+    font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+    font-size: 15px;
+/*    padding: 15px;*/
+    background-color: #f3f3f3;
+    font-weight: bold;
+}
+
+/*.chesscom .headers > .whiteHeader:before {
+    content: " White: ";
+}*/
+
+.chesscom .headers > .whiteHeader {
+    display: inline-block;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+/*
+.chesscom .headers > .whiteHeader:after {
+    display: block;
+    content: " ";
+}
+*/
+
+.chesscom .headers > .blackHeader:before {
+    content: "  vs. ";
+}
+
+.chesscom .headers > .blackHeader {
+    display: inline-block;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+.chesscom .headers > .restHeader {
+    display: block;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    font-weight: 500;
+    font-size: 80%;
+}
+
+.chesscom .players {
+    font-weight: 900;
+}
+
+.chesscom .outerBoard {
+    float: left;
+    width: 390px;
+}
+
+.movesOuterScroller {
+    position: relative;
+    width: 100%;
+}
+
+.chesscom .movesScroller {
+    padding: 5px 5px;
+    font-size: 13px;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    font-weight: bold;
+    border-right: 0px solid #f3f3f3;
+    background: #ffffff;
+    vertical-align: baseline;
+    text-align: justify;
+    overflow: auto;
+}
+
+.movesScroller {
+}
+
+.movesScroller .moves {
+    position: relative;
+    overflow: auto;
+}
+
+.chesscom .endBoard {
+    clear: both;
+}
+.chesscom .moves a {
+    text-decoration: none;
+}
+
+/* white square */
+.chesscom .white-1e1d7 {
+  background-color: white;
+  color: #EDEDF2;
+}
+
+/* black square */
+.chesscom .black-3c85d {
+  background-color: #EDEDF2;
+  color: white;
+}
+
+.chesscom .alpha-d2270 {
+    bottom: 2px;
+    right: 2px;
+}
+
+.chesscom .numeric-fc462 {
+        top: 1px;
+        left: 2px;
+}
+
+/* notation */
+.chesscom .notation-322f9 {
+    /* cursor: default;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    font-size: 10px;
+
+}
+
+/*************** End chesscom pattern *****************************/
+
+/* Pattern for something greenish. */
+/* board */
+.informator .board-b72b1 {
+    /*    border: 2px solid #404040; */
+    border: 4px solid black;
+}
+
+/* white square */
+.informator .white-1e1d7 {
+    background-color: #eeeeee;
+    color: #aaaaaa;
+}
+
+/* black square */
+.informator .black-3c85d {
+    color: #eeeeee;
+    background-color: #aaaaaa;
+}
+
+/*************** End informator pattern *****************************/
+
+/* Pattern for something greenish. */
+/* board */
+.sportverlag .board-b72b1 {
+    /*    border: 2px solid #404040; */
+    border: 4px black;
+}
+
+/* white square */
+.sportverlag .white-1e1d7 {
+    background-color: #f4f4f4;
+    color: rgba(2, 2, 2, 0.75);
+}
+
+/* black square */
+.sportverlag .black-3c85d {
+    color: rgba(2, 2, 2, 0.75);
+    /*background-image: -webkit-repeating-linear-gradient(top left, #333 1%, #eee 8%);*/
+    background-image: url("../img/pattern/diagonal1x3.png");
+}
+
+
+/*************** End sportverlag pattern *****************************/
+
+/* Pattern for beyer. */
+/* board */
+.beyer .board-b72b1 {
+    /*    border: 2px solid #404040; */
+    padding: 4px;
+    outline: 1px solid black;
+
+}
+
+/* white square */
+.beyer .white-1e1d7 {
+    background-color: #f4f4f4;
+    color: rgba(2, 2, 2, 0.75);
+}
+
+/* black square */
+.beyer .black-3c85d {
+    color: rgba(2, 2, 2, 0.75);
+    /*background-image: -webkit-repeating-linear-gradient(top left, #333 1%, #eee 8%);*/
+    background-image: url("../img/pattern/vertical1x3.png");
+}
+
+.beyer .alpha-d2270 {
+    bottom: -22px;
+    right: 20px;
+}
+
+.beyer .numeric-fc462 {
+    top: 18px;
+    left: -17px;
+}
+
+/* notation */
+.beyer .notation-322f9 {
+    /* cursor: default;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    font-size: 12px;
+}
+
+/*************** End Beyer pattern *****************************/
+
+/* board */
+.falken .board-b72b1 {
+    /*    border: 2px solid #404040; */
+    border: 1px solid black;
+
+    /* #2 */
+    padding: 20px;
+
+    /* #3 */
+    outline: 2px solid black;
+}
+
+/* white square */
+.falken .white-1e1d7 {
+    background-color: #f4f4f4;
+    color: rgba(2, 2, 2, 0.75);
+}
+
+/* black square */
+.falken .black-3c85d {
+    color: rgba(2, 2, 2, 0.75);
+    background-color: #636b6a;
+}
+
+.falken .alpha-d2270 {
+    bottom: -15px;
+    right: 20px;
+}
+
+.falken .numeric-fc462 {
+    top: 20px;
+    left: -15px;
+}
+
+/* notation */
+.falken .notation-322f9 {
+    /* cursor: default;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    font-size: 12px;
+
+}
+
+
+/*************** End falken pattern *****************************/
+
+/* Pattern for something greenish. */
+/* board */
+.green .board-b72b1 {
+    /*    border: 2px solid #404040; */
+    border-color: green;
+    /*border-width: 20px;*/
+}
+
+/* white square */
+.green .white-1e1d7 {
+    background-color: rgba(116, 185, 48, 0.80);
+    color: rgba(116, 185, 48, 0.20);
+}
+
+/* black square */
+.green .black-3c85d {
+    color: rgba(116, 185, 48, 0.80);
+    background-color: rgba(116, 185, 48, 0.20);
+}
+
+/* highlighted square */
+.green .highlight1-32417, .highlight2-9c5d2 {
+    -webkit-box-shadow: inset 0 0 3px 3px yellow;
+    -moz-box-shadow: inset 0 0 3px 3px yellow;
+    box-shadow: inset 0 0 3px 3px yellow;
+}
+
+/* notation */
+.green .notation-322f9 {
+    /* cursor: default;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    font-size: 14px;
+
+}
+
+.green .alpha-d2270 {
+    /*bottom: -16px;*/
+    /*right: 21px;*/
+}
+
+.green .numeric-fc462 {
+/*
+    top: 19px;
+    left: -12px;
+*/
+}
+
+
+/* Theme: BLUE */
+
+/* board */
+.blue .board-b72b1 {
+    /*    border: 2px solid #404040; */
+    border-color: blue;
+}
+
+/* white square */
+.blue .white-1e1d7 {
+    background-color: rgba(187, 234, 249, 0.38);
+    color: rgba(0, 0, 139, 0.73);
+}
+
+/* black square */
+.blue .black-3c85d {
+    color: rgba(187, 234, 249, 0.38);
+    background-color: rgba(0, 0, 139, 0.73);
+}
+
+/* highlighted square */
+.blue .highlight1-32417, .highlight2-9c5d2 {
+    -webkit-box-shadow: inset 0 0 3px 3px yellow;
+    -moz-box-shadow: inset 0 0 3px 3px yellow;
+    box-shadow: inset 0 0 3px 3px yellow;
+}
+
+/* notation */
+.blue .notation-322f9 {
+    /* cursor: default;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    font-size: 20px;
+
+}
+
+.blue .alpha-d2270 {
+    bottom: 1px;
+    right: 3px;
+
+}
+
+.blue .numeric-fc462 {
+    top: 0;
+    left: 0;
+
+}
+
+/* Styling when moves are possible */
+.square-55d63.black-3c85d.possible {
+    background-color: #696969;
+}
+
+.square-55d63.white-1e1d7.possible {
+    background-color: #a9a9a9;
+}

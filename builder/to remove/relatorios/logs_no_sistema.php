@@ -1,7 +1,7 @@
 <?php
 ##INCLUDES
 	require_once('../lib/config.php');
-	
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('logs_no_sistema');
 
@@ -10,13 +10,13 @@
 #É IE?
 	if (preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT']) || ((strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/') !== false) && (strpos($_SERVER['HTTP_USER_AGENT'], 'rv:') !== false)))
 		$BrowserIE = true;
-	
+
 
 ?>
 <!--
 CONSULTAS SQL:
 <?
-if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
+if ((int)$_SESSION['USUARIO']['id_cliente'] == 1) //Admin
 	echo $SQL_DUMP;
 ?>
 -->
@@ -139,7 +139,7 @@ if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
 								</div>
 								<? } ?>
 								<div class="row form-group">
-													
+
 													<div class="col-md-4">
 														<label>Período que foram gerado dos logs</label>
 														<div id="reportrange" class="form-control">
@@ -161,7 +161,7 @@ if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
 														}
 														?>
 													</div>
-												</div>	
+												</div>
 								</div>
 								<div class="form-actions2">
 																	<button type="submit" class="btn red">Pesquisar</button>
@@ -171,8 +171,8 @@ if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
 						</div>
 					</div>
 <!-- ------------------ -->
-			
-			
+
+
 					<!-- BEGIN SAMPLE TABLE PORTLET-->
 					<div class="portlet box red">
 						<div class="portlet-title_sem_titulo">
@@ -215,22 +215,22 @@ if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
 									</td>
 								</tr>
 								<?
-								} 
+								}
 								?>
 							</tbody>
 							</table>
-							
+
 <!--							<p align="right"><a href="#" class="btn red" id="exportExcel">Exportar Excel</a></p>-->
-						
+
 						</div>
-						
-				
-					
+
+
+
 					</div>
 					<!-- END SAMPLE TABLE PORTLET-->
         <br/>
         <br/>
-					
+
 		</div>
 	</div>
 	<!-- END CONTENT -->
@@ -276,7 +276,7 @@ if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -322,7 +322,7 @@ if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
         jQuery(document).ready(function()
-			{       
+			{
 			// initiate layout and plugins
 			Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
@@ -333,25 +333,25 @@ if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
 		     //Charts.initCharts();
 		     //Charts.initPieCharts();
 		     //Charts.initBarCharts();
-			
-			
+
+
 			$('#reportrange span').html('<?=$DAT_COMPLETA?>');
 			$('#dat_inicio').val('<?=$DAT_INICIO?>');
 			$('#dat_fim').val('<?=$DAT_FIM?>');
 			$('#dat_completa').val('<?=$DAT_COMPLETA?>');
-			
+
 			//AJAX END
-			});   
+			});
 
 		  $('#exportExcel').click(function() {
 			  $.post("../exec/?e=exportExcel", {
 				content: $('#datatable').html(),
 				}, function(response){
-					$("body").append("<iframe src='../exec/?e=exportExcel&download=1' style='display: none;' ></iframe>"); 
-				});	
+					$("body").append("<iframe src='../exec/?e=exportExcel&download=1' style='display: none;' ></iframe>");
+				});
 		  });
-			
-		 			
+
+
     </script>
 <!-- END JAVASCRIPTS -->
 </body>

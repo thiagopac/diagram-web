@@ -54,58 +54,6 @@ function RemoveAcentos($string="")
    }
 }
 
-function fnSELECT_CLIENT($DB,$SELECTED,$SHOW_LABEL = true,$TAMANHO = 4)
-	{
-	//Nao Ã© Adminstrador?
-	$ID_CLIENTE = (int)$_SESSION['ADMINISTRADOR']['id_cliente'];
-	if ($ID_CLIENTE != 1)
-		{
-		$ret = '<input type="hidden" name="ID_CLIENTE" id="CLIENTE" value="'.$ID_CLIENTE.'" />';
-		return(array($ID_CLIENTE,$ret));
-		}
-
-	//Se eh adminitrador... Continua listando os clientes...
-	$ID_CLIENTE = 0;
-
-	$SQL = "SELECT C.ID, A.NOME, A.LOGIN
-			FROM CLIENTE C, ADMINISTRADOR A
-			WHERE C.STATUS = 1 AND C.ID <> 1
-			  AND A.ID_CLIENTE = C.ID
-			  AND A.STATUS = 1
-			 ORDER BY A.NOME
-		   ";
-	$RET = fnDB_DO_SELECT_WHILE($DB,$SQL);
-
-	//if ($SHOW_LABEL)
-	$ret = '<div class="col-md-'.$TAMANHO.'">';
-
-	if ($SHOW_LABEL)
-		$ret .= '<label>Cliente</label>';
-
-	$ret .= '<select class="form-control" name="id_cliente" id="search_category_id">';
-
-	if ((count($RET) > 1) && ($SELECTED == ''))
-		$ret .= "<option value=\"0\">Selecione...</option>";
-
-	foreach($RET as $KEY => $ROW)
-		{
-		$sel = '';
-		if (($ROW['ID'] == $SELECTED) || (count($RET) == 1))
-			{
-			$sel = 'selected';
-			$ID_CLIENTE = (int)$ROW['ID'];
-			}
-
-		$ret .= "<option $sel value=\"{$ROW['ID']}\">{$ROW['NOME']}</option>";
-		}
-
-	$ret .= '</select>';
-
-	//if ($SHOW_LABEL)
-	$ret .= '</div>';
-
-	return(array($ID_CLIENTE,$ret));
-	}
 function pwStrongCheck($pwd)
 	{
 		$error = false;
@@ -144,7 +92,7 @@ function fnInicia_Sessao($strGrantPage)
 
 	if (!fnVerifica_Grant($strGrantPage))
 		{
-		header("location: ../../index.php?erroMsg=".urlencode('Sem acesso para a pÃ¡gina. Tente novamente.')); 
+		header("location: ../../index.php?erroMsg=".urlencode('Sem acesso para a página. Tente novamente.'));
 		exit;
 		}
 
@@ -156,7 +104,7 @@ function fnVerifica_Grant($strGrantPage,$grants = 'NULL')
 	global $MENU_GRANT;
 
 	if ($grants == 'NULL')
-		$grants = $_SESSION['ADMINISTRADOR']['GRANTS'];
+		$grants = $_SESSION['USER']['GRANTS'];
 
 	if (strpos($grants, '|'.$strGrantPage.'|') !== false)
 		return(true);
@@ -170,38 +118,38 @@ function fnHeaderLogin()
 
 	foreach($MENU_GRANT as $i => $arItem)
 		{
-		if (strpos($_SESSION['ADMINISTRADOR']['GRANTS'], '|'.$arItem[0].'|') !== false)
+		if (strpos($_SESSION['USER']['GRANTS'], '|'.$arItem[0].'|') !== false)
 			{
 			header("location: ../".$arItem[0].'/'); exit;
 			}
 		}
 	}
 
-# RETORNO DADOS DO ADMINISTRADOR NO LOGIN
-function fnDB_ADMINISTRADOR_INFO($DB,$strLogin,$strPass)
+# RETORNO DADOS DO USUARIO NO LOGIN
+function fnDB_USER_INFO($DB,$strLogin,$strPass)
 	{
 	global $DATABASE_NAME;
 	$error = false;
 
 
-	$strSQL = "SELECT ID, NOME, LOGIN, GRANTS, ID_TIPO_ADMIN
-				FROM $DATABASE_NAME.ADMINISTRADOR
+	$strSQL = "SELECT ID, FIRSTNAME, LASTNAME, LOGIN, GRANTS, ID_TYPE_USER
+				FROM $DATABASE_NAME.USER
 				WHERE LOGIN = '$strLogin'
-				AND SENHA = '$strPass'
+				AND PASSWORD = '$strPass'
 				AND STATUS=1";
 
 
 	$qy = mysqli_query($DB, $strSQL) or $error = true;
 
 	if ($error)
-	fnLogText('(fnDB_ADMINISTRADOR_INFO) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
+	fnLogText('(fnDB_USER_INFO) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
 
 	$linha = mysqli_fetch_array($qy);
 
 	return($linha);
 	}
 
-# GERA HASH DA SENHA DO ADMINISTRADOR
+# GERA HASH DA SENHA DO USUARIO
 function fnSenhaMD5($string)
 	{
 	global $SENHA_MD5;
@@ -211,7 +159,7 @@ function fnSenhaMD5($string)
 
 
 # GERA LOG DE AUDITORIA DE AÃ‡Ã•ES DO SISTEMA
-function fnDB_LOG_AUDITORIA_ADD($DB,$descricao,$loga_request = true){
+function fnDB_LOG_AUDIT_ADD($DB,$descricao,$loga_request = true){
 	global $DATABASE_NAME;
 
 	$error = false;
@@ -224,14 +172,14 @@ function fnDB_LOG_AUDITORIA_ADD($DB,$descricao,$loga_request = true){
 		$request= addslashes(print_r($_REQUEST,true));
 
 	//SQL 1
-	$strSQL = "INSERT INTO AUDITORIA
-				(IP, ID_USER, ACAO_DESC, REQUEST, DIN_REF, DIN)
+	$strSQL = "INSERT INTO AUDIT
+				(IP, ID_USER, ACTION_DESC, REQUEST, DIN)
 				VALUES
-				('$ip', {$_SESSION['ADMINISTRADOR']['ID']}, '$descricao', '$request', CURDATE(), NOW())";
+				('$ip', {$_SESSION['USER']['ID']}, '$descricao', '$request', NOW())";
 	$qy = mysqli_query($DB, $strSQL) or $error = true;
 
 	if ($error)
-		fnLogText('(fnDB_LOG_AUDITORIA_ADD) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
+		fnLogText('(fnDB_LOG_AUDIT_ADD) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
 
 	if($DB->affected_rows == 0){
 		return(false);
@@ -303,7 +251,7 @@ function sanitizaLocal($DB, $localDoador, $localRecebedor){
     if($result1 && $result2 && $result3 && $result4){
 
     	//Adiciona registro na tabela de auditoria
-    	fnDB_LOG_AUDITORIA_ADD($DB,'Efetuou trasferência de checkins.',false);
+    	fnDB_LOG_AUDIT_ADD($DB,'Efetuou trasferência de checkins.',false);
 
             return $MSG = "Checkins transferidos com sucesso";
     }else{
@@ -317,7 +265,7 @@ function alteraTempo($DB, $txt_t_local, $txt_t_checkin){
 	if($result){
 
 		//Adiciona registro na tabela de auditoria
-		fnDB_LOG_AUDITORIA_ADD($DB,'Alterou configuração de tempo.',false);
+		fnDB_LOG_AUDIT_ADD($DB,'Alterou configuração de tempo.',false);
 
 		return $MSG = "Tempo alterado com sucesso";
 	}else{

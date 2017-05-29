@@ -8,27 +8,27 @@
 	//Validacao
 	if (($strLOGIN == '') || ($strPASS == ''))
 	{
-		header('location: ../index.php?mc=1'); 
+		header('location: ../index.php?mc=1');
 		exit;
 	}
-	
+
 	//Programacao
 	$DB = fnDBConn();
-	$arADMINISTRADOR = fnDB_ADMINISTRADOR_INFO($DB,$strLOGIN,$strPASS_MD5);
-	
-	if ((int)$arADMINISTRADOR['ID'] <= 0)
+	$arUSUARIO = fnDB_USER_INFO($DB,$strLOGIN,$strPASS_MD5);
+
+	if ((int)$arUSUARIO['ID'] <= 0)
 	{
 		header('location: ../index.php?mc=1');
 		exit;
 	}
-	
+
 	//Inicia a sessao
 	session_start();
-	$_SESSION['ADMINISTRADOR'] = $arADMINISTRADOR;
-	
+	$_SESSION['USER'] = $arUSUARIO;
+
 	//Adiciona registro na tabela de auditoria
-	fnDB_LOG_AUDITORIA_ADD($DB,'Entrou no sistema.',false);
-	
+	fnDB_LOG_AUDIT_ADD($DB,'Entrou no sistema.',false);
+
 	//Redirect pra proxima URL valida
 	fnHeaderLogin();
 ?>

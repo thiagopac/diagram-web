@@ -1,7 +1,7 @@
 <?
 ##INCLUDES
 	require_once('../lib/config.php');
-	
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('clienteslocais');
 
@@ -11,29 +11,29 @@
 
 #INICIO LOGICA
 	$DB = fnDBConn();
-		
-	$SQL = "SELECT * FROM ADMINISTRADOR WHERE ID = $ID";
+
+	$SQL = "SELECT * FROM USUARIO WHERE ID = $ID";
 	$CLIENTE = fnDB_DO_SELECT($DB,$SQL);
-	
+
 	$SQL = "SELECT AL.ID_LOCAL, L.NOME FROM ADMINISTRADOR_LOCAL AL
 			JOIN LOCAL L ON (AL.ID_LOCAL = L.ID_LOCAL)
 			WHERE ID_ADMINISTRADOR = $ID
 			ORDER BY L.NOME ASC";
-	
+
 	$ADMINISTRADOR_LOCAL = fnDB_DO_SELECT_WHILE($DB,$SQL);
-	
-	$SQL = "SELECT * 
-			FROM LOCAL 
-			WHERE ID_LOCAL NOT 
+
+	$SQL = "SELECT *
+			FROM LOCAL
+			WHERE ID_LOCAL NOT
 			IN (SELECT ID_LOCAL
 			FROM ADMINISTRADOR_LOCAL
 			WHERE ID_ADMINISTRADOR = $ID)
 			ORDER BY NOME ASC";
-	
-	$LOCAIS = fnDB_DO_SELECT_WHILE($DB,$SQL);	
+
+	$LOCAIS = fnDB_DO_SELECT_WHILE($DB,$SQL);
 ?>
 <!DOCTYPE html>
-<!-- 
+<!--
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
 Version: 3.1
 Author: KeenThemes
@@ -120,7 +120,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<? include('../_menu.php'); ?>
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
-		<div class="page-content">			
+		<div class="page-content">
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
@@ -128,7 +128,7 @@ License: You must have a valid license purchased only from themeforest(the above
 					<h3 class="page-title">
 					Vincular locais <small>ao cliente</small>
 					</h3>
-					
+
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
 			</div>
@@ -164,7 +164,7 @@ License: You must have a valid license purchased only from themeforest(the above
 										<div class="col-md-4">
 											<p class="form-control-static">Todos locais &#8594; Locais do cliente</p><p></p>
 											<select multiple="multiple" class="multi-select" id="my_multi_select1" name="my_multi_select1[]">
-												
+
 												<?
 												foreach($LOCAIS as $KEY => $ROW)
 													{?>
@@ -177,11 +177,11 @@ License: You must have a valid license purchased only from themeforest(the above
 													}?>
 											</select>
 										</div>
-										
+
 									</div>
-									
+
 								</div>
-	
+
 								<div class="form-actions fluid">
 									<div class="col-md-offset-5 col-md-6">
 										<button type="submit" class="btn green">Salvar</button>
@@ -213,7 +213,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -240,13 +240,13 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="../../assets/admin/pages/scripts/components-dropdowns.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-        jQuery(document).ready(function() {       
+        jQuery(document).ready(function() {
            // initiate layout and plugins
            Metronic.init(); // init metronic core components
 		   Layout.init(); // init current layout
 		   QuickSidebar.init() // init quick sidebar
 		   ComponentsDropdowns.init();
-        });   
+        });
     </script>
 <!-- END JAVASCRIPTS -->
 </body>

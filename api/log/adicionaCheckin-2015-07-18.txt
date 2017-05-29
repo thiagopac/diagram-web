@@ -1,3 +1,0 @@
-SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`u138894269_api`.`CHECKIN`, CONSTRAINT `fk_CHECKIN_USUARIO1` FOREIGN KEY (`ID_USUARIO`) REFERENCES `USUARIO` (`ID_USUARIO`) ON DELETE NO ACTION ON UPDATE NO ACTION)
------------------------------------------------------------------------------------------
-

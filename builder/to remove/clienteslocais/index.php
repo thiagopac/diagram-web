@@ -1,7 +1,7 @@
 <?
 ##INCLUDES
 	require_once('../lib/config.php');
-	
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('clienteslocais');
 
@@ -12,13 +12,13 @@
 	$DB = fnDBConn();
 	$SQL = "SELECT A.NOME, COUNT( AL.ID_LOCAL ) AS QT_LOCAIS, A.ID
 			FROM ADMINISTRADOR_LOCAL AL
-			RIGHT JOIN ADMINISTRADOR A ON ( A.ID = AL.ID_ADMINISTRADOR ) 
-			WHERE A.ID_TIPO_ADMIN <>1
+			RIGHT JOIN ADMINISTRADOR A ON ( A.ID = AL.ID_ADMINISTRADOR )
+			WHERE A.ID_TYPE_USER <>1
 			GROUP BY AL.ID_ADMINISTRADOR";
 	$RET = fnDB_DO_SELECT_WHILE($DB,$SQL);
 ?>
 <!DOCTYPE html>
-<!-- 
+<!--
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
 Version: 3.1
 Author: KeenThemes
@@ -111,7 +111,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
 		<div class="page-content">
-			
+
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
@@ -127,7 +127,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN SAMPLE TABLE PORTLET-->
 					<div class="portlet box blue">
 						<div class="portlet-title_sem_titulo">
-							
+
 						</div>
 						<div class="portlet-body">
 							<div class="table-responsive">
@@ -137,7 +137,7 @@ License: You must have a valid license purchased only from themeforest(the above
 										<?=$MSG?>
 									</div>
 								<? } ?>
-									
+
 								<table class="table">
 								<thead>
 								<tr>
@@ -177,7 +177,7 @@ License: You must have a valid license purchased only from themeforest(the above
 						</div>
 					</div>
 					<!-- END SAMPLE TABLE PORTLET-->
-			
+
 		</div>
 	</div>
 	<!-- END CONTENT -->
@@ -199,7 +199,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -234,14 +234,14 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="../../assets/admin/pages/scripts/components-form-tools.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-        jQuery(document).ready(function() {       
+        jQuery(document).ready(function() {
            // initiate layout and plugins
 			Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
 			QuickSidebar.init() // init quick sidebar
             ComponentsFormTools.init();
-        });   
-		
+        });
+
     $('.confirmation').on('click', function () {
         return confirm('Tem certeza?');
     });

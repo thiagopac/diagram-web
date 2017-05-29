@@ -9,14 +9,7 @@
 		<!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
 		<div class="page-sidebar navbar-collapse collapse">
 			<!-- BEGIN SIDEBAR MENU -->
-			<ul class="page-sidebar-menu" data-auto-scroll="true" data-slide-speed="200">
-				<!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
-				<li class="sidebar-toggler-wrapper">
-					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-					<div class="sidebar-toggler">
-					</div>
-					<!-- END SIDEBAR TOGGLER BUTTON -->
-				</li>
+			<ul class="page-sidebar-menu page-sidebar-menu-closed" data-auto-scroll="true" data-slide-speed="200">
 				<!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
 				<li class="sidebar-search-wrapper hidden-xs">
 					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
@@ -39,7 +32,7 @@
 				<li class="last <? if ($MENU_ATIVO == 'dashboard') echo 'active'; ?>">
 					<a href="<?=$rootpath?>/dashboard/">
 					<i class="icon-home"></i>
-					<span class="title">Resumo</span>
+					<span class="title">Dashboard</span>
 					<span class="selected"></span>
 					</a>
 				</li>
@@ -48,7 +41,7 @@
 				<li class="last <? if ($MENU_ATIVO == 'administrators') echo 'active'; ?>">
 					<a href="<?=$rootpath?>/administrators/">
 					<i class="icon-user"></i>
-					<span class="title">Administradores</span>
+					<span class="title">Administrators</span>
 					<span class="selected"></span>
 					</a>
 				</li>
@@ -57,7 +50,7 @@
 				<li class="last <? if ($MENU_ATIVO == 'audit') echo 'active'; ?>">
 					<a href="<?=$rootpath?>/audit/">
 					<i class="icon-briefcase"></i>
-					<span class="title">Auditoria</span>
+					<span class="title">Audit</span>
 					<span class="selected"></span>
 					</a>
 				</li>
@@ -66,9 +59,30 @@
 				<li class="last <? if ($MENU_ATIVO == 'settings') echo 'active'; ?>">
 					<a href="<?=$rootpath?>/settings/">
 					<i class="fa fa-cogs"></i>
-					<span class="title">Configurações</span>
+					<span class="title">Settings</span>
 					<span class="selected"></span>
 					</a>
+				</li>
+				<? } ?>
+        <? if (fnVerifica_Grant('openings')) { ?>
+				<li class="last <? if (($MENU_ATIVO == 'openings') || ($MENU_ATIVO == 'openings-builder')) echo 'active'; ?>">
+					<a href="<?=$rootpath?>/openings/">
+					<i class="fa fa-book"></i>
+					<span class="title">Openings</span>
+					<span class="selected"></span>
+					</a>
+          <ul class="sub-menu">
+            <? if (fnVerifica_Grant('openings')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'openings') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/openings/index.php"><i class="fa fa-angle-right"></i>Study</a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('openings-builder')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'openings-builder') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/openings-builder/index.php"><i class="fa fa-angle-right"></i>Builder</a>
+            </li>
+            <? } ?>
+          </ul>
 				</li>
 				<? } ?>
 				<? if ((fnVerifica_Grant('buildpgn')) || (fnVerifica_Grant('buildfen')) || (fnVerifica_Grant('listboards'))){ ?>

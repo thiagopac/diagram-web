@@ -16,17 +16,16 @@
       <div class="col-md-12">
          <!-- BEGIN PAGE TITLE & BREADCRUMB-->
          <h3 class="page-title">
-            Meus diagramas <small></small>
+            My diagrams <small></small>
          </h3>
       </div>
    </div>
    <!-- END PAGE HEADER-->
 
    <!-- BEGIN EXAMPLE TABLE PORTLET-->
-   <div class="portlet box yellow">
+   <div class="portlet box red">
       <div class="portlet-title">
          <div class="caption">
-            <i class="fa fa-user"></i>Table
          </div>
          <div class="actions">
             <a href="javascript:;" class="btn btn-default btn-sm">

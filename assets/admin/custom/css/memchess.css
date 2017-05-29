@@ -1,0 +1,9 @@
+.squareByWidth { width: 400px; width: 65vw; height: 65vw; }
+.squareByHeight { width: 400px; width: 65vh; height: 65vh; }
+.rectangleByWidth { width: 400px; width: 65vw; }
+.rectangleByHeight { width: 400px; width: 65vh; }
+
+#boardWrap {
+	padding: 20px;
+	background-color: #fff;
+}

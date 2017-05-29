@@ -1,7 +1,7 @@
 <?
 ##INCLUDES
 	require_once('../lib/config.php');
-	
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('historico_aluno');
 
@@ -13,73 +13,73 @@
 
 #INICIO LOGICA
 	$DB = fnDBConn();
-	
+
 	list($ID_CLIENTE,$LISTBOX_CLIENTES) = fnSELECT_CLIENT($DB,$ID_CLIENTE);
-	
+
 #CONECTA NO BANCO DO CLIENTE
 	if (($ID_CLIENTE > 1) && ($CPF != ''))
 		{
 		$SQL = "select * from cliente where id = $ID_CLIENTE";
 		$RET = fnDB_DO_SELECT($DB,$SQL);
-		
+
 		list($ERRO,$DB_CLI) = fnDBConn_CLIENTE($RET['params']);
 		if ($ERRO == 'ERRO')
 			$MSG = $DB_CLI;
 		}
-		
+
 #PUXA OS DADOS DO ALUNO
 	if (($ID_CLIENTE > 1) && ($MSG == '') && ($CPF != ''))
 		{
-		$SQL = "select id,nome,cpf,senha,ifnull(calouro,0)+1 calouro,DATE_FORMAT(dtcriacao,'%d/%m/%Y %H:%i:%s') din 
+		$SQL = "select id,nome,cpf,senha,ifnull(calouro,0)+1 calouro,DATE_FORMAT(dtcriacao,'%d/%m/%Y %H:%i:%s') din
 			   from ALUNO
 			   where cpf = '$CPF'";
-				
-		$RET_ALUNO = fnDB_DO_SELECT($DB_CLI,$SQL);		
-		
+
+		$RET_ALUNO = fnDB_DO_SELECT($DB_CLI,$SQL);
+
 		$ID_ALUNO = (int)$RET_ALUNO['ID'];
-		
+
 		if ($ID_ALUNO == 0)
 			$MSG = "Nenhum aluno encontrado com o CPF: <b>$CPF</b>";
 		}
-		
+
 #PUXA OS DADOS DO ALUNO
 	if ($ID_ALUNO > 0)
 		{
 		$arINTERFACE_TIPO[1] = 'SMS';
 		$arINTERFACE_TIPO[2] = 'APP';
 		$arINTERFACE_TIPO[3] = 'WEB';
-		
-		$SQL = " select ano, mes, idtipo, DATE_FORMAT(dtconfirmacao,'%d/%m/%Y %H:%i:%s') din 
+
+		$SQL = " select ano, mes, idtipo, DATE_FORMAT(dtconfirmacao,'%d/%m/%Y %H:%i:%s') din
 				from LISTA_ALUNO
 				where idaluno = $ID_ALUNO
 				order by ano desc, mes desc";
-				
-		$RET_LISTA_ALUNO = fnDB_DO_SELECT_WHILE($DB_CLI,$SQL);	
-		
+
+		$RET_LISTA_ALUNO = fnDB_DO_SELECT_WHILE($DB_CLI,$SQL);
+
 		$SQL = " select UNIDADE_ENSINO.nome
 				from ALUNO_UNICURSO,UNIDADE_CURSO,UNIDADE_ENSINO
 				where ALUNO_UNICURSO.idaluno = $ID_ALUNO
 				and ALUNO_UNICURSO.idunicurso = UNIDADE_CURSO.id
 				and UNIDADE_CURSO.idunidade = UNIDADE_ENSINO.id
 				group by ALUNO_UNICURSO.idaluno";
-				
-		$RET_UNIDADE_ENSINO = fnDB_DO_SELECT($DB_CLI,$SQL);	
-		
+
+		$RET_UNIDADE_ENSINO = fnDB_DO_SELECT($DB_CLI,$SQL);
+
 		$SQL = " select distinct concat('(',substring(numero,3,2),') ',substring(numero,5,20)) numero from TELEFONE
 				where idaluno = $ID_ALUNO order by principal desc";
-				
+
 		$RET_TELEFONES = fnDB_DO_SELECT_WHILE($DB_CLI,$SQL);
 		}
 ?>
 <!--
 CONSULTAS SQL:
 <?
-if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
+if ((int)$_SESSION['USUARIO']['id_cliente'] == 1) //Admin
 	echo $SQL_DUMP;
 ?>
 -->
 <!DOCTYPE html>
-<!-- 
+<!--
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
 Version: 3.1
 Author: KeenThemes
@@ -205,12 +205,12 @@ License: You must have a valid license purchased only from themeforest(the above
 								<? } ?>
 								<div class="row form-group">
 													<?=$LISTBOX_CLIENTES?>
-													
+
 													<div class="col-md-3">
 														<label>CPF</label>
 														<input type="text" name="pesquisa" class="form-control" placeholder="Digite o CPF do aluno..." value="<?=$CPF?>">
 													</div>
-													
+
 												</div>
 								</div>
 								<div class="form-actions2">
@@ -220,8 +220,8 @@ License: You must have a valid license purchased only from themeforest(the above
 						</div>
 					</div>
 <!-- ------------------ -->
-			
-			
+
+
 					<!-- BEGIN SAMPLE TABLE PORTLET-->
 					<div style="margin-bottom: 20px" class="portlet box red">
 						<div class="portlet-title_sem_titulo">
@@ -278,7 +278,7 @@ License: You must have a valid license purchased only from themeforest(the above
 								<td>
 									 <? if ((int)$RET_ALUNO['calouro'] == '1') echo 'Não'; ?>
 									 <? if ((int)$RET_ALUNO['calouro'] == '2') echo 'Sim'; ?>
-									 
+
 								</td>
 								<th>
 									 Telefone 4
@@ -321,7 +321,7 @@ License: You must have a valid license purchased only from themeforest(the above
 						</div>
 					</div>
 					<!-- END SAMPLE TABLE PORTLET-->
-					
+
 					<!-- BEGIN SAMPLE TABLE PORTLET-->
 					<div class="portlet box red">
 						<div class="portlet-title_sem_titulo">
@@ -340,7 +340,7 @@ License: You must have a valid license purchased only from themeforest(the above
 									 Confirmou Presença?
 								</th>
 								<th class="numeric">
-									 Via Interface 
+									 Via Interface
 								</th>
 								<th class="numeric">
 									 Data da Confirmação
@@ -379,7 +379,7 @@ License: You must have a valid license purchased only from themeforest(the above
 					<!-- END SAMPLE TABLE PORTLET-->
         <br/>
         <br/>
-					
+
 		</div>
 	</div>
 	<!-- END CONTENT -->
@@ -401,7 +401,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -430,13 +430,13 @@ License: You must have a valid license purchased only from themeforest(the above
 <script type="text/javascript" src="../../assets/outros/excellentexport.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-        jQuery(document).ready(function() {       
+        jQuery(document).ready(function() {
 			// initiate layout and plugins
 			Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
-			QuickSidebar.init() // init quick sidebar			
-		});   
-		
+			QuickSidebar.init() // init quick sidebar
+		});
+
     </script>
 <!-- END JAVASCRIPTS -->
 </body>

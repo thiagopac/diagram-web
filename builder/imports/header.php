@@ -14,21 +14,21 @@
 <? include('../imports/page_level_styles.php'); ?>
 <? include('../imports/theme_styles.php'); ?>
 
-<link rel="shortcut icon" href="favicon.ico" />
+<link rel="shortcut icon" href="../favicon.png" />
 </head>
 
-<body class="page-header-fixed page-quick-sidebar-over-content">
+<body class="page-header-fixed page-quick-sidebar-over-content page-boxed page-sidebar-closed">
 	<!-- BEGIN HEADER -->
-	<div class="page-header navbar navbar-fixed-top">
+	<div class="page-header -i navbar navbar-fixed-top">
 		<!-- BEGIN HEADER INNER -->
-		<div class="page-header-inner">
+		<div class="page-header-inner container">
 			<!-- BEGIN LOGO -->
 			<div class="page-logo">
 				<a href="../dashboard/"> <img
 					src="../../assets/admin/layout/img/logo.png" alt="logo"
 					class="logo-default" />
 				</a>
-				<div class="menu-toggler sidebar-toggler hide">
+				<div class="menu-toggler sidebar-toggler">
 					<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
 				</div>
 			</div>
@@ -44,5 +44,7 @@
 	<!-- END HEADER -->
 	<div class="clearfix"></div>
 	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
+	<!-- CONTAINER / used with boxed -->
+	<div class="container">
+		<div class="page-container">
 	<? include('../_menu.php'); ?>

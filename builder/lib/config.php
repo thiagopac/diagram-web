@@ -39,6 +39,7 @@ date_default_timezone_set('America/Sao_Paulo');
 		$MYSQL_SENHA = "mysql";
 		$MYSQL_PORTA = 3306;
 		$MYSQL_DATABASE = 'diagramchess-dev';
+		// $MYSQL_DATABASE = 'diagramchess-qa';
 		}
 
 #MENU
@@ -49,6 +50,8 @@ date_default_timezone_set('America/Sao_Paulo');
 	$MENU_GRANT[]  = array('listboards');
 	$MENU_GRANT[]  = array('buildpgn');
 	$MENU_GRANT[]  = array('buildfen');
+	$MENU_GRANT[]  = array('openings');
+	$MENU_GRANT[]  = array('openings-builder');
 
 //VARIAVEIS
 	$TITULO = "Diagram Chess";

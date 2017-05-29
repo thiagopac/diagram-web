@@ -1,7 +1,7 @@
 <?
 ##INCLUDES
 	require_once('../lib/config.php');
-	
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('confirmacoes_e_senhas');
 
@@ -12,61 +12,61 @@
 	$DAT_COMPLETA = addslashes($_REQUEST['dat_completa']);
 	$ID_CLIENTE	= (int)$_REQUEST['id_cliente'];
 
-	$menos30dias = time( ) - 86400 * 1; 
-	
+	$menos30dias = time( ) - 86400 * 1;
+
 	if ($DAT_INICIO == '') 	$DAT_INICIO = date('Y-m-d',$menos30dias);
 	if ($DAT_FIM == '') 		$DAT_FIM = date('Y-m-d');
 	if ($DAT_COMPLETA == '')	$DAT_COMPLETA = date('d/m/Y',$menos30dias).' - '.date('d/m/Y');
-	
+
 	$MSG = '';
 
 #É IE?
 	if (preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT']) || ((strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/') !== false) && (strpos($_SERVER['HTTP_USER_AGENT'], 'rv:') !== false)))
 		$BrowserIE = true;
-	
+
 #INICIO LOGICA
 	$DB = fnDBConn();
-	
+
 	list($ID_CLIENTE,$LISTBOX_CLIENTES) = fnSELECT_CLIENT($DB,$ID_CLIENTE);
-	
+
 #CONECTA NO BANCO DO CLIENTE
 	if ($ID_CLIENTE > 1)
 		{
 		$SQL = "select * from cliente where id = $ID_CLIENTE";
 		$RET = fnDB_DO_SELECT($DB,$SQL);
-		
+
 		list($ERRO,$DB_CLI) = fnDBConn_CLIENTE($RET['params']);
 		if ($ERRO == 'ERRO')
 			$MSG = $DB_CLI;
 		}
-		
+
 #PUXA OS DADOS DO BANCO DO CLIENTE
 	if (($ID_CLIENTE > 1) && ($MSG == ''))
 		{
 		$arINTERFACE_TIPO['SMS'] = 1;
 		$arINTERFACE_TIPO['APP'] = 2;
 		$arINTERFACE_TIPO['WEB'] = 3;
-		
+
 		$PESQUISA_INTERFACE = (int)$arINTERFACE_TIPO[strtoupper($PESQUISA)];
 		$PESQUISA_CPF       = preg_replace('/\D+/', '', $PESQUISA);
 		$PESQUISA_SENHA       = addslashes(base64_encode($PESQUISA));
-		
+
 		$SQL = "select  distinct DATE_FORMAT(date(LISTA_ALUNO.dtconfirmacao),'%d/%m/%Y')  din,
 					ALUNO.cpf CPF,
 					ALUNO.senha senha,
 					ALUNO.nome nome,
 					LISTA_ALUNO.ano ano,
 					LISTA_ALUNO.mes mes,
-					case 
+					case
 						when LISTA_ALUNO.idtipo = 1 then 'SMS'
 						when LISTA_ALUNO.idtipo = 2 then 'APP'
 						when LISTA_ALUNO.idtipo = 3 then 'WEB'
 					End as interface
 				from LISTA_ALUNO, ALUNO_UNICURSO, UNIDADE_CURSO, ALUNO
-				where 
-				  ( '' = '$PESQUISA' or 
-					ALUNO.cpf = '$PESQUISA_CPF' or 
-					ALUNO.senha = '$PESQUISA_SENHA'  or 
+				where
+				  ( '' = '$PESQUISA' or
+					ALUNO.cpf = '$PESQUISA_CPF' or
+					ALUNO.senha = '$PESQUISA_SENHA'  or
 					ALUNO.nome like '%$PESQUISA%' or
 					LISTA_ALUNO.ano = '$PESQUISA' or
 					LISTA_ALUNO.mes = '$PESQUISA' or
@@ -81,7 +81,7 @@
 				  and LISTA_ALUNO.dtconfirmacao between '$DAT_INICIO 00:00:00' and '$DAT_FIM 23:59:59'
 				order by LISTA_ALUNO.dtconfirmacao desc
 				";
-				
+
 		/*$SQL = "select DATE_FORMAT(date(dtcriacao),'%d/%m/%Y') din,status ,statusdesc ,count(*) quantidade
 				from RESPOSTA_ROBO
 				where
@@ -90,18 +90,18 @@
 				group by date(dtcriacao),2,3
 				order by dtcriacao desc, 4 desc
 				";*/
-		$RET = fnDB_DO_SELECT_WHILE($DB_CLI,$SQL);		
+		$RET = fnDB_DO_SELECT_WHILE($DB_CLI,$SQL);
 		}
 ?>
 <!--
 CONSULTAS SQL:
 <?
-if ((int)$_SESSION['ADMINISTRADOR']['id_cliente'] == 1) //Admin
+if ((int)$_SESSION['USUARIO']['id_cliente'] == 1) //Admin
 	echo $SQL_DUMP;
 ?>
 -->
 <!DOCTYPE html>
-<!-- 
+<!--
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
 Version: 3.1
 Author: KeenThemes
@@ -230,7 +230,7 @@ License: You must have a valid license purchased only from themeforest(the above
 								<? } ?>
 								<div class="row form-group">
 													<?=$LISTBOX_CLIENTES?>
-													
+
 													<div class="col-md-4">
 														<label>Período da Pesquisa</label>
 														<div id="reportrange" class="form-control">
@@ -245,7 +245,7 @@ License: You must have a valid license purchased only from themeforest(the above
 														<label>Pesquisa</label>
 														<input type="text" name="pesquisa" class="form-control" placeholder="Digite o termo de pesquisa..." value="<?=$PESQUISA?>">
 													</div>
-												</div>				
+												</div>
 								</div>
 								<div class="form-actions2">
 																	<button type="submit" class="btn red">Pesquisar</button>
@@ -254,8 +254,8 @@ License: You must have a valid license purchased only from themeforest(the above
 						</div>
 					</div>
 <!-- ------------------ -->
-			
-			
+
+
 					<!-- BEGIN SAMPLE TABLE PORTLET-->
 					<div class="portlet box red">
 						<div class="portlet-title_sem_titulo">
@@ -292,21 +292,21 @@ License: You must have a valid license purchased only from themeforest(the above
 							foreach($RET as $KEY => $ROW)
 								{
 								$ROW['senha'] = base64_decode($ROW['senha']);
-								
+
 								$ROW['nome'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['nome']);
 
 								if ($PESQUISA_CPF == $ROW['CPF'])
 									$ROW['CPF'] = str_ireplace($PESQUISA_CPF,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA_CPF.'</FONT>',$ROW['CPF']);
-								
+
 								if ($PESQUISA == $ROW['senha'])
 									$ROW['senha'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['senha']);
-									
+
 								if ($PESQUISA == $ROW['ano'])
 									$ROW['ano'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['ano']);
-								
+
 								if ($PESQUISA == $ROW['mes'])
 									$ROW['mes'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['mes']);
-									
+
 								if (strtoupper($PESQUISA) == strtoupper($ROW['interface']))
 									$ROW['interface'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['interface']);
 								?>
@@ -342,11 +342,11 @@ License: You must have a valid license purchased only from themeforest(the above
 					</div>
 					<!-- END SAMPLE TABLE PORTLET-->
 					<p align="right"><a href="#" class="btn red" id="exportExcel">Exportar Excel</a></p>
-					
-					
+
+
         <br/>
         <br/>
-					
+
 		</div>
 	</div>
 	<!-- END CONTENT -->
@@ -368,7 +368,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -399,30 +399,30 @@ License: You must have a valid license purchased only from themeforest(the above
 <script type="text/javascript" src="../../assets/outros/excellentexport.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-        jQuery(document).ready(function() {       
+        jQuery(document).ready(function() {
 			// initiate layout and plugins
 			Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
 			QuickSidebar.init() // init quick sidebar
 			ComponentsPickers.init();
-			
+
 			$('#reportrange span').html('<?=$DAT_COMPLETA?>');
 			$('#dat_inicio').val('<?=$DAT_INICIO?>');
 			$('#dat_fim').val('<?=$DAT_FIM?>');
 			$('#dat_completa').val('<?=$DAT_COMPLETA?>');
-			
+
 		    $('#exportExcel').click(function() {
 			  $.post("../exec/?e=exportExcel", {
 				content: $('#datatable').html(),
 				}, function(response){
-					$("body").append("<iframe src='../exec/?e=exportExcel&download=1' style='display: none;' ></iframe>"); 
-				});	
-			
+					$("body").append("<iframe src='../exec/?e=exportExcel&download=1' style='display: none;' ></iframe>");
+				});
+
 			});
 
-			
-		});   
-		
+
+		});
+
     </script>
 <!-- END JAVASCRIPTS -->
 </body>

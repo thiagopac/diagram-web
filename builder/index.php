@@ -1,35 +1,7 @@
-<?php
-##INCLUDES
-	include('lib/config.php');
-
-### INPUTS
-	$intERROR = (isset($_REQUEST['mc']) ? (int)$_REQUEST['mc'] : 0);
-
-	switch ($intERROR)
-	{
-		case 1:
-				$strMsg = "<strong>Erro:</strong> login ou senha inválidos.";
-				break;
-	}
-?>
 <!DOCTYPE html>
-<!--
-Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
-Version: 3.1
-Author: KeenThemes
-Website: http://www.keenthemes.com/
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Like: www.facebook.com/keenthemes
-Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
-License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
--->
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
+
 <html lang="en" >
-<!--<![endif]-->
-<!-- BEGIN HEAD -->
+
 <head>
 <meta charset="utf-8"/>
 <title><?=$TITULO?></title>
@@ -58,16 +30,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="favicon.ico"/>
 </head>
-<!-- BEGIN BODY -->
-<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
-<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
-<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
-<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
-<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
-<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
-<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
-<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
-<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+
 <body class="login">
 <!-- BEGIN LOGO -->
 <div class="logo">
@@ -113,48 +76,13 @@ License: You must have a valid license purchased only from themeforest(the above
 			LOGIN
 			</button>
 		</div>
-		<!--div class="login-options">
-			<h4>Or login with</h4>
-			<ul class="social-icons">
-				<li>
-					<a class="facebook" data-original-title="facebook" href="#">
-					</a>
-				</li>
-				<li>
-					<a class="twitter" data-original-title="Twitter" href="#">
-					</a>
-				</li>
-				<li>
-					<a class="googleplus" data-original-title="Goole Plus" href="#">
-					</a>
-				</li>
-				<li>
-					<a class="linkedin" data-original-title="Linkedin" href="#">
-					</a>
-				</li>
-			</ul>
-		</div-->
-		<!--div class="forget-password">
-			<h4>Esqueceu sua senha ?</h4>
-			<p>
-				 no worries, click <a href="javascript:;" id="forget-password">
-				here </a>
-				to reset your password.
-			</p>
-		</div-->
-		<!--div class="create-account">
-			<p>
-				 Don't have an account yet ?&nbsp; <a href="javascript:;" id="register-btn">
-				Create an account </a>
-			</p>
-		</div-->
 	</form>
 	<!-- END LOGIN FORM -->
 </div>
 <!-- END LOGIN -->
 <!-- BEGIN COPYRIGHT -->
 <div class="copyright">
-	 <?=date("Y"); ?> &copy; <?=$TITULO?>
+	  Diagram Chess &copy;
 </div>
 <!-- END COPYRIGHT -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
@@ -187,9 +115,9 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
 		jQuery(document).ready(function() {
-		  Metronic.init(); // init metronic core components
-Layout.init(); // init current layout
-QuickSidebar.init() // init quick sidebar
+		  Metronic.init();
+			Layout.init();
+			QuickSidebar.init();
 		  Login.init();
 		});
 	</script>

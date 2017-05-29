@@ -1,7 +1,7 @@
 <?
 ##INCLUDES
 	require_once('../lib/config.php');
-	
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('clientes');
 
@@ -11,25 +11,25 @@
 
 #INICIO LOGICA
 	$DB = fnDBConn();
-	
+
 	if ($ID == -1)
 		{
 		$GRANTS = '|';
 		foreach($MENU_GRANT as $ROW)
 			$GRANTS .= $ROW[0].'|';
-			
-		$SQL = "INSERT INTO ADMINISTRADOR (ID_TIPO_ADMIN, LOGIN, SENHA, NOME, GRANTS, STATUS, DIN) VALUES (2, NULL, NULL, NULL, '{$GRANTS}', 0, NOW())";
+
+		$SQL = "INSERT INTO USUARIO (ID_TIPO_USUARIO, LOGIN, SENHA, NOME, GRANTS, STATUS, DIN) VALUES (2, NULL, NULL, NULL, '{$GRANTS}', 0, NOW())";
 		$RET = fnDB_DO_EXEC($DB,$SQL);
 		$ID = (int)$RET[1];
 		if ($ID == 0)
 			die('Falha geral. ID nao foi criado');
 		}
-		
-	$SQL = "SELECT * FROM ADMINISTRADOR WHERE ID = $ID";
+
+	$SQL = "SELECT * FROM USUARIO WHERE ID = $ID";
 	$RET = fnDB_DO_SELECT($DB,$SQL);
 ?>
 <!DOCTYPE html>
-<!-- 
+<!--
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.1.1
 Version: 3.1
 Author: KeenThemes
@@ -121,7 +121,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<? include('../_menu.php'); ?>
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
-		<div class="page-content">			
+		<div class="page-content">
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
@@ -129,7 +129,7 @@ License: You must have a valid license purchased only from themeforest(the above
 					<h3 class="page-title">
 					Novo cliente<small></small>
 					</h3>
-					
+
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
 			</div>
@@ -168,18 +168,18 @@ License: You must have a valid license purchased only from themeforest(the above
 											</div>
 										</div>
 									</div>
-									
+
 									<div class="form-group last password-strength">
 										<label class="control-label col-md-3">Senha</label>
 										<div class="col-md-4">
 											<input type="text" class="form-control" name="password" id="password_strength">
 										</div>
 									</div>
-									
+
 								</div>
-								
-								
-									
+
+
+
 								<div class="form-actions fluid">
 									<div class="col-md-offset-3 col-md-9">
 										<button type="submit" class="btn green">Salvar</button>
@@ -211,7 +211,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="../../assets/global/plugins/respond.min.js"></script>
-<script src="../../assets/global/plugins/excanvas.min.js"></script> 
+<script src="../../assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -246,13 +246,13 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="../../assets/admin/pages/scripts/components-form-tools.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-        jQuery(document).ready(function() {       
+        jQuery(document).ready(function() {
            // initiate layout and plugins
            Metronic.init(); // init metronic core components
 Layout.init(); // init current layout
 QuickSidebar.init() // init quick sidebar
            ComponentsFormTools.init();
-        });   
+        });
     </script>
 <!-- END JAVASCRIPTS -->
 </body>
