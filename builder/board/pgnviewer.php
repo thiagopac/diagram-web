@@ -2,7 +2,6 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Some Games to Edit</title>
     <!-- Libraries used: chessboardjs and chess.js from GitHub -->
     <link href="../../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <script src="../../assets/admin/custom/scripts/chessboard.js" type="text/javascript"></script>

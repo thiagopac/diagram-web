@@ -52,6 +52,7 @@ div.buttons > span.button.default, div.edit > span.button.default, div.edit > bu
     padding: 4px;
     border: solid lightgrey 1px;
     border-radius: 4px;
+    text-align: center;
 }
 
 div.buttons > i.button:hover,div.edit > i.button:hover  {
@@ -137,11 +138,11 @@ div.edit > .button.pgn.default:before {
 }
 
 .button.fa-times {
-   color: red;
+   color: #686868;
 }
 
 .button.fa-times:hover {
-    border: red 2px solid;
+    color: #999999;
 }
 
 div.outerpgn {
@@ -198,11 +199,30 @@ div.buttons > span.button.ff, div.edit > span.button {
 
 div.commentRadio label {
     display: inline;
+    font-family: monospace;
+    font-size: 14px;
+    color: #656565;
 }
 div.comment > textarea.comment {
-    width: 100%;
+    width: 98%;
     height: 50px;
+    margin-top: 5px;
+
+    outline: none !important;
+    border:1px solid #d3d3d3;
 }
+div.comment {
+  margin-top: 10px;
+    margin-left: 4px;
+}
+div.commentInfo {
+  font-family: verdana;
+  font-size: 11px;
+  background-color: #eef7fb;
+  color:#428db1;
+  padding: 4px;
+}
+
 div.green > span.button {
     margin: 5px;
     width: 36px;
@@ -380,7 +400,6 @@ div.pgn {
 }
 
 .movesOuterScroller {
-    position: relative;
     width: 100%;
 }
 
@@ -670,9 +689,9 @@ div.pgn {
 
 /* Styling when moves are possible */
 .square-55d63.black-3c85d.possible {
-    background-color: #696969;
+    background-color: #e3e7a8;
 }
 
 .square-55d63.white-1e1d7.possible {
-    background-color: #a9a9a9;
+    background-color: #f8fbc1;
 }

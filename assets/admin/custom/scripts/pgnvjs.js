@@ -260,7 +260,8 @@ var pgnBase = function (boardId, configuration) {
         };
         // Generates the edit buttons (only)
         var generateEditButtons = function(buttonDiv) {
-            [["promoteVar", "fa-hand-o-up"], ["deleteMoves", "fa-scissors"]].forEach(function(entry) {
+            // [["promoteVar", "fa-hand-o-up"], ["deleteMoves", "fa-scissors"]].forEach(function(entry) {
+            [["deleteMoves", "fa-trash"]].forEach(function(entry) {
                 var but = addButton(entry, buttonDiv);
                 //but.className = but.className + " gray"; // just a test, worked.
                 // only gray out if not usable, check that later.
@@ -271,16 +272,22 @@ var pgnBase = function (boardId, configuration) {
         };
 
         var generateCommentDiv = function(commentDiv) {
+
+
+
+          var warning = createEle("div", null, "commentInfo", null, commentDiv);
+          warning.appendChild(document.createTextNode("Create the complete game, then post the comments and variations"));
+
             var radio = createEle("div", null, "commentRadio", theme, commentDiv);
             var mc = createEle("input", null, "moveComment", theme, radio);
             mc.type = "radio"; mc.value = "move"; mc.name = "radio";
-            createEle("label", null, "labelMoveComment", theme, radio).appendChild(document.createTextNode("Move"));
+            createEle("label", null, "labelMoveComment", theme, radio).appendChild(document.createTextNode("Paragraph "));
             var mb = createEle("input", null, "beforeComment", theme, radio);
             mb.type = "radio"; mb.value = "before"; mb.name = "radio";
-            createEle("label", null, "labelBeforeComment", theme, radio).appendChild(document.createTextNode("Before"));
+            createEle("label", null, "labelBeforeComment", theme, radio).appendChild(document.createTextNode("Before "));
             var ma = createEle("input", null, "afterComment", theme, radio);
             ma.type = "radio"; ma.value = "after"; ma.name = "radio";
-            createEle("label", null, "labelAfterComment", theme, radio).appendChild(document.createTextNode("After"));
+            createEle("label", null, "labelAfterComment", theme, radio).appendChild(document.createTextNode("After "));
             createEle("textarea", null, "comment", theme, commentDiv);
         };
         if (hasMarkup()) {
@@ -828,17 +835,21 @@ var pgnBase = function (boardId, configuration) {
         }
         regenerateMoves(myMoves);
         bindFunctions();
-        generateHeaders();
+
+        if (!hasMode('edit')) {
+          generateHeaders();
+        }
+
         if (hasMode('edit')) {
             generateNAGMenu($("#edit" + boardId + "Button")[0]);
             $(function(){
                 $("select#" + buttonsId + "nag").multiselect({
                     header: false,
                     selectedList: 4,
-                    minWidth: 80,
+                    minWidth: 110,
                     checkAllText: "",
                     uncheckAllText: "Clean",
-                    noneSelectedText: "NAGs",
+                    noneSelectedText: "Marks",
                     click: function(event, ui) {
                         /**
                          * Add (or remove) a NAG from the current move. Ignore it, if there is

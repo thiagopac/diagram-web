@@ -69,11 +69,11 @@
                            <a data-toggle="tab" href="#tab_3">
                            <i class="fa fa-users"></i> Main Grandmasters </a>
                         </li>
-                        <li class="active">
+                        <li>
                            <a data-toggle="tab" href="#tab_4">
                            <i class="fa fa-minus"></i> Variations </a>
                         </li>
-                        <li>
+                        <li class="active">
                            <a data-toggle="tab" href="#tab_5">
                            <i class="fa fa-bars"></i> Lines </a>
                         </li>
@@ -145,7 +145,7 @@
                                     </div>
                                  </div>
                               </div>
-                              <div id="tab_4" class="tab-pane active">
+                              <div id="tab_4" class="tab-pane">
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
@@ -169,8 +169,8 @@
                                        <div class="modal-body form">
                                          <form action="#" class="form-horizontal form-row-seperated">
                                            <div class="form-group">
-                                             <label class="col-sm-4 control-label">Name</label>
-                                             <div class="col-sm-8">
+                                             <label class="col-sm-2 control-label">Name</label>
+                                             <div class="col-sm-10">
                                                <div class="input-group">
                                                  <span class="input-group-addon">
                                                  <i class="fa fa-tag"></i>
@@ -183,8 +183,8 @@
                                              </div>
                                            </div>
                                            <div class="form-group">
-                                             <label class="col-sm-4 control-label">Description</label>
-                                             <div class="col-sm-8">
+                                             <label class="col-sm-2 control-label">Description</label>
+                                             <div class="col-sm-10">
                                                <div class="input-group">
                                                  <span class="input-group-addon">
                                                  <i class="fa fa-info"></i>
@@ -194,8 +194,8 @@
                                              </div>
                                            </div>
                                            <div class="form-group last">
-                                             <label class="col-sm-4 control-label">Primary language</label>
-                                             <div class="col-sm-8">
+                                             <label class="col-sm-2 control-label">Primary language</label>
+                                             <div class="col-sm-10">
                                                <div class="input-group">
                                                  <span class="input-group-addon">
                                                  <i class="fa fa-language"></i>
@@ -221,7 +221,7 @@
                                  </div>
 
                               </div>
-                              <div id="tab_5" class="tab-pane">
+                              <div id="tab_5" class="tab-pane active">
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
@@ -237,8 +237,8 @@
                                        <small>This study does not have any line yet.</small>
                                     </div>
                                  </div>
-                                 <div id="modalNewLine" class="modal fade" role="dialog" aria-hidden="true">
-                                   <div class="modal-dialog">
+                                 <div id="modalNewLine" class="modal fade bs-modal-lg" role="dialog" aria-hidden="true">
+                                   <div class="modal-dialog modal-lg">
                                      <div class="modal-content">
                                        <div class="modal-header">
                                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
@@ -247,8 +247,28 @@
                                        <div class="modal-body form">
                                          <form action="#" class="form-horizontal form-row-seperated">
                                            <div class="form-group">
-                                             <label class="col-sm-4 control-label">Name</label>
-                                             <div class="col-sm-8">
+                                             <label class="col-sm-2 control-label">Variation</label>
+                                             <div class="col-sm-10">
+                                               <div class="input-group">
+                                                 <span class="input-group-addon">
+                                                 <i class="fa fa-minus"></i>
+                                                 </span>
+                                                 <select class="form-control select2me" name="options2">
+                                                    <option value="">Select...</option>
+                                                    <option value="Option 1">Option 1</option>
+                                                    <option value="Option 2">Option 2</option>
+                                                    <option value="Option 3">Option 3</option>
+                                                    <option value="Option 4">Option 4</option>
+                                                 </select>
+                                               </div>
+                                               <p class="help-block">
+                                                  Choose the variation to which this line belongs <br>
+                                               </p>
+                                             </div>
+                                           </div>
+                                           <div class="form-group">
+                                             <label class="col-sm-2 control-label">Name</label>
+                                             <div class="col-sm-10">
                                                <div class="input-group">
                                                  <span class="input-group-addon">
                                                  <i class="fa fa-tag"></i>
@@ -256,13 +276,13 @@
                                                  <input type="text" id="typeahead_example_modal_1" name="typeahead_example_modal_1" class="form-control"/>
                                                </div>
                                                <p class="help-block">
-                                                  E.g: Advanced Variation<br>
+                                                  E.g: Alekhine variation<br>
                                                </p>
                                              </div>
                                            </div>
                                            <div class="form-group">
-                                             <label class="col-sm-4 control-label">Description</label>
-                                             <div class="col-sm-8">
+                                             <label class="col-sm-2 control-label">Description</label>
+                                             <div class="col-sm-10">
                                                <div class="input-group">
                                                  <span class="input-group-addon">
                                                  <i class="fa fa-info"></i>
@@ -272,19 +292,14 @@
                                              </div>
                                            </div>
                                            <div class="form-group last">
-                                             <label class="col-sm-4 control-label">Primary language</label>
-                                             <div class="col-sm-8">
+                                             <div class="col-sm-12">
                                                <div class="input-group">
-                                                 <span class="input-group-addon">
-                                                 <i class="fa fa-language"></i>
-                                                 </span>
-                                                 <select class="form-control select2me" name="options2">
-                                                    <option value="">Select...</option>
-                                                    <option value="Option 1">Option 1</option>
-                                                    <option value="Option 2">Option 2</option>
-                                                    <option value="Option 3">Option 3</option>
-                                                    <option value="Option 4">Option 4</option>
-                                                 </select>
+                                                 <span style="visibility:hidden" class="input-group-addon"></span>
+                                                 <div class="portlet-body">
+                                                       <iframe name='iframe1' id="iframe1" onload="resizeIframe(this)" src="../board/pgneditor.php" scrolling="yes"
+                                                        frameborder="0" border="0" cellspacing="0"
+                                                        style="border-style: none;width: 100%; height: 650px;"></iframe>
+                                                 </div>
                                                </div>
                                              </div>
                                            </div>
