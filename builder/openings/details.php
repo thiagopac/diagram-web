@@ -1,11 +1,29 @@
 <?
-   // #INCLUDES
-   require_once ('../lib/config.php');
+  // #INCLUDES
+  require_once ('../lib/config.php');
+  require_once('../models/Study.php');
 
-   // CONTROLE SESSAO
-   fnInicia_Sessao ( 'openings' );
-   include('../imports/header.php');
-   ?>
+  // CONTROLE SESSAO
+  fnInicia_Sessao ( 'openings' );
+  require_once('../imports/header.php');
+
+  $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
+  $userID = $_SESSION['USER']['ID'];
+
+  #BUSCAR TODAS AS VARIÁVEIS GET
+  $paramStudy = $_SESSION['s'];
+
+  $study = new Study();
+  $study = $study->getStudyWithID($paramStudy);
+
+  if ($study->monetization->price->value != 0.00) {
+    $study->currencyAndPrice = $study->currency->symbol.' '.$study->monetization->price->value;
+  }else{
+    $study->currencyAndPrice = "FREE";
+  }
+
+  // var_dump($study);
+?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">
@@ -13,7 +31,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Caro-Kann<small></small>
+            <?=$study->name?><small></small>
          </h3>
       </div>
    </div>
@@ -25,7 +43,7 @@
          <i class="fa fa-angle-right"></i>
        </li>
        <li>
-         <a href="details.php">Caro-Kann</a>
+         <a href="details.php?s=<?=$study->id?>"><?=$study->name?></a>
        </li>
      </ul>
      <div class="page-toolbar">
@@ -72,22 +90,21 @@
          <div class="col-md-9">
            <div class="row">
              <div class="col-md-8 profile-info" style="text-align:justify;">
-               <p>A defesa Caro-Kann é uma das mais sólidas respostas ao lance 1.e4 das brancas. Classificada como abertura semi-aberta, a defesa  leva este nome em homenagem o enxadrista britânico Horatio Caro e o austríaco Marcus Kann que analisaram a abertura em 1886.</p>
                <p>
-                  Este estudo consiste na preparação das linhas mais populares da defesa Caro-Kann. As linhas aqui preparadas conseguem igualar a posição rapidamente, garantindo uma posição sólida, um meio jogo bastante equilibrado, dando ao jogador de pretas a possibulidade de chegar ao final com boas vantagens. Todas as linhas deste estudo foram retiradas do livro <em>Play the Caro-Kann</em>, da Mestre Internacional Jovanka Houska.
+                 <?=$study->aboutStudy?>
                </p>
                <ul class="list-inline">
                  <li>
-                   <i class="fa fa-calendar"></i> 22 Jan 2017
+                   <i class="fa fa-calendar"></i> <?=$study->dateCreated?>
                  </li>
                  <li>
-                   <i class="fa fa-briefcase"></i> Jovanka Houska
+                   <i class="fa fa-briefcase"></i> <?=$study->authorFullName?>
                  </li>
                  <li>
-                   <i class="fa fa-list-ol"></i> 13 Variations & 44 Lines
+                   <i class="fa fa-list-ol"></i> <?=$study->variationsCount ?> Var. | <?=$study->linesCount ?> Lines
                  </li>
                  <li>
-                   <i class="fa fa-usd"></i>Free
+                   <i class="fa fa-usd"></i> <?=$study->currencyAndPrice?>
                  </li>
                </ul>
                <span class="badge badge-danger">You have not rated this opening yet</span>
@@ -95,9 +112,89 @@
                  <div id="rateYo"></div>
                </p>
                <br/>
-               <a href="theory.php" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> THEORY</a>
-               <a href="practice.php" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> PRACTICE</a>
+               <?php
+
+               $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
+
+               if ($userOwnsStudy == true): ?>
+                  <a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> THEORY</a>
+                  <a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> PRACTICE</a>
+               <?php else: ?>
+                  <a href="#modalPurchase" class="btn btn-lg btn-success" title="Buy" data-toggle="modal"><i class="fa fa-usd"></i> BUY </a>
+               <?php endif; ?>
              </div>
+
+             <div id="modalPurchase" class="modal fade bs-modal-lg" role="dialog" aria-hidden="true">
+               <div class="modal-dialog modal-md">
+                 <div class="modal-content">
+                   <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                     <h4 class="modal-title">Purchase <?=$study->name?></h4>
+                   </div>
+                   <div class="modal-body">
+
+                     <ul class="chats">
+                     									<li class="in">
+                     										<img class="avatar" alt="" src="../../assets/admin/layout/img/avatar1.jpg"/>
+                     										<div class="message">
+                     											<span class="arrow">
+                     											</span>
+                     											<label>
+                     											<?=$study->authorFullName?> </label>
+                     											<span class="body">
+                     											<p><?=$study->detailsPayment->text?></span></p>
+                     										</div>
+                     									</li>
+                     								</ul>
+
+                                    <div class="portlet light">
+                        							<!-- STAT -->
+                        							<div class="row list-separated profile-stat">
+                        								<div class="col-md-4 col-sm-4 col-xs-6">
+                        									<div class="uppercase profile-stat-title">
+                        										 <?=$study->variationsCount?>
+                        									</div>
+                        									<div class="uppercase profile-stat-text">
+                        										 Variations
+                        									</div>
+                        								</div>
+                        								<div class="col-md-4 col-sm-4 col-xs-6">
+                        									<div class="uppercase profile-stat-title">
+                        										 <?=$study->linesCount?>
+                        									</div>
+                        									<div class="uppercase profile-stat-text">
+                        										 Lines
+                        									</div>
+                        								</div>
+                        								<div class="col-md-4 col-sm-4 col-xs-6">
+                        									<div class="uppercase profile-stat-title">
+                        										 <?=$study->currencyAndPrice?>
+                        									</div>
+                        									<div class="uppercase profile-stat-text">
+                        										 Investment
+                        									</div>
+                        								</div>
+                        							</div>
+                        							<!-- END STAT -->
+                        							<div>
+                        								<h4 class="profile-desc-title"><?=$study->typePayment?></h4>
+                        								<span class="profile-desc-text"> Please make the payment through the url below. </span>
+                        								<div class="margin-top-20 profile-desc-link">
+                        									<i class="fa fa-usd"></i>
+                        									<a href="<?=$study->detailsPayment->url?>" target="_blank"><?=$study->detailsPayment->url?></a>
+                        								</div>
+                        							</div>
+                        						</div>
+                                    <span class="label label-danger"><small>Attention</small></span>
+                                    <span> <small>After payment confirmation, your purchase will be activated as soon as possible.</small></span>
+                   </div>
+                   <div class="modal-footer">
+                     <button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                   </div>
+                 </div>
+               </div>
+             </div>
+
              <!--end col-md-8-->
              <div class="col-md-4">
                <div class="portlet sale-summary">

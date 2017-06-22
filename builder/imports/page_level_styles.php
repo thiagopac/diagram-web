@@ -23,4 +23,9 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/global/plugins/select2/select2.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css"/>
 
+<link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css"/>
+
+<link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/pricing-table.css"/>
+
+<link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/profile.css"/>
 <!-- END PAGE LEVEL STYLES -->

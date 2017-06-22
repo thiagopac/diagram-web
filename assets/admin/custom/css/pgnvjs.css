@@ -211,6 +211,14 @@ div.comment > textarea.comment {
     outline: none !important;
     border:1px solid #d3d3d3;
 }
+.pgnCode {
+    width: 98%;
+    height: 100px;
+    margin-top: 5px;
+
+    outline: none !important;
+    border:1px solid #d3d3d3;
+}
 div.comment {
   margin-top: 10px;
     margin-left: 4px;
@@ -374,7 +382,8 @@ div.pgn {
 */
 
 .chesscom .headers > .blackHeader:before {
-    content: "  vs. ";
+    /*content: "  vs. ";*/
+    content: "   ";
 }
 
 .chesscom .headers > .blackHeader {

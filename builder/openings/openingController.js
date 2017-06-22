@@ -19,14 +19,9 @@ var updatedHistory = false;
 var currentLine = "";
 var nextMove = "";
 var moveBlock = false;
-var currentTab = 'Openings';
-var gamePage = 0;
 var currentOpening = '';
-var genericBookIDs = ['1','2','3','4','5','6','7'];
-var myGenericBookIDs;
 var doRepeat = false;
 var mistakesCount = 0;
-var comments;
 var perfectLineCount = 0;
 
 function Line(moves, timeDue, nextBox) {
@@ -38,7 +33,7 @@ function Line(moves, timeDue, nextBox) {
 function openingClass() {
 
 	//fazer a inserção no array da abertura selecionada
-	selectedOpeningBook.push("e4c6");
+	selectedOpeningBook.push(ecoPracticeLine);
 
 	this.whiteOpeningLines = [];
 	this.blackOpeningLines = [];
@@ -54,8 +49,10 @@ function openingClass() {
 	var d = new Date();
 	this.unseenLineTime = d.getTime() + 315360000000;
 
-	$.each(whiteLines, function(parentLine) {
-		$.each(whiteLines[parentLine], function(innerLineIndex, childLine) {
+	console.log(diagramLines);
+
+	$.each(diagramLines, function(parentLine) {
+		$.each(diagramLines[parentLine], function(innerLineIndex, childLine) {
 			var newline = new Line(childLine, openingObj.unseenLineTime, 0);
 			openingObj.whiteOpeningLines.push(newline);
 
@@ -63,8 +60,8 @@ function openingClass() {
 			openingObj.whiteLinesReverse[childLine].push(parentLine);
 		});
 	});
-	$.each(blackLines, function(parentLine) {
-		$.each(blackLines[parentLine], function(innerLineIndex, childLine) {
+	$.each(diagramLines, function(parentLine) {
+		$.each(diagramLines[parentLine], function(innerLineIndex, childLine) {
 			var newline = new Line(childLine, openingObj.unseenLineTime, 0);
 			openingObj.blackOpeningLines.push(newline);
 
@@ -83,7 +80,10 @@ function openingClass() {
 	shuffle(this.blackOpeningLines);
 
 	//flip and start quando o usuário tiver escolhido uma defesa para jogar de pretas
-	this.flipAndStart();
+
+	if(side == "B"){
+		this.flipAndStart();
+	}
 
 	this.loadCandidateLines(selectedOpeningBook);
 
@@ -112,13 +112,13 @@ openingClass.prototype.loadCandidateLines = function(openings) {
 	var openingObj = this;
 	$.each(openings, function(openingindex, openingdata) {
 		if (chessy.orientation() == 'white') {
-			if (!(openingdata in whiteLines)) return true; // continue
-			$.each(whiteLines[openingdata], function(lineindex, linedata) {
+			if (!(openingdata in diagramLines)) return true; // continue
+			$.each(diagramLines[openingdata], function(lineindex, linedata) {
 				openingObj.candidateLines.push(linedata);
 			});
 		} else if (chessy.orientation() == 'black') {
-			if (!(openingdata in blackLines)) return true; // continue
-			$.each(blackLines[openingdata], function(lineindex, linedata) {
+			if (!(openingdata in diagramLines)) return true; // continue
+			$.each(diagramLines[openingdata], function(lineindex, linedata) {
 				openingObj.candidateLines.push(linedata);
 			});
 		}
@@ -316,7 +316,7 @@ openingClass.prototype.updateOpening = function(data) {
 	var blackLines = data[1];
 
 	// Place the downloaded data into the Opening
-	$.each(whiteLines, function(dataindex, dataval) {
+	$.each(diagramLines, function(dataindex, dataval) {
 		var moves = dataval[0];
 		var timeDue = dataval[1];
 		var nextBox = dataval[2];
@@ -332,7 +332,7 @@ openingClass.prototype.updateOpening = function(data) {
 	openingObj.whiteOpeningLines.sort(function(a, b) {
 		return a.timeDue - b.timeDue;
 	});
-	$.each(blackLines, function(dataindex, dataval) {
+	$.each(diagramLines, function(dataindex, dataval) {
 		var moves = dataval[0];
 		var timeDue = dataval[1];
 		var nextBox = dataval[2];
@@ -491,7 +491,6 @@ function newGame() {
 
 	chessy.reset();
 	mistakesCount = 0;
-	genericBookIDs = shuffle(genericBookIDs);
 
 	if (!updatedHistory && !perfectLine) {
 		openingInstance.doneLine(currentLine, false);
@@ -505,7 +504,6 @@ function newGame() {
 	timesHintAsked = 0;
 	if (!doRepeat) {
 		currentLine = openingInstance.getNextLine(selectedOpeningBook);
-		// getComments("");
 	}
 	doRepeat = false;
 	if (currentLine === null) {
@@ -513,7 +511,7 @@ function newGame() {
 	} else {
 		nextMove = getNextMove(chessy.history().join(''), currentLine);
 	}
-	// displayComments();
+
 	if (!chessy.isPlayersTurn()) setTimeout(makeOpponentMove, 500);
 }
 
@@ -673,8 +671,6 @@ function onDrop(source, target) {
 	nextMove = getNextMove(chessy.history().join(''), currentLine);
 	updateOpeningText();
 
-	// displayComments();
-
 	setTimeout(makeOpponentMove, 500);
 }
 
@@ -814,7 +810,7 @@ function makeOpponentMove() {
 function updateOpeningText() {
 	if (chessy.history().join('') in opening_book) {
 		currentOpening = opening_book[chessy.history().join('')][0];
-		$('#opening').text(currentOpening);
+		$('#opening').text("ECO Name: "+currentOpening);
 	} else if (chessy.history().join('') == '') {
 		currentOpening = '';
 		$('#opening').text('');

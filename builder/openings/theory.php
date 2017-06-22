@@ -1,18 +1,33 @@
 <?
-   // #INCLUDES
-   require_once ('../lib/config.php');
+  // #INCLUDES
+  require_once ('../lib/config.php');
+  require_once('../models/Study.php');
+  require_once('../models/Variation.php');
+  require_once('../models/Line.php');
 
-   // CONTROLE SESSAO
-   fnInicia_Sessao ( 'openings' );
-   include('../imports/header.php');
-   include('../imports/opening_styles.php');
-   ?>
-   <script>
+  // CONTROLE SESSAO
+  fnInicia_Sessao ( 'openings' );
+  require_once('../imports/header.php');
+  require_once('../imports/opening_styles.php');
+
+  $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
+
+  #BUSCAR TODAS AS VARIÁVEIS GET
+  $paramStudy = $_SESSION['s'];
+
+  #INICIO LOGICA
+
+  $study = new Study();
+  $study = $study->getStudyWithID($paramStudy);
+?>
+
+<script>
    function resizeIframe(obj) {
      //faz um iframe aparecer inteiro, de acordo com o height do conteúdo que será apresentado
     // obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-  }
-   </script>
+   }
+</script>
+
 <div class="page-content-wrapper">
 <div class="page-content">
    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
@@ -31,7 +46,7 @@
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="details.php">Caro-Kann</a>
+            <a href="details.php?s=<?=$study->id?>"><?=$study->name?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
@@ -39,33 +54,33 @@
          </li>
       </ul>
       <div class="page-toolbar">
-        <div class="btn-group pull-right">
-          <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
-          Actions <i class="fa fa-angle-down"></i>
-          </button>
-          <ul class="dropdown-menu pull-right" role="menu">
-            <li>
-              <a href="#">Restart stats</a>
-            </li>
-            <li>
-              <a href="#">Tell a friend</a>
-            </li>
-            <li class="divider">
-            </li>
-            <li>
-              <a href="#">Back to start</a>
-            </li>
-          </ul>
-        </div>
+         <div class="btn-group pull-right">
+            <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+            Actions <i class="fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+               <li>
+                  <a href="#">Restart stats</a>
+               </li>
+               <li>
+                  <a href="#">Tell a friend</a>
+               </li>
+               <li class="divider">
+               </li>
+               <li>
+                  <a href="#">Back to start</a>
+               </li>
+            </ul>
+         </div>
       </div>
    </div>
    <!-- END PAGE TITLE & BREADCRUMB-->
    <? include('../imports/alert.php'); ?>
    <div class="progress">
-     <div class="progress-bar blue-hoki" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
-       <span>
-       85% Complete </span>
-     </div>
+      <div class="progress-bar blue-hoki" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
+         <span>
+         85% Complete </span>
+      </div>
    </div>
    <div class="row">
       <div class="col-md-12">
@@ -141,7 +156,7 @@
                   <div class="portlet-title">
                      <div class="caption">
                         <i class="icon-bar-chart font-green-sharp hide"></i>
-                        <span class="caption-helper">OPENING:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase">Caro-Kann Defense</span>
+                        <span class="caption-helper">OPENING:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->eco->name?></span>
                      </div>
                   </div>
                   <!-- end PROJECT HEAD -->
@@ -171,16 +186,7 @@
                                     <div class="portlet-body">
                                        <div>
                                           <p>
-                                             At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culp orem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus. Fusce condimentum eleifend enim a feugiat. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero consectetur adipiscing elit magna. Sed et quam lacus. Fusce condimentum eleifend enim a feugiat. Pellentesque viverra vehicula sem ut volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus.
-                                          </p>
-                                          <blockquote class="hero">
-                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit posuere erat a ante.
-                                             </p>
-                                             <small>Someone famous <cite title="Source Title">Source Title</cite></small>
-                                          </blockquote>
-                                          <p>
-                                             At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique dimentum eleifend enim a feugiat. Pellentesque viverra vehicula sem ut volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus.
+                                             <?=$study->baseTheory->theoryHistory->text?>
                                           </p>
                                        </div>
                                     </div>
@@ -208,16 +214,7 @@
                                     <div class="portlet-body">
                                        <div>
                                           <p>
-                                             At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culp orem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus. Fusce condimentum eleifend enim a feugiat. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero consectetur adipiscing elit magna. Sed et quam lacus. Fusce condimentum eleifend enim a feugiat. Pellentesque viverra vehicula sem ut volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus.
-                                          </p>
-                                          <blockquote class="hero">
-                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit posuere erat a ante.
-                                             </p>
-                                             <small>Someone famous <cite title="Source Title">Source Title</cite></small>
-                                          </blockquote>
-                                          <p>
-                                             At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique dimentum eleifend enim a feugiat. Pellentesque viverra vehicula sem ut volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus.
+                                             <?=$study->baseTheory->theoryGameStyle->text?>
                                           </p>
                                        </div>
                                     </div>
@@ -245,16 +242,7 @@
                                     <div class="portlet-body">
                                        <div>
                                           <p>
-                                             At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culp orem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus. Fusce condimentum eleifend enim a feugiat. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero consectetur adipiscing elit magna. Sed et quam lacus. Fusce condimentum eleifend enim a feugiat. Pellentesque viverra vehicula sem ut volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus.
-                                          </p>
-                                          <blockquote class="hero">
-                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit posuere erat a ante.
-                                             </p>
-                                             <small>Someone famous <cite title="Source Title">Source Title</cite></small>
-                                          </blockquote>
-                                          <p>
-                                             At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique dimentum eleifend enim a feugiat. Pellentesque viverra vehicula sem ut volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non libero magna. Sed et quam lacus.
+                                             <?=$study->baseTheory->theoryMainGrandMasters->text?>
                                           </p>
                                        </div>
                                     </div>
@@ -264,241 +252,106 @@
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
-                                          <span class="caption-subject bold uppercase"> Linhas</span>
+                                          <span class="caption-subject bold uppercase"> VARIATIONS</span>
                                        </div>
                                        <div class="actions">
-                         								<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title="">
-                         								</a>
-                         							</div>
+                                          <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title="">
+                                          </a>
+                                       </div>
                                     </div>
                                     <div class="portlet-body">
-                                      <div class="row">
-
+                                       <div class="row">
                                           <ul class="nav nav-tabs">
-                                            <li class="active">
-                                              <a href="#tab_1_1" data-toggle="tab">
-                                              Variante Clássica </a>
-                                            </li>
-                                            <li class="dropdown">
-                                              <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                                              Ataque Panov <i class="fa fa-angle-down"></i>
-                                              </a>
-                                              <ul class="dropdown-menu" role="menu">
-                                                <li>
-                                                  <a href="#tab_2_1" tabindex="-1" data-toggle="tab">
-                                                  Panov 1 </a>
-                                                </li>
-                                                <li>
-                                                  <a href="#tab_2_2" tabindex="-1" data-toggle="tab">
-                                                  Panov 2 </a>
-                                                </li>
-                                                <li>
-                                                  <a href="#tab_2_3" tabindex="-1" data-toggle="tab">
-                                                  Panov 3 </a>
-                                                </li>
-                                                <li>
-                                                  <a href="#tab_2_4" tabindex="-1" data-toggle="tab">
-                                                  Panov 4 </a>
-                                                </li>
-                                              </ul>
-                                            </li>
-                                            <li>
-                                              <a href="#tab_3_1" data-toggle="tab">
-                                              Variante das Trocas </a>
-                                            </li>
-                                            <li>
-                                              <a href="#tab_4_1" data-toggle="tab">
-                                              Variante Smyslov </a>
-                                            </li>
+                                             <?
+                                                $flag = "active";
+                                                foreach ($study->variations as $key => $variation) {
+                                                  if (count($variation->lines) > 1) {
+                                                    $href = "javascript:;";
+                                                    $dataToggle = "dropdown";
+                                                    $class = "dropdown-toggle";
+                                                    $angleDown = "<i class=\"fa fa-angle-down\"></i>";
+                                                  }else{
+                                                    $line = $variation->lines[0];
+                                                    $href = "#tab_".$variation->id."_".$line->id;
+                                                    $dataToggle = "tab";
+                                                    $class = "";
+                                                    $angleDown = "";
+                                                  }?>
+                                             <li class="dropdown <?=$flag?>">
+                                                <a href="<?=$href?>" class="<?=$class?>" data-toggle="<?=$dataToggle?>">
+                                                <?=$variation->name?> <?=$angleDown?></a>
+                                                <ul class="dropdown-menu" role="menu">
+                                                   <?php foreach ($variation->lines as $key => $line):
+                                                      $href = "#tab_".$variation->id."_".$line->id;
+                                                      ?>
+                                                   <li>
+                                                      <a href="<?=$href?>" tabindex="-1" data-toggle="tab">
+                                                      <?=$line->name?></a>
+                                                   </li>
+                                                   <?php endforeach; ?>
+                                                </ul>
+                                             </li>
+                                             <? $flag = "" ?>
+                                             <?} ?>
                                           </ul>
-
-
                                           <div class="tab-content">
-                                            <div class="tab-pane active" id="tab_1_1">
-                                              <div class="portlet light">
-                                                 <div class="portlet-title">
-                                                    <div class="caption">
-                                                       <span class="caption-subject uppercase"> Variante Clássica</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                       <div class="btn-group">
-                                                          <div class="md-checkbox">
-                                                             <input type="checkbox" id="checkbox-variante-classica" class="md-check" >
-                                                             <label for="checkbox-variante-classica">
-                                                             <span></span>
-                                                             <span class="check"></span>
-                                                             <span class="box"></span>
-                                                             Mark as learned </label>
-                                                          </div>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                                 <div class="portlet-body">
-                                                       <iframe name='iframe1' id="iframe1" onload="resizeIframe(this)" src="../board/pgnviewer.php" scrolling="yes"
-                                                        frameborder="0" border="0" cellspacing="0"
-                                                        style="border-style: none;width: 100%; height: 600px;"></iframe>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_2_1">
-                                              <div class="portlet light">
-                                                 <div class="portlet-title">
-                                                    <div class="caption">
-                                                       <span class="caption-subject uppercase"> Panov 1</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                       <div class="btn-group">
-                                                          <div class="md-checkbox">
-                                                             <input type="checkbox" id="checkbox-variante-panov-1" class="md-check" >
-                                                             <label for="checkbox-variante-panov-1">
-                                                             <span></span>
-                                                             <span class="check"></span>
-                                                             <span class="box"></span>
-                                                             Mark as learned </label>
-                                                          </div>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                                 <div class="portlet-body">
-                                                    <div>
-                                                       Tabuleiro
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_2_2">
-                                              <div class="portlet light">
-                                                 <div class="portlet-title">
-                                                    <div class="caption">
-                                                       <span class="caption-subject uppercase"> Panov 2</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                       <div class="btn-group">
-                                                          <div class="md-checkbox">
-                                                             <input type="checkbox" id="checkbox-variante-panov-2" class="md-check" >
-                                                             <label for="checkbox-variante-panov-2">
-                                                             <span></span>
-                                                             <span class="check"></span>
-                                                             <span class="box"></span>
-                                                             Mark as learned </label>
-                                                          </div>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                                 <div class="portlet-body">
-                                                    <div>
-                                                       Tabuleiro
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_2_3">
-                                              <div class="portlet light">
-                                                 <div class="portlet-title">
-                                                    <div class="caption">
-                                                       <span class="caption-subject uppercase"> Panov 3</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                       <div class="btn-group">
-                                                          <div class="md-checkbox">
-                                                             <input type="checkbox" id="checkbox-variante-panov-3" class="md-check" >
-                                                             <label for="checkbox-variante-panov-3">
-                                                             <span></span>
-                                                             <span class="check"></span>
-                                                             <span class="box"></span>
-                                                             Mark as learned </label>
-                                                          </div>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                                 <div class="portlet-body">
-                                                    <div>
-                                                       Tabuleiro
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_2_4">
-                                              <div class="portlet light">
-                                                 <div class="portlet-title">
-                                                    <div class="caption">
-                                                       <span class="caption-subject uppercase"> Panov 4</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                       <div class="btn-group">
-                                                          <div class="md-checkbox">
-                                                             <input type="checkbox" id="checkbox-variante-panov-4" class="md-check" >
-                                                             <label for="checkbox-variante-panov-4">
-                                                             <span></span>
-                                                             <span class="check"></span>
-                                                             <span class="box"></span>
-                                                             Mark as learned </label>
-                                                          </div>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                                 <div class="portlet-body">
-                                                    <div>
-                                                       Tabuleiro
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_3_1">
-                                              <div class="portlet light">
-                                                 <div class="portlet-title">
-                                                    <div class="caption">
-                                                       <span class="caption-subject uppercase"> Variante das Trocas</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                       <div class="btn-group">
-                                                          <div class="md-checkbox">
-                                                             <input type="checkbox" id="checkbox-variante-das-trocas" class="md-check" >
-                                                             <label for="checkbox-variante-das-trocas">
-                                                             <span></span>
-                                                             <span class="check"></span>
-                                                             <span class="box"></span>
-                                                             Mark as learned </label>
-                                                          </div>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                                 <div class="portlet-body">
-                                                    <div>
-                                                       Tabuleiro
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_4_1">
-                                              <div class="portlet light">
-                                                 <div class="portlet-title">
-                                                    <div class="caption">
-                                                       <span class="caption-subject uppercase"> Variante Smyslov</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                       <div class="btn-group">
-                                                          <div class="md-checkbox">
-                                                             <input type="checkbox" id="checkbox-variante-smyslov" class="md-check" >
-                                                             <label for="checkbox-variante-smyslov">
-                                                             <span></span>
-                                                             <span class="check"></span>
-                                                             <span class="box"></span>
-                                                             Mark as learned </label>
-                                                          </div>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                                 <div class="portlet-body">
-                                                    <div>
-                                                       Tabuleiro
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                          </div>
+                                             <?$flag = "active";
+                                             foreach ($study->variations as $key => $variation) {
+                                                foreach ($variation->lines as $key => $line) {
+                                                    $tab = "tab_".$line->idVariation."_".$line->id; ?>
+                                             <div class="tab-pane <?=$flag?>" id="<?=$tab?>">
+                                                <div class="portlet light">
 
-                                      </div>
+                                                  <?php if (strlen($variation->text)>0): ?>
+                                                  <div class="portlet">
+                                                  						<div class="portlet-title">
+                                                  							<div class="caption">
+                                                  								About <?=$variation->name?>
+                                                  							</div>
+                                                  							<div class="tools">
+                                                  								<a href="javascript:;" class="collapse" data-original-title="" title="">
+                                                  								</a>
+                                                  								<a href="javascript:;" class="remove" data-original-title="" title="">
+                                                  								</a>
+                                                  							</div>
+                                                  						</div>
+                                                  						<div class="portlet-body">
+                                                  							 <?=$variation->text?>
+                                                  						</div>
+                                                  					</div>
+                                                  <?php endif; ?>
+
+                                                   <div class="portlet-title">
+                                                      <div class="caption">
+                                                         <span class="caption-subject uppercase"> <?=$line->name?></span>
+                                                      </div>
+                                                      <div class="actions">
+                                                         <div class="btn-group">
+                                                            <div class="md-checkbox">
+                                                               <input type="checkbox" id="checkbox-variante-classica" class="md-check" >
+                                                               <label for="checkbox-variante-classica">
+                                                               <span></span>
+                                                               <span class="check"></span>
+                                                               <span class="box"></span>
+                                                               Mark as learned </label>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="portlet-body">
+                                                      <iframe name='iframe1' id="iframe1" onload="resizeIframe(this)" src="../board/pgnviewer.php?pgn=<?=$line->pgn?>" scrolling="yes" frameborder="0" border="0" cellspacing="0"
+                                                         style="border-style: none;width: 100%; height: 480px;"></iframe>
+                                                         <?php if (strlen($line->text)>0): ?>
+                                                           <blockquote><h5><?=$line->text?></h5></blockquote>
+                                                         <?php endif; ?>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <? $flag = "fade" ?>
+                                              <?} ?>
+                                             <?} ?>
+                                          </div>
+                                       </div>
                                     </div>
                                  </div>
                               </div>
@@ -510,44 +363,9 @@
                                        </div>
                                     </div>
                                     <div class="portlet-body">
-                                       <div class="blog-twitter">
-                                          <div class="blog-twitter-block">
-                                             <p>
-                                                BOOK NAME
-                                             </p>
-                                             <p>
-                                                LASTNAME, Author Name
-                                             </p>
-                                             <a href="javascript:;">
-                                             <em>http://google.com.br</em>
-                                             </a>
-                                             <i class="fa fa-info blog-twiiter-icon"></i>
-                                          </div>
-                                          <div class="blog-twitter-block">
-                                             <p>
-                                                BOOK NAME
-                                             </p>
-                                             <p>
-                                                LASTNAME, Author Name
-                                             </p>
-                                             <a href="javascript:;">
-                                             <em>http://google.com.br</em>
-                                             </a>
-                                             <i class="fa fa-info blog-twiiter-icon"></i>
-                                          </div>
-                                          <div class="blog-twitter-block">
-                                             <p>
-                                                BOOK NAME
-                                             </p>
-                                             <p>
-                                                LASTNAME, Author Name
-                                             </p>
-                                             <a href="javascript:;">
-                                             <em>http://google.com.br</em>
-                                             </a>
-                                             <i class="fa fa-info blog-twiiter-icon"></i>
-                                          </div>
-                                       </div>
+                                       <p>
+                                          <?=$study->baseTheory->theoryBibliography->text?>
+                                       </p>
                                     </div>
                                  </div>
                               </div>
@@ -603,7 +421,6 @@
 <? include('../imports/metronic_core.php'); ?>
 <script src="../../assets/admin/custom/scripts/chess.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-
 <script src="../../assets/admin/custom/scripts/chessboard-0.3.0.js"></script>
 </body>
 </html>

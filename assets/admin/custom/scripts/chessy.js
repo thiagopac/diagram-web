@@ -136,10 +136,13 @@ Chessy.prototype.isGameOver = function() {
 Chessy.prototype.greySquare = function(square) {
 	var squareEl = $('#board .square-' + square);
 
-	var background = 'url("../../assets/admin/custom/img/assets/select.png")';
+	// var background = 'url("../../assets/admin/custom/img/assets/select.png")';
+	var background = '#e3e7a8';
+
 	var backgroundsize = 'contain';
 	if (squareEl.hasClass('black-3c85d') === true) {
-		var background = 'url("../../assets/admin/custom/img/assets/select2.png")';
+		// var background = 'url("../../assets/admin/custom/img/assets/select2.png")';
+		background = '#f8fbc1';
 	}
 
 	squareEl.css('background', background);

@@ -1,11 +1,21 @@
 <?
    // #INCLUDES
    require_once ('../lib/config.php');
+   require_once('../models/Study.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings' );
-   include('../imports/header.php');
-   ?>
+
+   require_once('../imports/header.php');
+
+   #BUSCAR TODAS AS VARIÁVEIS GET
+   	$MSG = addslashes($_REQUEST['MSG']);
+
+    $study = new Study();
+    $arrStudies = $study->getAllStudies();
+
+    // var_dump($arrStudies);
+?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">
@@ -29,14 +39,19 @@
 	 <? include('../imports/alert.php'); ?>
 
 <div class="tiles">
-  <a href="details.php">
+
+
+  <?foreach($arrStudies as $KEY => $study){ ?> <!-- INCÍCIO foreach  -->
+
+  <!-- INÍCIO VIEW OBJETO ESTUDO -->
+  <a href="details.php?s=<?=$study->id?>">
     <div class="tile selected double bg-grey-cascade">
       <div class="corner">
       </div>
       <div class="check">
       </div>
       <div class="tile-body">
-        <h3>Caro-Kann</h3><small>By: Jovanka Houska</small>
+        <h4><?=$study->name?></h4><small>By: <?=$study->authorFullName?></small>
         <p>
            <div id="rateYo"></div>
         </p>
@@ -46,11 +61,16 @@
           85%
         </div>
         <div class="number">
-           <small>Updated: 12:13PM, 22 Jan 17</small>
+           <small>Updated: <?=$study->dateUpdated?></small>
         </div>
       </div>
     </div>
   </a>
+
+  <!-- FIM VIEW OBJETO ESTUDO -->
+
+  <?}?> <!-- FIM foreach  -->
+
  </div>
 
 <!-- END CONTENT -->

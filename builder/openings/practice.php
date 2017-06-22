@@ -1,12 +1,40 @@
 <?
    // #INCLUDES
    require_once ('../lib/config.php');
-
+   require_once('../models/Study.php');
+   require_once('../models/PracticeLine.php');
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings' );
    include('../imports/header.php');
    include('../imports/opening_styles.php');
-   ?>
+
+   $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
+   $userID = $_SESSION['USER']['ID'];
+
+   #BUSCAR TODAS AS VARIÁVEIS GET
+   $paramStudy = $_SESSION['s'];
+
+   $study = new Study();
+   $study = $study->getStudyWithID($paramStudy);
+
+?>
+
+<script>
+
+  var diagramLines = {};
+  var arrPracticePGNs = [];
+  <?php foreach ($study->basePractice->practicePGNs as $practicePGN) : ?>
+  arrPracticePGNs.push('<?php echo $practicePGN ?>');
+  <?php endforeach; ?>
+
+  //O ECO NÃO PODERÁ SER NO STUDY.. PRECISARÁ PASSAR PARA OU A LINE OU VARIATION...
+  ecoPracticeLine = '<?=$study->basePractice->ecoPracticeLine?>';
+
+  side = '<?=$study->side?>';
+
+  diagramLines['<?=$study->basePractice->ecoPracticeLine?>'] = arrPracticePGNs;
+
+</script>
    <div class="page-content-wrapper">
    <div class="page-content">
      <!-- BEGIN PAGE TITLE & BREADCRUMB-->
@@ -25,7 +53,7 @@
 						<i class="fa fa-angle-right"></i>
 					</li>
 					<li>
-						<a href="details.php">Caro-Kann</a>
+						<a href="details.php?s=<?=$study->id?>"><?=$study->name?></a>
 						<i class="fa fa-angle-right"></i>
 					</li>
 					<li>
@@ -121,7 +149,7 @@
                      <div class="portlet-title">
                         <div class="caption">
                            <i class="icon-bar-chart font-green-sharp hide"></i>
-                           <span class="caption-helper">ABERTURA:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase">Caro-Kann Defense</span>
+                           <span class="caption-helper">OPENING:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->eco->name?></span>
                         </div>
                         <div class="actions right">
                            <a href="javascript:;" class="btn blue" id="btnnew"><i class="fa fa-refresh"></i> Restart</a>
@@ -215,9 +243,8 @@
 <script src="../../assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="../../assets/admin/custom/scripts/chessboard-0.3.0.js"></script>
 <script src="../../assets/admin/custom/scripts/chessy.js"></script>
-<script src="../../assets/admin/custom/scripts/opening_names.js"></script>
-<script src="../../assets/admin/custom/scripts/books.js"></script>
-<script src="../../assets/admin/custom/scripts/lines.js"></script>
+<script src="opening_names.js"></script>
+<script src="books.js"></script>
 <script src="../../assets/admin/custom/scripts/jquery.ui.touch-punch.min.js"></script>
 <script src="openingController.js"></script>
 </body>

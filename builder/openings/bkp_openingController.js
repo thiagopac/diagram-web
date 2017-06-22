@@ -271,15 +271,11 @@ openingClass.prototype.doneLine = function(line, wasPerfect) {
 				if (!wasKnownBefore && wasPerfect) opening_book[candidateOpeningLine][3] += 1
 				// also remove 1 due line if it was due
 				if (opening_book[candidateOpeningLine][6] >= 1) opening_book[candidateOpeningLine][6]--;
-				// addProgressBar(candidateOpeningLine);
-				addToolTipToOpening(opening_book[candidateOpeningLine][0]);
 			} else if (chessy.orientation() == 'black') {
 				if (!($.inArray(candidateOpeningLine, this.blackLinesReverse[line]) > -1)) continue;
 				if (wasKnownBefore && !wasPerfect) opening_book[candidateOpeningLine][4] -= 1
 				if (!wasKnownBefore && wasPerfect) opening_book[candidateOpeningLine][4] += 1
 				if (opening_book[candidateOpeningLine][6] >= 1) opening_book[candidateOpeningLine][7]--;
-				// addProgressBar(candidateOpeningLine);
-				addToolTipToOpening(opening_book[candidateOpeningLine][0]);
 			}
 		}
 	}
@@ -312,11 +308,6 @@ openingClass.prototype.updateDueLines = function() {
 			});
 		});
 	}
-
-	$('.openingLineName').each(function() {
-		var name = $(this).text();
-		addToolTipToOpening(name);
-	});
 };
 
 openingClass.prototype.updateOpening = function(data) {
@@ -378,13 +369,6 @@ openingClass.prototype.updateOpening = function(data) {
 			});
 		}
 	});
-	$.each(opening_book, function(opening_index, opening_data) {
-		// addProgressBar(opening_index);
-		addToolTipToOpening(opening_book[opening_index][0]);
-	});
-
-
-	$(document).tooltip();
 
 	this.updateDueLines();
 };
@@ -497,123 +481,6 @@ $("#btnhint").click(function() {
 	}
 });
 
-$("body").on("click", ".expander", function(e) {
-	e.stopPropagation();
-	if ($(this).text() == '+') {
-		var thisopeningname = $(this).parent().children('.openingLineName').text();
-		// console.log(thisopeningname);
-		var thisopeningmoves = opening_book_moves[thisopeningname];
-		var nummovesthisopening = countMoves(thisopeningmoves);
-		var thisOpeningLineElement = $(this);
-		var thiselement = $(this);
-		var numAdded = 0;
-		var opening_book_sorted = [];
-		$.each(opening_book, function(move, data) {
-			if (data[5] == thisopeningmoves) {
-				if ((chessy.orientation() == 'white' && data[1] > 10) ||
-					(chessy.orientation() == 'black' && data[2] > 10)) {
-					numAdded++;
-					opening_book_sorted.push([move, data]);
-				}
-			}
-		});
-		var sortcol = 1;
-		if (chessy.orientation() == 'black') sortcol = 2;
-		opening_book_sorted.sort(function(a, b) {
-			return b[1][sortcol] - a[1][sortcol];
-		});
-		$.each(opening_book_sorted, function() {
-			var move = $(this)[0];
-			var name = $(this)[1][0];
-			var idname = name.replace(/[^a-zA-Z0-9]/g,"");
-			if (opening_book[move][8] == 0 && chessy.orientation() == 'white') {
-				thisOpeningLineElement.parent().append('<div class="openingLine"><span class="expander">+</span><span id="' + idname + '" class="openingLineName">' + name + '</span></div>');
-			}
-			if (opening_book[move][8] == 1 && chessy.orientation() == 'white') {
-				thisOpeningLineElement.parent().append('<div class="openingLine"><span class="expander">&nbsp;</span><span id="' + idname + '" class="openingLineName">' + name + '</span></div>');
-			}
-			if (opening_book[move][9] == 0 && chessy.orientation() == 'black') {
-				thisOpeningLineElement.parent().append('<div class="openingLine"><span class="expander">+</span><span id="' + idname + '" class="openingLineName">' + name + '</span></div>');
-			}
-			if (opening_book[move][9] == 1 && chessy.orientation() == 'black') {
-				thisOpeningLineElement.parent().append('<div class="openingLine"><span class="expander">&nbsp;</span><span id="' + idname + '" class="openingLineName">' + name + '</span></div>');
-			}
-			addToolTipToOpening(name);
-			// addProgressBar(opening_book_moves[name]);
-		});
-		$(this).text('-');
-		$(this).css('padding-bottom', '2px');
-		if (numAdded == 0) $(this).text('');
-
-		openingInstance.updateDueLines();
-
-	} else if ($(this).text() == '-'){
-		// find all selected openings under this opening and click them
-		$(this).parent().find(".openingLine.selected").each(function(){
-			$(this).children(".openingLineName").click();
-		});
-
-		$(this).parent().find("div").remove();
-		$(this).text('+');
-		$(this).css('padding-bottom', '0');
-	}
-});
-
-$("body").on("click", ".openingLineName", function(e) {
-	e.stopPropagation();
-	var element = $(this).parent();
-
-	element.toggleClass('selected');
-	if (element.hasClass('selected')) {
-		element.parents().removeClass('selected');
-		$(element).find('div').each(function(){
-			$(this).removeClass('selected');
-		});
-	}
-	updateSelectedOpeningBook();
-	openingInstance.loadCandidateLines(selectedOpeningBook);
-	// console.log(selectedOpeningBook);
-	if (chessy.history().length == 0) {
-		currentLine = openingInstance.getNextLine(selectedOpeningBook);
-		// getComments("");
-		if (currentLine === null) {
-			nextMove = '';
-		} else {
-			nextMove = getNextMove(chessy.history().join(''), currentLine);
-		}
-		if (!isPlayersTurn()) setTimeout(makeOpponentMove, 500);
-	}
-
-	// Make each of the first moves bounce if the board is at the start
-	if (chessy.game.history().length == 0) {
-		for (var i = 0; i < selectedOpeningBook.length; ++i) {
-			var firstMove = splitStringIntoMoves(selectedOpeningBook[i])[0];
-			var firstPiece = chessy.game.san_to_obj(firstMove).from;
-
-			//fazer a primeira peça a ser movida ficar destacada. Há um bug
-			// $(".square-"+firstPiece + " > img").effect("highlight");
-		}
-	}
-});
-
-$("body").on("click", "#tabOpeningButton", function(e) {
-	if (currentTab == 'Openings') return;
-
-	currentTab = 'Openings';
-	$(".ui-layout-east").css("background", "linear-gradient(#BEFFBA, #5DFF53)");
-	$(".ui-layout-east").css("border", "1px solid #2A2");
-	$("#tabHeader").text("Opening Chooser");
-	$("#gameExplorer").hide();
-	$("#commentsSection").hide();
-	$("#openingBox").show();
-});
-
-$("body").on("click", ".gameLineName", function(e) {
-	var id = $(this).data("gameid");
-	if (id == 'emptyGame') return;
-	window.open('game.html?i='+id, 'View Game');
-});
-
 function newGame() {
 
 	$("#opening").html('&nbsp;');
@@ -648,36 +515,6 @@ function newGame() {
 	}
 	// displayComments();
 	if (!chessy.isPlayersTurn()) setTimeout(makeOpponentMove, 500);
-}
-
-function addToolTipToOpening(name) {
-	if ($(".ui-tooltip").length > 0) {
-		setTimeout(function(){addToolTipToOpening(name);}, 500);
-		return;
-	}
-
-	var moves = opening_book_moves[name];
-	var elementid = name.replace(/[^a-zA-Z0-9]/g,"");
-
-	if (chessy.orientation() == 'white') {
-		$('#' + elementid).prop('title',
-		"Lines:&nbsp;<span style='float: right'>" + opening_book[moves][1] + "</span><br />" +
-		"Learnt:&nbsp;<span style='float: right'>" + opening_book[moves][3] + "</span><br />" +
-		"Due:&nbsp;<span style='float: right'>" + opening_book[moves][6] + "</span>");
-	} else {
-		$('#' + elementid).prop('title',
-		"Lines:&nbsp;<span style='float: right'>" + opening_book[moves][2] + "</span><br />" +
-		"Learnt:&nbsp;<span style='float: right'>" + opening_book[moves][4] + "</span><br />" +
-		"Due:&nbsp;<span style='float: right'>" + opening_book[moves][7] + "</span>");
-	}
-
-	$('#' + elementid).tooltip({
-		content: function() {
-			return $(this).attr('title');
-		},
-		position: { my: "left top+25", at: "left bottom", collision: "flipfit" },
-		tooltipClass: "tooltipHint"
-	});
 }
 
 function countMoves(s) {
@@ -1148,21 +985,6 @@ function unique_array(a) {
 	});
 }
 
-var entityMap = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': '&quot;',
-  "'": '&#39;',
-  "/": '&#x2F;'
-};
-
-function escapeHtml(string) {
-  return String(string).replace(/[&<>"'\/]/g, function (s) {
-    return entityMap[s];
-  });
-}
-
 String.prototype.startsWith = function(needle) {
 	return(this.indexOf(needle) == 0);
 };
@@ -1176,7 +998,4 @@ $(window).trigger('resize');
 
 
 currentLine = openingInstance.getNextLine(selectedOpeningBook);
-// getComments("");
 nextMove = getNextMove(chessy.history().join(''), currentLine);
-
-$(document).tooltip();

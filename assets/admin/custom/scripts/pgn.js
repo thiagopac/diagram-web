@@ -87,7 +87,7 @@ var pgnReader = function (configuration) {
                 error: function() {
                     alert("Could not read PGN file from: " + url);
                 },
-                async: false 
+                async: false
             });
             return retPGN;
         }
@@ -290,7 +290,7 @@ var pgnReader = function (configuration) {
             if (that.headers['Result']) {
                 that.endGame = that.headers['Result'];
             }
-        } 
+        }
         that.headers = splitHeaders(configuration.pgn);
         interpretHeaders();
         var index = configuration.pgn.lastIndexOf("]");
@@ -434,14 +434,14 @@ var pgnReader = function (configuration) {
                     var my_var = removeFromArray(vars, i);
                     if (current.next !== undefined) {
                        deleteMove(current.next);
-                    }        
+                    }
                     getMoves()[current.index] = null;
                     return;
                 }
             }
         }
         // 3. Some line some other move, no variation
-        if (current.variations.length === 0) { 
+        if (current.variations.length === 0) {
             if (current.next !== undefined && (current.next !== null)) {
                 deleteMove(current.next);
             }
@@ -450,7 +450,7 @@ var pgnReader = function (configuration) {
             return;
         }
         // 4. Some line some other move, with variation
-        if (current.variations.length > 0) { 
+        if (current.variations.length > 0) {
             if (current.next !== undefined) {
                 deleteMove(current.next);
             }
@@ -459,7 +459,7 @@ var pgnReader = function (configuration) {
             that.moves[current.prev].next = variationMove.index;
             that.moves[id] = null;
             updateVariationLevel(variationMove, varLevel - 1);
-        } 
+        }
     };
 
     /**
@@ -577,7 +577,7 @@ var pgnReader = function (configuration) {
         var write_comment_after = function(move, sb) {
             write_comment(move.commentAfter, sb);
         };
-        
+
         var write_check_or_mate  = function (move, sb) {
             if (move.notation.check) {
                 sb.append(move.notation.check)

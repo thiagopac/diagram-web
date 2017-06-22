@@ -1,10 +1,17 @@
 <?
    // #INCLUDES
    require_once ('../lib/config.php');
+   require_once('../models/Study.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings-builder' );
+
    include('../imports/header.php');
+
+   $authorID = $_SESSION['USER']['ID'];
+
+   $study = new Study();
+   $arrStudies = $study->getAllStudiesForAuthor($authorID);
    ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -46,30 +53,39 @@
    							</div>
    						</div>
    						<div class="portlet-body">
-
                 <div class="tiles">
-                  <a href="details.php">
+
+                  <?foreach($arrStudies as $KEY => $study){ ?> <!-- INCÍCIO foreach  -->
+                    <!-- INÍCIO VIEW OBJETO ESTUDO -->
+
+                  <a href="details.php?s=<?=$study->id?>">
                     <div class="tile double bg-grey-cascade">
                       <div class="corner">
                       </div>
                       <div class="check">
                       </div>
                       <div class="tile-body">
-                        <h3>Caro-Kann</h3><small>By: Jovanka Houska</small>
+                        <h4><?=$study->name?></h4><small>By: <?=$study->authorFullName?></small>
                         <p>
                            <div id="rateYo"></div>
                         </p>
                       </div>
                       <div class="tile-object">
                         <div class="number">
-                           <small>Updated: 12:13PM, 22 Jan 17</small>
+                           <small>Updated: <?=$study->dateUpdated?></small>
                         </div>
                       </div>
                     </div>
                   </a>
+
+                  <!-- FIM VIEW OBJETO ESTUDO -->
+                  <?}?> <!-- FIM foreach  -->
+
+                  <?php if (count($arrStudies) < 1): ?>
+                    <p class="text-center">You have not created any studies yet.</p>
+                  <?php endif; ?>
+
                  </div>
-
-
    						</div>
    					</div>
    					<!-- END Portlet PORTLET-->

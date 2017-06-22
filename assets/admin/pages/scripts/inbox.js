@@ -18,7 +18,7 @@ var Inbox = function () {
             cache: false,
             url: url,
             dataType: "html",
-            success: function(res) 
+            success: function(res)
             {
                 toggleButton(el);
 
@@ -58,15 +58,15 @@ var Inbox = function () {
         content.html('');
         toggleButton(el);
 
-        var message_id = el.parent('tr').attr("data-messageid");  
-        
+        var message_id = el.parent('tr').attr("data-messageid");
+
         $.ajax({
             type: "GET",
             cache: false,
             url: url,
             dataType: "html",
             data: {'message_id': message_id},
-            success: function(res) 
+            success: function(res)
             {
                 toggleButton(el);
 
@@ -130,7 +130,7 @@ var Inbox = function () {
             cache: false,
             url: url,
             dataType: "html",
-            success: function(res) 
+            success: function(res)
             {
                 toggleButton(el);
 
@@ -158,7 +158,7 @@ var Inbox = function () {
     var loadReply = function (el) {
         var messageid = $(el).attr("data-messageid");
         var url = 'inbox_reply.html?messageid=' + messageid;
-        
+
         loading.show();
         content.html('');
         toggleButton(el);
@@ -169,7 +169,7 @@ var Inbox = function () {
             cache: false,
             url: url,
             dataType: "html",
-            success: function(res) 
+            success: function(res)
             {
                 toggleButton(el);
 
@@ -207,7 +207,7 @@ var Inbox = function () {
             cache: false,
             url: url,
             dataType: "html",
-            success: function(res) 
+            success: function(res)
             {
                 toggleButton(el);
 

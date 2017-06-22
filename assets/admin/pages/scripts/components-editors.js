@@ -1,5 +1,5 @@
 var ComponentsEditors = function () {
-    
+
     var handleWysihtml5 = function () {
         if (!jQuery().wysihtml5) {
             return;
@@ -23,7 +23,7 @@ var ComponentsEditors = function () {
         //main function to initiate the module
         init: function () {
             handleWysihtml5();
-            handleSummernote();
+            // handleSummernote();
         }
     };
 

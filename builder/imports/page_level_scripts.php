@@ -5,9 +5,9 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 ?>
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="<?=$absolutepath?>assets/global/scripts/metronic.js" type="text/javascript"></script>
-<script src="<?=$absolutepath?>assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
-<script src="<?=$absolutepath?>assets/admin/layout/scripts/quick-sidebar.js" type="text/javascript"></script>
+<script src="<?=$absolutepath?>assets/global/scripts/metronic.js"></script>
+<script src="<?=$absolutepath?>assets/admin/layout/scripts/layout.js"></script>
+<script src="<?=$absolutepath?>assets/admin/layout/scripts/quick-sidebar.js"></script>
 <script src="<?=$absolutepath?>assets/admin/pages/scripts/components-pickers.js"></script>
 <script src="<?=$absolutepath?>assets/admin/pages/scripts/table-managed.js"></script>
 <script src="<?=$absolutepath?>assets/admin/pages/scripts/portlet-draggable.js"></script>
@@ -16,4 +16,6 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 <script src="<?=$absolutepath?>assets/admin/pages/scripts/ui-toastr.js"></script>
 <script src="<?=$absolutepath?>assets/admin/pages/scripts/ui-alert-dialog-api.js"></script>
 <script src="<?=$absolutepath?>assets/admin/pages/scripts/components-pickers.js"></script>
+<script src="<?=$absolutepath?>assets/admin/pages/scripts/components-editors.js"></script>
+<script src="<?=$absolutepath?>assets/admin/pages/scripts/ui-confirmations.js"></script>
 <!-- END PAGE LEVEL SCRIPTS -->

@@ -1,10 +1,20 @@
 <?
    // #INCLUDES
    require_once ('../lib/config.php');
+   require_once('../models/Study.php');
+   require_once('../models/InterfaceLanguage.php');
+   require_once('../models/Eco.php');
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ( 'openings-builder' );
+   fnInicia_Sessao ( 'openings-builder');
    include('../imports/header.php');
+
+   $interfaceLanguage = new InterfaceLanguage();
+   $arrInterfaceLanguages = $interfaceLanguage->getAllInterfaceLanguages();
+
+   $eco = new Eco();
+   $arrEcos = $eco->getALlEcos();
+
    ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -48,10 +58,13 @@
                   <div class="col-md-6">
                      <select class="form-control select2me" name="options2">
                         <option value="">Select...</option>
-                        <option value="Option 1">Option 1</option>
-                        <option value="Option 2">Option 2</option>
-                        <option value="Option 3">Option 3</option>
-                        <option value="Option 4">Option 4</option>
+
+                        <?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
+
+                          <option value="<?=$interfaceLanguage->id?>">[<?=$interfaceLanguage->code?>] - <?=$interfaceLanguage->name?></option>
+
+                        <?php endforeach; ?>
+
                      </select>
                      <span class="help-block">
                      Select the language of this material. You can submit studies only in the supported languages. </span>
@@ -82,21 +95,14 @@
                   <div class="col-md-6">
                      <select class="form-control select2me" name="options2">
                         <option value="">Select...</option>
-                        <option value="Option 1">Option 1</option>
-                        <option value="Option 2">Option 2</option>
-                        <option value="Option 3">Option 3</option>
-                        <option value="Option 4">Option 4</option>
+                        <?php foreach ($arrEcos as $key => $eco): ?>
+
+                          <option value="<?=$eco->id?>">[<?=$eco->code?>] - <?=$eco->name?> (<?=$eco->line?>)</option>
+
+                        <?php endforeach; ?>
                      </select>
                      <span class="help-block">
                      If you don't know what is the ECO code, please consider read <a href="https://en.wikipedia.org/wiki/List_of_chess_openings">this</a>.</span>
-                  </div>
-               </div>
-               <div class="form-group">
-                  <label class="col-md-3 control-label">About the <strong>OPENING</strong></label>
-                  <div class="col-md-6">
-                     <textarea id="textarea_opening" maxlength="250" class="form-control" rows="6" placeholder="E.g: The Caro–Kann is a common defense against the King's Pawn Opening and is classified as a Semi-Open Game like the Sicilian Defence and French Defence, although it is thought to be more solid and less dynamic than either of those openings. It often leads to good endgames for Black, who has the better pawn structure."></textarea>
-                     <span class="help-block">
-                     Describe the main details of the <strong>OPENING</strong> of this study. </span>
                   </div>
                </div>
                <div class="form-group">
