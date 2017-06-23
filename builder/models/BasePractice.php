@@ -6,7 +6,7 @@ require_once('PracticeLine.php');
 
 class BasePractice {
 
-	public $ecoPracticeLine;
+	public $studyEcoPracticeLine;
 	public $practicePGNs;
 
 	public $idStudy;
@@ -25,7 +25,7 @@ class BasePractice {
 
 			$eco = new Eco();
 			$eco = $eco->getEcoForStudy($this->idStudy);
-			$this->ecoPracticeLine = $eco->ecoPracticeLine;
+			$this->studyEcoPracticeLine = $eco->ecoPracticeLine;
 
 			$line = new Line();
 			$arrLines = $line->getAllLinesForStudy($this->idStudy);

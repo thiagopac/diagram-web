@@ -107,10 +107,11 @@
                    <i class="fa fa-usd"></i> <?=$study->currencyAndPrice?>
                  </li>
                </ul>
-               <span class="badge badge-danger">You have not rated this opening yet</span>
-               <p>
-                 <div id="rateYo"></div>
-               </p>
+               <form>
+                 <p>
+                   <input id="rating" name="rating" class="rating" data-size="sm" data-min="0" data-max="5" data-step="0.5" value="" data-readonly="false" data-show-clear="false" data-show-caption="true">
+                 </p>
+              </form>
                <br/>
                <?php
 
@@ -239,8 +240,6 @@
        <!--END TABS-->
      </div>
    </div>
-
-
 <!-- END CONTENT -->
 </div>
 <? include('../imports/footer.php'); ?>
@@ -249,7 +248,7 @@
    jQuery(document).ready(function() {
      // initiate layout and plugins
      Metronic.init(); // init metronic core components
-     Layout.init(); // init current layou
+     Layout.init(); // init current layout
 
      $('.easy-pie-chart .number.opening').easyPieChart({
          animate: 1000,
@@ -261,15 +260,6 @@
 				this.el.children[0].innerHTML = Math.round(percent)+"<small>%</small>";
 			}
      });
-
-     $("#rateYo").rateYo({
-        starWidth: "30px",
-        rating: 4.5,
-        halfStar: true,
-        normalFill: "#d3d3d3"
-      }).on("rateyo.set", function (e, data) {
-                  console.log("The rating is set to " + data.rating + "!");
-      });
 
    });
 </script>

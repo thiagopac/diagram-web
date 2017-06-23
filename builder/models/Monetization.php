@@ -16,8 +16,8 @@ class Monetization {
 
 		//se o array não estiver vazio, inicializar as propriedades do objeto com os valores do array
 		if (!empty($array)) {
-			$this->id = $array['OPENING_STUDY_PRICE_ID'];
-			$this->value = $array['OPENING_STUDY_PRICE_DATE_CREATED'];
+			$this->id = $array['OPENING_STUDY_MONETIZATION_ID'];
+			$this->value = $array['OPENING_STUDY_MONETIZATION_DATE_CREATED'];
 
 			$this->currency = new Currency($array);
 

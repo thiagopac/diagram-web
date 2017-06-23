@@ -8,7 +8,6 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/global/plugins/select2/select2.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/profile-old.css"/>
-<link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/custom/css/rating.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/global/plugins/bootstrap-toastr/toastr.min.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/news.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/blog.css"/>
@@ -28,4 +27,6 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/pricing-table.css"/>
 
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/profile.css"/>
+
+<link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/custom/css/star-rating.css"/>
 <!-- END PAGE LEVEL STYLES -->

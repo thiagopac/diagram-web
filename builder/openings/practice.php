@@ -17,22 +17,50 @@
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
 
+   $getEco = $_GET['eco'];
 ?>
 
 <script>
 
+
   var diagramLines = {};
   var arrPracticePGNs = [];
-  <?php foreach ($study->basePractice->practicePGNs as $practicePGN) : ?>
-  arrPracticePGNs.push('<?php echo $practicePGN ?>');
+  var arrAllPracticePGNs = [];
+
+  <?php foreach ($study->variations as $variation) : ?>
+
+      <?php foreach ($variation->lines as $line) : ?>
+
+          <?php foreach ($line->practiceLines as $practiceLine) : ?>
+
+              arrPracticePGNs.push('<?php echo $practiceLine->practicePGN ?>');
+              arrAllPracticePGNs.push('<?php echo $practiceLine->practicePGN ?>');
+
+          <?php endforeach; ?>
+
+      <?php endforeach; ?>
+
+      diagramLines['<?=$variation->eco->ecoPracticeLine?>'] = arrPracticePGNs;
+
+      arrPracticePGNs = [];
+
   <?php endforeach; ?>
 
-  //O ECO NÃO PODERÁ SER NO STUDY.. PRECISARÁ PASSAR PARA OU A LINE OU VARIATION...
-  ecoPracticeLine = '<?=$study->basePractice->ecoPracticeLine?>';
+//todas as variations serão criadas com uma chave do código ECO do estudo, para um estudo abrangente, ou estudo direcioado que poderá ser criado depois, com cada
+//variation sendo chave de suas linhas
+  diagramLines['<?=$study->basePractice->studyEcoPracticeLine?>'] = arrAllPracticePGNs;
+
+//o treinamento presume que o jogador vai jogar um estudo abrangente, de todas as variantes. Poderá ser iniciado um treinamento por variante, passando o ECO da variante para
+//um treinamento direcionado.
+
+  ecoPracticeLine = '<?=$study->basePractice->studyEcoPracticeLine?>';
+  getEco = '<?=$getEco?>';
+
+  if(getEco != ''){
+    ecoPracticeLine = getEco;
+  }
 
   side = '<?=$study->side?>';
-
-  diagramLines['<?=$study->basePractice->ecoPracticeLine?>'] = arrPracticePGNs;
 
 </script>
    <div class="page-content-wrapper">
@@ -91,7 +119,7 @@
                <div class="todo-sidebar">
                   <div class="portlet light">
                      <div class="portlet-title">
-                        <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
+                        <div class="caption">
                            <span class="caption-subject font-green-sharp bold uppercase">TRAINING </span>
                            <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view project list</span>
                         </div>
@@ -139,6 +167,22 @@
                            </ul>
                         </div>
                      </div>
+                     <div class="portlet-title">
+                       <div class="caption">
+                          <span class="caption-subject font-green-sharp bold uppercase">VARIATION </span>
+                          <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view project list</span>
+                       </div>
+                   </div>
+                   <div class="portlet-body">
+                     <div class="form-group">
+                         <select class="form-control select2me" name="practiceVariation" id="practiceVariation">
+                           <option value="<?=$study->eco->ecoPracticeLine?>" <?php echo $getEco == $study->eco->ecoPracticeLine || $getEco == null ? 'selected' : ''; ?>>All</option>
+                            <?php foreach ($study->variations as $key => $variation): ?>
+                              <option value="<?=$variation->eco->ecoPracticeLine?>" <?=$selected?> <?php echo $getEco == $variation->eco->ecoPracticeLine ? 'selected' : ''; ?>><?=$variation->name?></option>
+                            <?php endforeach; ?>
+                         </select>
+                     </div>
+                   </div>
                   </div>
                </div>
                <!-- END TODO SIDEBAR -->
@@ -244,7 +288,6 @@
 <script src="../../assets/admin/custom/scripts/chessboard-0.3.0.js"></script>
 <script src="../../assets/admin/custom/scripts/chessy.js"></script>
 <script src="opening_names.js"></script>
-<script src="books.js"></script>
 <script src="../../assets/admin/custom/scripts/jquery.ui.touch-punch.min.js"></script>
 <script src="openingController.js"></script>
 </body>
@@ -269,6 +312,14 @@ jQuery(document).ready(function() {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
   }
+
+  $('#practiceVariation').on('change', function (evt) {
+    // console.log($('#practiceVariation').select2('val'));
+    ecoPracticeLine = $('#practiceVariation').select2('val');
+    console.log(ecoPracticeLine);
+    window.location.href = "practice.php?eco="+ecoPracticeLine;
+
+});
 
   UIAlertDialogApi.init();
 

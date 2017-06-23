@@ -59,15 +59,15 @@
                     <!-- INÍCIO VIEW OBJETO ESTUDO -->
 
                   <a href="details.php?s=<?=$study->id?>">
-                    <div class="tile double bg-grey-cascade">
-                      <div class="corner">
-                      </div>
-                      <div class="check">
-                      </div>
+                    <div class="tile double bg-grey-cascade double">
+
                       <div class="tile-body">
                         <h4><?=$study->name?></h4><small>By: <?=$study->authorFullName?></small>
                         <p>
-                           <div id="rateYo"></div>
+                          <!--  rate-->
+                          <div style="margin-top:10px;">
+                            <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="4.5" data-readonly="true" data-show-clear="false" data-show-caption="false">
+                          </div>
                         </p>
                       </div>
                       <div class="tile-object">

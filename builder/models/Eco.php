@@ -61,6 +61,24 @@ class Eco {
 		return $eco;
 	}
 
+	public function getEcoForVariation($paramVariation){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT OE.ID AS OPENING_STUDY_ECO_ID, OE.CODE AS OPENING_STUDY_ECO_CODE, OE.NAME AS OPENING_STUDY_ECO_NAME, OE.LINE AS OPENING_STUDY_ECO_LINE
+						FROM OPENING_ECO AS OE
+						INNER JOIN OPENING_STUDY_THEORY_VARIATION AS OSTV ON OSTV.ID_OPENING_ECO = OE.ID
+						WHERE OSTV.ID = $paramVariation";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$eco = new Eco($RESULT);
+
+		return $eco;
+	}
+
+
+
 	//retira os números e espaços de um PGN.. ex 1. e4 c6 2. d4 d5 torna e4c6d4d5
 	function getPracticePGNfromPGN($pgn){
 		$pgn = preg_replace('(\d+. )', "", $pgn);

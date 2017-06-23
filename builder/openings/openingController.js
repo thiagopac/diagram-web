@@ -35,6 +35,8 @@ function openingClass() {
 	//fazer a inserção no array da abertura selecionada
 	selectedOpeningBook.push(ecoPracticeLine);
 
+	console.log(ecoPracticeLine);
+
 	this.whiteOpeningLines = [];
 	this.blackOpeningLines = [];
 	this.timeToNextShowing = [25000, 120000, 600000, 3600000, 18000000, 86400000, 432000000, 2160000000, 10800000000, 54000000000, 270000000000];
@@ -381,13 +383,12 @@ openingClass.prototype.print = function() {
 	for (var i = 0; i < OpeningLines.length; ++i) {
 		var l = OpeningLines[i];
 		if (l.timeDue == this.unseenLineTime) break;
-		console.log(l.moves + " " + ((l.timeDue - d.getTime()) / 1000) + " " + l.nextBox);
+		// console.log(l.moves + " " + ((l.timeDue - d.getTime()) / 1000) + " " + l.nextBox);
 	}
 };
 
 openingClass.prototype.flipAndStart = function() {
 
-	console.log("flip and start");
 	timesHintAsked = 0;
 	if (chessy.history().length >= 1) {
 		updatedHistory = true; // don't allow the user to win lines after flipping
@@ -796,7 +797,7 @@ function makeOpponentMove() {
 
 	var move_obj = chessy.move(nextMove);
 	if (move_obj == null) {
-		console.log("1555: "+move_obj);
+		// console.log("1555: "+move_obj);
 		showMessage('lineinexistent', 'Attention', '200px');
 		undoMove();
 	}

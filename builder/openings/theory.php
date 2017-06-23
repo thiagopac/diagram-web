@@ -306,7 +306,7 @@
                                                   <div class="portlet">
                                                   						<div class="portlet-title">
                                                   							<div class="caption">
-                                                  								About <?=$variation->name?>
+                                                  								<?=$variation->name?>
                                                   							</div>
                                                   							<div class="tools">
                                                   								<a href="javascript:;" class="collapse" data-original-title="" title="">
