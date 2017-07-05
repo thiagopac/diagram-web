@@ -120,6 +120,7 @@
                if ($userOwnsStudy == true): ?>
                   <a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> THEORY</a>
                   <a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> PRACTICE</a>
+                  <!-- <a href="#modalPurchase" class="btn btn-lg btn-success" title="Donate" data-toggle="modal"><i class="fa fa-usd"></i> DONATE </a> -->
                <?php else: ?>
                   <a href="#modalPurchase" class="btn btn-lg btn-success" title="Buy" data-toggle="modal"><i class="fa fa-usd"></i> BUY </a>
                <?php endif; ?>
@@ -136,7 +137,7 @@
 
                      <ul class="chats">
                      									<li class="in">
-                     										<img class="avatar" alt="" src="../../assets/admin/layout/img/avatar1.jpg"/>
+                     										<!-- <img class="avatar" alt="" src="../../assets/admin/layout/img/avatar1.jpg"/> -->
                      										<div class="message">
                      											<span class="arrow">
                      											</span>

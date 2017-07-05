@@ -13,9 +13,9 @@
 
    	$menos30dias = time( ) - 86400 * 30;
 
-   	if ($DAT_INICIO == '') $DAT_INICIO = date('Y-m-d');
+   	if ($DAT_INICIO == '') $DAT_INICIO = date('Y-m-d', $menos30dias);
    	if ($DAT_FIM == '') $DAT_FIM = date('Y-m-d');
-   	if ($DAT_COMPLETA == '')	$DAT_COMPLETA = date('d/m/Y').' - '.date('d/m/Y');
+   	if ($DAT_COMPLETA == '')	$DAT_COMPLETA = date('d/m/Y', $menos30dias).' - '.date('d/m/Y');
 
    #INICIO LOGICA
    	$DB = fnDBConn();
@@ -26,6 +26,7 @@
    				  USER.LOGIN LIKE '%$PESQUISA%')
    			  AND AUDIT.DIN BETWEEN '$DAT_INICIO 23:59:59' AND '$DAT_FIM 23:59:59'
    			ORDER BY AUDIT.ID DESC";
+
    	$RET = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
    include('../imports/header.php');
@@ -47,10 +48,9 @@
       </div>
       <!-- END PAGE HEADER-->
       <!-- BEGIN PORTLET -->
-      <div class="portlet box red">
+      <div class="portlet gren">
          <div class="portlet-title">
-            <div class="caption"></div>
-
+            <div class="caption">Search Details</div>
          </div>
          <div class="portlet-body form">
             <form role="form">
@@ -153,5 +153,4 @@
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
-<? var_dump($SQL); ?>
 </html>

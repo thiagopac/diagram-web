@@ -313,26 +313,6 @@
      Metronic.init(); // init metronic core components
      Layout.init(); // init current layou
 
-     $('.easy-pie-chart .number.opening').easyPieChart({
-         animate: 1000,
-         scaleColor: false,
-         size: 200,
-         lineWidth: 15,
-         barColor: '#586e8b',
-         onStep: function(from, to, percent) {
-   	this.el.children[0].innerHTML = Math.round(percent)+"<small>%</small>";
-   }
-     });
-
-     $("#rateYo").rateYo({
-        starWidth: "30px",
-        rating: 4.5,
-        halfStar: true,
-        normalFill: "#d3d3d3"
-      }).on("rateyo.set", function (e, data) {
-                  console.log("The rating is set to " + data.rating + "!");
-      });
-
    });
 </script>
 </body>

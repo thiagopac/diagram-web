@@ -1,34 +1,18 @@
 <?
 ##INCLUDES.
 	require_once('../lib/config.php');
+	require_once('../models/User.php');
 
 #CONTROLE SESSAO
-	fnInicia_Sessao('administrators');
+	fnInicia_Sessao('moderation-users');
+	include('../imports/header.php');
 
 #INPUTS
 	$MSG = addslashes($_REQUEST['msg']);
-	$ID  = (int)$_REQUEST['id'];
+	$paramUser  = (int)$_REQUEST['u'];
 
-#INICIO LOGICA
-	$DB = fnDBConn();
-
-	if ($ID == -1)
-		{
-		$GRANTS = '|';
-		foreach($MENU_GRANT as $ROW)
-			$GRANTS .= $ROW[0].'|';
-
-		$SQL = "INSERT INTO USER (ID_TYPE_USER, LOGIN, PASSWORD, FIRSTNAME, LASTNAME, GRANTS, STATUS, DIN) VALUES (1, NULL, NULL, NULL, '{$GRANTS}', 0, NOW())";
-		$RET = fnDB_DO_EXEC($DB,$SQL);
-		$ID = (int)$RET[1];
-		if ($ID == 0)
-			die('Falha geral. ID nao foi criado');
-		}
-
-	$SQL = "SELECT * FROM USUARIO WHERE ID = $ID";
-	$RET = fnDB_DO_SELECT($DB,$SQL);
-
-	include('../imports/header.php');
+	$user = new User();
+	$user = $user->getUserWithId($paramUser);
 ?>
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
@@ -41,7 +25,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Dados do usário <small></small>
+					Edit User <small></small>
 					</h3>
 
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -49,19 +33,16 @@
 			</div>
 			<!-- END PAGE HEADER-->
 
-					<div class="portlet box red">
+					<div class="portlet gren">
 						<div class="portlet-title">
-							<div class="caption"></div>
-							<div class="tools">
-								 <a href="javascript:;" class="collapse">
-								 </a>
+							<div class="caption">User Details</div>
 							</div>
-						</div>
+
 						<div class="portlet-body form">
 							<!-- BEGIN FORM-->
 							<form method="post" action="../exec/" id="form_sample_2" class="form-horizontal" novalidate="novalidate">
 							<input type="hidden" name="e" id="e" value="adm_edit" />
-							<input type="hidden" name="id" id="id" value="<?=$ID?>" />
+							<input type="hidden" name="id" id="id" value="<?=$user->id?>" />
 								<div class="form-body">
 									<? if ($MSG != '') { ?>
 									<div class="alert alert-danger display">
@@ -70,10 +51,15 @@
 									</div>
 									<? } ?>
 									<div class="form-group">
-										<label class="control-label col-md-3">Nome</label>
-										<div class="col-md-4">
+										<label class="control-label col-md-3">Full Name</label>
+										<div class="col-md-2">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="nome" aria-required="true" aria-invalid="false" value="<?=$RET['NOME']?>">
+												<input type="text" class="form-control" name="firstName" aria-required="true" aria-invalid="false" value="<?=$user->firstName?>">
+											</div>
+										</div>
+										<div class="col-md-2">
+											<div class="input-icon right">
+												<input type="text" class="form-control" name="lastName" aria-required="true" aria-invalid="false" value="<?=$user->lastName?>">
 											</div>
 										</div>
 									</div>
@@ -82,37 +68,57 @@
 										</label>
 										<div class="col-md-4">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$RET['LOGIN']?>">
+												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$user->login?>">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">ELO Fide</span>
+										</label>
+										<div class="col-md-4">
+											<div class="input-icon right">
+												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$user->eloFide?>">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">User status</span>
+										</label>
+										<div class="col-md-4">
+											<div class="input-icon right">
+												<select class="form-control" name="select">
+													<?php $selectedInactive = ($user->status == "0") ? "selected" : null;?>
+													<?php $selectedActive = ($user->status == "1") ? "selected" : null;?>
+													 <option value="0" <?=$selectedInactive?>>Inactive</option>
+													 <option value="1" <?=$selectedActive?>>Active</option>
+												</select>
 											</div>
 										</div>
 									</div>
 
 									<div class="form-group last password-strength">
-										<label class="control-label col-md-3">Senha</label>
+										<label class="control-label col-md-3">Password</label>
 										<div class="col-md-4">
 											<input type="password" class="form-control" name="password" id="password_strength">
 										</div>
 										<label for="chkShowPassword" style="margin:5px;">
 							                <input type="checkbox" id="chkShowPassword" />
-							                Mostrar senha
+							                Show password
 							             </label>
 									</div>
 								</div>
 
 
-
 								<div class="form-actions fluid">
 									<div class="col-md-offset-3 col-md-9">
 										<button type="submit" class="btn green">Salvar</button>
-										<button type="button" class="btn default" onClick="parent.location='index.php';">Voltar</button>
+										<button type="button" class="btn default" onClick="window.history.go(-1); return false;">Voltar</button>
 									</div>
 								</div>
 							</form>
 							<!-- END FORM-->
 						</div>
 					</div>
-		</div>
-	</div>
 	<!-- END CONTENT -->
 </div>
 <? include('../imports/footer.php'); ?>
@@ -123,7 +129,7 @@
            Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
 			QuickSidebar.init() // init quick sidebar
-           ComponentsFormTools.init();
+
         });
 
         $(function () {

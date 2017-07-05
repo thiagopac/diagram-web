@@ -37,13 +37,31 @@
 					</a>
 				</li>
 				<? } ?>
-				<? if (fnVerifica_Grant('administrators')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'administrators') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/administrators/">
+				<? if (fnVerifica_Grant('moderation')) { ?>
+				<li class="last <? if ($MENU_ATIVO == 'moderation') echo 'active'; ?>">
+        <li class="last <? if (($MENU_ATIVO == 'moderation') || ($MENU_ATIVO == 'moderation-administrators') || ($MENU_ATIVO == 'moderation-users') || ($MENU_ATIVO == 'moderation-openings')) echo 'active'; ?>">
+					<a href="<?=$rootpath?>/moderation/">
 					<i class="icon-user"></i>
-					<span class="title">Administrators</span>
+					<span class="title">Moderation</span>
 					<span class="selected"></span>
 					</a>
+          <ul class="sub-menu">
+            <? if (fnVerifica_Grant('moderation-administrators')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'moderation-administrators') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/moderation/administrators.php"><i class="fa fa-angle-right"></i>Administrators</a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('moderation-users')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'moderation-users') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/moderation/users.php"><i class="fa fa-angle-right"></i>Users</a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('moderation-openings')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'moderation-openings') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/moderation/openings.php"><i class="fa fa-angle-right"></i>Openings</a>
+            </li>
+            <? } ?>
+          </ul>
 				</li>
 				<? } ?>
 				<? if (fnVerifica_Grant('audit')) { ?>
@@ -85,34 +103,26 @@
           </ul>
 				</li>
 				<? } ?>
-				<? if ((fnVerifica_Grant('buildpgn')) || (fnVerifica_Grant('buildfen')) || (fnVerifica_Grant('listboards'))){ ?>
-				<li class="last <? if (in_array($MENU_ATIVO,array('buildpgn','buildfen','listboards'))) echo 'active'; ?>">
-				<a href="javascript:;">
-						<i class="fa fa-files-o"></i>
-						<span class="title">Boards</span>
-						<span class="arrow"></span>
-						<span class="selected"></span>
-						</a>
-						<ul class="sub-menu">
-						<!-- BEGIN REPORT OPTION -->
-							<? if (fnVerifica_Grant('listboards')) { ?>
-							<li class="<? if ($MENU_ATIVO == 'listboards') echo 'active'; ?>">
-								<a href="<?=$rootpath?>/boards/list.php"><i class="fa fa-angle-right"></i>List boards</a>
-							</li>
-							<? } ?>
-							<? if (fnVerifica_Grant('buildpgn')) { ?>
-							<li class="<? if ($MENU_ATIVO == 'buildpgn') echo 'active'; ?>">
-								<a href="<?=$rootpath?>/boards/buildpgn.php"><i class="fa fa-angle-right"></i>Build PGN</a>
-							</li>
-							<? } ?>
-							<? if (fnVerifica_Grant('buildfen')) { ?>
-							<li class="<? if ($MENU_ATIVO == 'buildfen') echo 'active'; ?>">
-								<a href="<?=$rootpath?>/boards/buildfen.php"><i class="fa fa-angle-right"></i>Build FEN</a>
-							</li>
-							<? } ?>
-						<!-- END REPORT OPTION -->
-						</ul>
-					</li>
+        <? if (fnVerifica_Grant('administration')) { ?>
+				<li class="last <? if (($MENU_ATIVO == 'administration-inbox') || ($MENU_ATIVO == 'administration-management')) echo 'active'; ?>">
+					<a href="<?=$rootpath?>/administration/">
+					<i class="fa fa-inbox"></i>
+					<span class="title">Administration</span>
+					<span class="selected"></span>
+					</a>
+          <ul class="sub-menu">
+            <? if (fnVerifica_Grant('administration-inbox')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'administration-inbox') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/administration/index.php"><i class="fa fa-angle-right"></i>Inbox</a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('administration-management')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'administration-management') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/>/management.php"><i class="fa fa-angle-right"></i>Management</a>
+            </li>
+            <? } ?>
+          </ul>
+				</li>
 				<? } ?>
 			</ul>
 			<!-- END SIDEBAR MENU -->

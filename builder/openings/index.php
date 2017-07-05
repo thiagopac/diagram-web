@@ -15,7 +15,7 @@
     $userID = $_SESSION['USER']['ID'];
 
     $study = new Study();
-    $arrStudies = $study->getAllStudies();
+    $arrStudies = $study->getAllActiveStudies();
 
     // var_dump($arrStudies);
 ?>

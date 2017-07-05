@@ -5,7 +5,8 @@
   require_once('../models/InterfaceLanguage.php');
 
   // CONTROLE SESSAO
-  fnInicia_Sessao ( 'openings' );
+  fnInicia_Sessao('moderation-openings');
+
   include('../imports/header.php');
   include('../imports/opening_styles.php');
 

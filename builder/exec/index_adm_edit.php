@@ -9,7 +9,7 @@
 	$strPASS = trim(addslashes($_REQUEST['password']));
 	$strPASS_MD5 	= fnSenhaMD5($strPASS);
 
-	$URL_BACK = "location: ../usuarios/editar.php?id={$ID}&msg=";
+	$URL_BACK = "location: ../usuarios/edit.php?id={$ID}&msg=";
 
 	$DB = fnDBConn();
 
@@ -38,7 +38,7 @@
 //Verifica se ja tem uma senha atribuida pra esse login (ou se eh um login novo)
 	if ($strPASS == '')
 		{
-		$SQL = "SELECT * FROM USUARIO WHERE ID = $ID";
+		$SQL = "SELECT * FROM USER WHERE ID = $ID";
 		$RET = fnDB_DO_SELECT($DB,$SQL);
 
 		if ($RET['senha'] == '')
@@ -49,7 +49,7 @@
 		}
 
 //Verifica se alguem ja ta usando esse email
-	$SQL = "SELECT ID FROM USUARIO WHERE LOGIN = '{$LOGIN}' AND ID <> $ID";
+	$SQL = "SELECT ID FROM USER WHERE LOGIN = '{$LOGIN}' AND ID <> $ID";
 	$RET = fnDB_DO_SELECT($DB,$SQL);
 
 	if ($RET['ID'] != 0)
@@ -62,7 +62,7 @@
 	if ($strPASS != '')
 		$SQL_SENHA = ", senha = '$strPASS_MD5'";
 
-	$SQL = "UPDATE USUARIO SET NOME = '$NOME', LOGIN = '$LOGIN', STATUS = 1 $SQL_SENHA WHERE ID = $ID";
+	$SQL = "UPDATE USER SET NOME = '$NOME', LOGIN = '$LOGIN', STATUS = 1 $SQL_SENHA WHERE ID = $ID";
 	$RET = fnDB_DO_EXEC($DB,$SQL);
 
 	//Adiciona registro na tabela de auditoria
