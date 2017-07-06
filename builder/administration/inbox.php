@@ -1,10 +1,10 @@
 <?
 ##INCLUDES
 	require_once('../lib/config.php');
-	require_once('../models/User.php');
+	require_once('../models/StudyAdministration.php');
 
 #CONTROLE SESSAO
-	fnInicia_Sessao('moderation-users');
+	fnInicia_Sessao('administration-inbox');
 
 	include('../imports/header.php');
 
@@ -15,8 +15,8 @@
 
 	$userID = $_SESSION['USER']['ID'];
 
-	$user = new User();
-	$arrUsers = $user->getAllUsers();
+	$studyAdministration = new StudyAdministration();
+	$arrStudyAdministrations = $studyAdministration->getAllStudyAdministrationsForAuthor($userID);
 
 ?>
 	<!-- BEGIN CONTENT -->
@@ -29,29 +29,28 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Users <small></small>
+					Inbox <small></small>
 					</h3>
-					<button type="button" class="btn red" style="right: 15px; position: absolute; margin-top: -40px" onClick="parent.location='edit-user.php?id=-1'">Novo Usuário</button>
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
 			</div>
 			<div class="page-bar">
 				 <ul class="page-breadcrumb">
 					 <li>
-							<i class="fa fa-home"></i>
-							<a href="#">Moderation</a>
-							<i class="fa fa-angle-right"></i>
+					 	 <i class="fa fa-home"></i>
+					 	 <a href="#">Administration</a>
+					 	 <i class="fa fa-angle-right"></i>
 					 </li>
 						<li>
-							 <a href="./users.php">Users</a>
+							 <a href="./inbox.php">Inbox</a>
 						</li>
 				 </ul>
 			</div>
 			<!-- END PAGE HEADER-->
 
 <!-- BEGIN SAMPLE TABLE PORTLET-->
+<p> Here you will receive all administrative messages about the studies you have created. Updates, news, suggestions and warnings for corrections will be concentrated here, in <strong>Administration</strong> <i class="fa fa-angle-right"></i> <strong>Inbox</strong></p>
 					<div class="portlet gren">
-
 
 						<div class="portlet-body">
 							<div class="table-responsive">
@@ -62,40 +61,40 @@
 									</div>
 								<? } ?>
 
-								<table class="table table-striped table-hover" id="table_users">
+								<table class="table table-hover" id="table_administrators">
 								<thead>
 								<tr>
 									<th>
-										 #
+										Study
 									</th>
 									<th>
-										 Login
+										Date
 									</th>
 									<th>
-										Full Name
-									</th>
-									<th>
-										 Actions
+										Message
 									</th>
 								</tr>
 								</thead>
 								<tbody>
 								<?
-								foreach($arrUsers as $KEY => $user)
+								foreach($arrStudyAdministrations as $KEY => $studyAdministration)
 									{
 									?>
-									<tr>
+									<tr class="<? $read = $studyAdministration->read == '0' ? "info" : ""; echo $read; ?>">
 										<td>
-											 <?=$user->id?>
+											 <a href="message.php?m=<?=$studyAdministration->id?>">
+ 													<?=$studyAdministration->study->name?>
+ 										 	</a>
 										</td>
 										<td>
-											<?=$user->login?>
+											<a href="message.php?m=<?=$studyAdministration->id?>">
+													<?=$studyAdministration->dateCreated?>
+										 	</a>
 										</td>
 										<td>
-											 <?=$user->fullName?>
-										</td>
-										<td>
-											 <a href="edit-user.php?u=<?=$user->id?>">Editar</a> | <a href="../exec/?e=adm_del&u=<?=$user->id?>" class="confirmation">Apagar</a>
+											<a href="message.php?m=<?=$studyAdministration->id?>">
+													<?=substr($studyAdministration->message, 0, 100)."..." ?>
+										 	</a>
 										</td>
 									</tr>
 									<?
@@ -126,7 +125,7 @@
         return confirm('Tem certeza?');
     });
 
-		var table = $('#table_users');
+		var table = $('#table_administrators');
 
 		// begin first table
 		table.dataTable({
@@ -158,8 +157,6 @@
 				}, {
 						"orderable": true
 				}, {
-						"orderable": true
-				}, {
 						"orderable": false
 				}],
 				"lengthMenu": [
@@ -183,7 +180,7 @@
 						'orderable': false,
 						'targets': [0]
 				}, {
-						"searchable": false,
+						"searchable": true,
 						"targets": [0]
 				}],
 				"order": [

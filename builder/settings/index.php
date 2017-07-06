@@ -3,36 +3,31 @@
    require_once ('../lib/config.php');
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ( 'settings' );
    include('../imports/header.php');
-?>
+   ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">
 
-	 <? include('../imports/alert.php'); ?>
-
-	 <!-- BEGIN PAGE TITLE & BREADCRUMB-->
    <div class="row">
-      <div class="col-md-12">
-         <h3 class="page-title">
-            Settings <small></small>
-         </h3>
-      </div>
+     <div class="col-md-12 page-404">
+       <div class="number">
+          404
+       </div>
+       <div class="details">
+         <h3>Oops! You're lost.</h3>
+         <p>
+            We can not find the page you're looking for.<br/>
+           <a onclick="window.history.go(-1)">
+           Return </a>
+           to the last page you were.
+         </p>
+       </div>
+     </div>
    </div>
-	 <!-- END PAGE TITLE & BREADCRUMB-->
-
 
 <!-- END CONTENT -->
 </div>
 <? include('../imports/footer.php'); ?>
-<? include('../imports/metronic_core.php'); ?>
-<script>
-   jQuery(document).ready(function() {
-   // initiate layout and plugins
-   Metronic.init(); // init metronic core components
-   Layout.init(); // init current layou
-   });
-</script>
 </body>
 </html>

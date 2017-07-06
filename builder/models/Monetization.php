@@ -19,16 +19,39 @@ class Monetization {
 			$this->id = $array['OPENING_STUDY_MONETIZATION_ID'];
 			$this->value = $array['OPENING_STUDY_MONETIZATION_DATE_CREATED'];
 
-			$this->currency = new Currency($array);
+			$currency = new Currency();
+			$this->currency = $currency->getCurrencyWithID($array['CURRENCY_ID']);
 
-			$this->price = new Price($array);
+			$price = new Price();
+			$this->price = $price->getPriceWithID($array['PRICE_ID']);
 
-			$this->detailsPayment = new DetailsPayment($array);
+			$detailsPayment = new DetailsPayment();
+			$this->detailsPayment = $detailsPayment->getDetailsPaymentWithID($array['OPENING_STUDY_DETAILS_PAYMENT_ID']);
 		}
   }
 
 	public function __destruct(){
 
+	}
+
+	public function getMonetizationForStudy($paramStudy){
+
+			$DB = fnDBConn();
+
+    	$SQL = "SELECT OSM.ID AS OPENING_STUDY_MONETIZATION_ID,
+       OSM.CURRENCY AS CURRENCY_ID,
+       OSM.ID_OPENING_STUDY AS OPENING_STUDY_ID,
+       OSM.DIN AS OPENING_STUDY_MONETIZATION_DATE_CREATED,
+       OSM.ID_DETAILS_PAYMENT AS OPENING_STUDY_DETAILS_PAYMENT_ID,
+       OSM.ID_PRICE AS PRICE_ID
+FROM OPENING_STUDY_MONETIZATION AS OSM
+WHERE OSM.ID_OPENING_STUDY = $paramStudy";
+
+			$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+			$monetization = new Monetization($RESULT);
+
+			return $monetization;
 	}
 
 }

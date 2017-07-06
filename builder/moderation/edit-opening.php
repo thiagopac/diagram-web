@@ -24,7 +24,7 @@
 	$study = $study->getStudyWithID($paramStudy);
 
 	if ($study->monetization->price->value != 0.00) {
-		$study->currencyAndPrice = $study->currency->symbol.' '.$study->monetization->price->value;
+		$study->currencyAndPrice = $study->monetization->currency->symbol.' '.$study->monetization->price->value;
 	}else{
 		$study->currencyAndPrice = "FREE";
 	}
@@ -60,6 +60,22 @@
 
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
+			</div>
+			<div class="page-bar">
+				 <ul class="page-breadcrumb">
+					 <li>
+							<i class="fa fa-home"></i>
+							<a href="#">Moderation</a>
+							<i class="fa fa-angle-right"></i>
+					 </li>
+						<li>
+							 <a href="./openings.php">Openings</a>
+							 <i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							 <a href="edit-opening.php">Edit Opening</a>
+						</li>
+				 </ul>
 			</div>
 			<!-- END PAGE HEADER-->
 
@@ -221,7 +237,7 @@
 																		<option value="">Select...</option>
 																		<?php foreach ($arrPaymentSystems as $key => $paymentSystem): ?>
 
-																			 <?php $selected = ($paymentSystem->id == $study->detailsPayment->paymentSystem->id) ? "selected" : null ;?>
+																			 <?php $selected = ($paymentSystem->id == $study->monetization->detailsPayment->paymentSystem->id) ? "selected" : null ;?>
 
 																			<option value="<?=$paymentSystem->id?>" <?=$selected?>><?=$paymentSystem->desc?></option>
 																		<?php endforeach; ?>
@@ -231,7 +247,7 @@
 													 <div class="form-group">
 															<label class="col-md-3 control-label">Payment URL</label>
 															<div class="col-md-6">
-																 <input type="text" class="form-control" value="<?=$study->detailsPayment->url?>" maxlength="50" name="defaultconfig" id="text_name" placeholder="E.g: https://pag.ae/seuCodigo (Using PagSeguro)">
+																 <input type="text" class="form-control" value="<?=$study->monetization->detailsPayment->url?>" maxlength="50" name="defaultconfig" id="text_name" placeholder="E.g: https://pag.ae/seuCodigo (Using PagSeguro)">
 																 <span class="help-block">
 																 Put the direct link to the item payment.</span>
 															</div>
@@ -239,7 +255,7 @@
 													 <div class="form-group">
 															<label class="col-md-3 control-label">Payment message to users</label>
 															<div class="col-md-6">
-																 <textarea id="textarea_opening" maxlength="250" class="form-control" rows="6"><?=$study->detailsPayment->text?></textarea>
+																 <textarea id="textarea_opening" maxlength="250" class="form-control" rows="6"><?=$study->monetization->detailsPayment->text?></textarea>
 																 <span class="help-block">
 																 Thank your students, encourage them to collaborate to maintain the excellent level of excellence in the quality of this material.</span>
 															</div>

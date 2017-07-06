@@ -19,12 +19,32 @@ class DetailsPayment {
 			$this->dateCreated = $array['OPENING_STUDY_DETAILS_PAYMENT_DATE_CREATED'];
 			$this->url = $array['OPENING_STUDY_DETAILS_PAYMENT_URL'];
 
-			$this->paymentSystem = new PaymentSystem($array);
+			$paymentSystem = new PaymentSystem();
+			$this->paymentSystem = $paymentSystem->getPaymentSystemWithID($array['PAYMENT_SYSTEM_ID']);
 		}
   }
 
 	public function __destruct(){
 
+	}
+
+	public function getDetailsPaymentWithID($paramDetailsPayment){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT OSDP.ID AS OPENING_STUDY_DETAILS_PAYMENT_ID,
+       OSDP.TEXT AS OPENING_STUDY_DETAILS_PAYMENT_TEXT,
+       OSDP.DIN AS OPENING_STUDY_DETAILS_PAYMENT_DATE_CREATED,
+       OSDP.URL AS OPENING_STUDY_DETAILS_PAYMENT_URL,
+       OSDP.ID_TYPE_PAYMENT AS PAYMENT_SYSTEM_ID
+FROM OPENING_STUDY_DETAILS_PAYMENT AS OSDP
+WHERE OSDP.ID = $paramDetailsPayment";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$detailsPayment = new DetailsPayment($RESULT);
+
+		return $detailsPayment;
 	}
 
 	public function getDetailsPaymentForStudy($paramStudy){

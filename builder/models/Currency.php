@@ -23,6 +23,21 @@ class Currency {
 
 	}
 
+	public function getCurrencyWithID($paramCurrency){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT CUR.ID AS CURRENCY_ID, CUR.CODE AS CURRENCY_CODE, CUR.NAME AS CURRENCY_NAME, CUR.SYMBOL AS CURRENCY_SYMBOL
+						FROM CURRENCY AS CUR
+						WHERE CUR.ID = $paramCurrency";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$currency = new Currency($RESULT);
+
+		return $currency;
+	}
+
 	public function getAllCurrencies(){
 
 		$DB = fnDBConn();

@@ -32,6 +32,22 @@
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
 			</div>
+			<div class="page-bar">
+				 <ul class="page-breadcrumb">
+					 <li>
+							<i class="fa fa-home"></i>
+							<a href="#">Moderation</a>
+							<i class="fa fa-angle-right"></i>
+					 </li>
+						<li>
+							 <a href="./administrators.php">Administrators</a>
+							 <i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							 <a href="editAdministrator.php">Edit Administrator</a>
+						</li>
+				 </ul>
+			</div>
 			<!-- END PAGE HEADER-->
 
 					<div class="portlet gren">

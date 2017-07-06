@@ -40,9 +40,13 @@
    </div>
    <div class="page-bar">
       <ul class="page-breadcrumb">
+        <li>
+           <i class="fa fa-home"></i>
+           <a href="#">Openings</a>
+           <i class="fa fa-angle-right"></i>
+        </li>
          <li>
-            <i class="fa fa-home"></i>
-            <a href="./">Openings</a>
+            <a href="./list.php">Study</a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>

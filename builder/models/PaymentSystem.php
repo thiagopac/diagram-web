@@ -19,6 +19,21 @@ class PaymentSystem {
 
 	}
 
+	public function getPaymentSystemWithID($paramPaymentSystem){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT PS.ID AS PAYMENT_SYSTEM_ID, PS.DESC AS PAYMENT_SYSTEM_DESC
+						FROM TYPE_PAYMENT AS PS
+						WHERE PS.ID = $paramPaymentSystem";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$paymentSystem = new PaymentSystem($RESULT);
+
+		return $paymentSystem;
+	}
+
 	public function getAllPaymentSystems(){
 
 		$DB = fnDBConn();

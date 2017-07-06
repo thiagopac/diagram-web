@@ -21,6 +21,21 @@ class InterfaceLanguage {
 
 	}
 
+	public function getInterfaceLanguageWithID($paramInterfaceLanguage){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT INTLAN.ID AS INTERFACE_LANGUAGE_ID, INTLAN.CODE AS INTERFACE_LANGUAGE_CODE, INTLAN.NAME AS INTERFACE_LANGUAGE_NAME
+						FROM INTERFACE_LANGUAGE AS INTLAN
+						WHERE INTLAN.ID = $paramInterfaceLanguage";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$interfaceLanguage = new InterfaceLanguage($RESULT);
+
+		return $interfaceLanguage;
+	}
+
 	public function getAllInterfaceLanguages(){
 
 		$DB = fnDBConn();

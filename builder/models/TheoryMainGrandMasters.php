@@ -21,5 +21,22 @@ class TheoryMainGrandMasters {
 
 	}
 
+	public function getTheoryMainGrandMastersForStudy($paramStudy){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT OSTMG.ID AS OPENING_THEORY_MAIN_GRANDMASTERS_ID,
+			 OSTMG.TEXT AS OPENING_THEORY_MAIN_GRANDMASTERS_TEXT,
+			 OSTMG.DIN AS OPENING_THEORY_MAIN_GRANDMASTERS_DATE_CREATED
+FROM OPENING_STUDY_THEORY_MAIN_GRANDMASTERS AS OSTMG
+WHERE ID_OPENING_STUDY = $paramStudy";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$theoryMainGrandMasters = new TheoryMainGrandMasters($RESULT);
+
+		return $theoryMainGrandMasters;
+	}
+
 }
 ?>

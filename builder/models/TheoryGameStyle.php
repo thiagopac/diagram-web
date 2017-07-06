@@ -21,5 +21,22 @@ class TheoryGameStyle {
 
 	}
 
+	public function getTheoryGameStyleForStudy($paramStudy){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT OSGS.ID AS OPENING_THEORY_GAME_STYLE_ID,
+			 OSGS.TEXT AS OPENING_THEORY_GAME_STYLE_TEXT,
+			 OSGS.DIN AS OPENING_THEORY_GAME_STYLE_DATE_CREATED
+FROM OPENING_STUDY_THEORY_GAME_STYLE AS OSGS
+WHERE ID_OPENING_STUDY = $paramStudy";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$theoryGameStyle = new TheoryGameStyle($RESULT);
+
+		return $theoryGameStyle;
+	}
+
 }
 ?>

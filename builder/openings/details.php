@@ -17,7 +17,7 @@
   $study = $study->getStudyWithID($paramStudy);
 
   if ($study->monetization->price->value != 0.00) {
-    $study->currencyAndPrice = $study->currency->symbol.' '.$study->monetization->price->value;
+    $study->currencyAndPrice = $study->monetization->currency->symbol.' '.$study->monetization->price->value;
   }else{
     $study->currencyAndPrice = "FREE";
   }
@@ -38,8 +38,12 @@
   <div class="page-bar">
      <ul class="page-breadcrumb">
        <li>
-         <i class="fa fa-home"></i>
-         <a href="./">Openings</a>
+          <i class="fa fa-home"></i>
+          <a href="#">Openings</a>
+          <i class="fa fa-angle-right"></i>
+       </li>
+       <li>
+         <a href="./list.php">Study</a>
          <i class="fa fa-angle-right"></i>
        </li>
        <li>
@@ -144,7 +148,7 @@
                      											<label>
                      											<?=$study->authorFullName?> </label>
                      											<span class="body">
-                     											<p><?=$study->detailsPayment->text?></span></p>
+                     											<p><?=$study->monetization->detailsPayment->text?></span></p>
                      										</div>
                      									</li>
                      								</ul>
@@ -183,7 +187,7 @@
                         								<span class="profile-desc-text"> Please make the payment through the url below. </span>
                         								<div class="margin-top-20 profile-desc-link">
                         									<i class="fa fa-usd"></i>
-                        									<a href="<?=$study->detailsPayment->url?>" target="_blank"><?=$study->detailsPayment->url?></a>
+                        									<a href="<?=$study->monetization->detailsPayment->url?>" target="_blank"><?=$study->monetization->detailsPayment->url?></a>
                         								</div>
                         							</div>
                         						</div>

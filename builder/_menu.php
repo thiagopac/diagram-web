@@ -30,7 +30,7 @@
 				</li>
 				<? if (fnVerifica_Grant('dashboard')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'dashboard') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/dashboard/">
+					<a href="<?=$rootpath?>/dashboard/dashboard.php">
 					<i class="icon-home"></i>
 					<span class="title">Dashboard</span>
 					<span class="selected"></span>
@@ -41,7 +41,7 @@
 				<li class="last <? if ($MENU_ATIVO == 'moderation') echo 'active'; ?>">
         <li class="last <? if (($MENU_ATIVO == 'moderation') || ($MENU_ATIVO == 'moderation-administrators') || ($MENU_ATIVO == 'moderation-users') || ($MENU_ATIVO == 'moderation-openings')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/moderation/">
-					<i class="icon-user"></i>
+					<i class="icon-lock-open"></i>
 					<span class="title">Moderation</span>
 					<span class="selected"></span>
 					</a>
@@ -66,7 +66,7 @@
 				<? } ?>
 				<? if (fnVerifica_Grant('audit')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'audit') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/audit/">
+					<a href="<?=$rootpath?>/audit/list.php">
 					<i class="icon-briefcase"></i>
 					<span class="title">Audit</span>
 					<span class="selected"></span>
@@ -75,8 +75,8 @@
 				<? } ?>
 				<? if (fnVerifica_Grant('settings')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'settings') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/settings/">
-					<i class="fa fa-cogs"></i>
+					<a href="<?=$rootpath?>/settings/settings.php">
+					<i class="icon-settings"></i>
 					<span class="title">Settings</span>
 					<span class="selected"></span>
 					</a>
@@ -85,19 +85,19 @@
         <? if (fnVerifica_Grant('openings')) { ?>
 				<li class="last <? if (($MENU_ATIVO == 'openings') || ($MENU_ATIVO == 'openings-builder')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/openings/">
-					<i class="fa fa-book"></i>
+					<i class="icon-book-open"></i>
 					<span class="title">Openings</span>
 					<span class="selected"></span>
 					</a>
           <ul class="sub-menu">
             <? if (fnVerifica_Grant('openings')) { ?>
             <li class="<? if ($MENU_ATIVO == 'openings') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/openings/index.php"><i class="fa fa-angle-right"></i>Study</a>
+              <a href="<?=$rootpath?>/openings/list.php"><i class="fa fa-angle-right"></i>Study</a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('openings-builder')) { ?>
             <li class="<? if ($MENU_ATIVO == 'openings-builder') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/openings-builder/index.php"><i class="fa fa-angle-right"></i>Builder</a>
+              <a href="<?=$rootpath?>/openings-builder/list.php"><i class="fa fa-angle-right"></i>Builder</a>
             </li>
             <? } ?>
           </ul>
@@ -106,19 +106,19 @@
         <? if (fnVerifica_Grant('administration')) { ?>
 				<li class="last <? if (($MENU_ATIVO == 'administration-inbox') || ($MENU_ATIVO == 'administration-management')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/administration/">
-					<i class="fa fa-inbox"></i>
+					<i class="icon-drawer"></i>
 					<span class="title">Administration</span>
 					<span class="selected"></span>
 					</a>
           <ul class="sub-menu">
             <? if (fnVerifica_Grant('administration-inbox')) { ?>
             <li class="<? if ($MENU_ATIVO == 'administration-inbox') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/administration/index.php"><i class="fa fa-angle-right"></i>Inbox</a>
+              <a href="<?=$rootpath?>/administration/inbox.php"><i class="fa fa-angle-right"></i>Inbox</a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('administration-management')) { ?>
             <li class="<? if ($MENU_ATIVO == 'administration-management') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/>/management.php"><i class="fa fa-angle-right"></i>Management</a>
+              <a href="<?=$rootpath?>/administration/management.php"><i class="fa fa-angle-right"></i>Management</a>
             </li>
             <? } ?>
           </ul>

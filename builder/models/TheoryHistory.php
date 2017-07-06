@@ -21,5 +21,22 @@ class TheoryHistory {
 
 	}
 
+	public function getTheoryHistoryForStudy($paramStudy){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT OSTH.ID AS OPENING_THEORY_HISTORY_ID,
+			 OSTH.TEXT AS OPENING_THEORY_HISTORY_TEXT,
+			 OSTH.DIN AS OPENING_THEORY_HISTORY_DATE_CREATED
+FROM OPENING_STUDY_THEORY_HISTORY AS OSTH
+WHERE ID_OPENING_STUDY = $paramStudy";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$theoryHistory = new TheoryHistory($RESULT);
+
+		return $theoryHistory;
+	}
+
 }
 ?>

@@ -40,12 +40,6 @@ class BasePractice {
 			}
 
 			$this->practicePGNs = $arrPracticePGNs;
-
-			// var_dump();
-
-			// foreach ($this->variations as $key => $variation) {
-			//
-			// }
 		}
   }
 

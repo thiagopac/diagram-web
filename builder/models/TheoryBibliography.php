@@ -21,5 +21,22 @@ class TheoryBibliography {
 
 	}
 
+	public function getTheoryBibliographyForStudy($paramStudy){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT OSTB.ID AS OPENING_STUDY_BIBLIOGRAPHY_ID,
+       OSTB.TEXT AS OPENING_STUDY_BIBLIOGRAPHY_TEXT,
+       OSTB.DIN AS OPENING_STUDY_BIBLIOGRAPHY_DATE_CREATED
+FROM OPENING_STUDY_THEORY_BIBLIOGRAPHY AS OSTB
+WHERE ID_OPENING_STUDY = $paramStudy";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$theoryBibliography = new TheoryBibliography($RESULT);
+
+		return $theoryBibliography;
+	}
+
 }
 ?>

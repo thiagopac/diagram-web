@@ -29,4 +29,6 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/profile.css"/>
 
 <link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/custom/css/star-rating.css"/>
+
+<link rel="stylesheet" type="text/css" href="<?=$absolutepath?>/assets/admin/pages/css/error.css"/>
 <!-- END PAGE LEVEL STYLES -->

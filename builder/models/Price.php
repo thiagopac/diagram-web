@@ -19,6 +19,21 @@ class Price {
 
 	}
 
+	public function getPriceWithID($paramPrice){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT PR.ID AS PRICE_ID, PR.VALUE AS PRICE_VALUE
+						FROM PRICE PR
+						WHERE PR.ID = $paramPrice";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$price = new Price($RESULT);
+
+		return $price;
+	}
+
 	public function getAllPrices(){
 
 		$DB = fnDBConn();

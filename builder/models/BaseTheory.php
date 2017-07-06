@@ -29,6 +29,27 @@ class BaseTheory {
 
 	}
 
+	public function getBaseTheoryForStudy($paramStudy){
+
+		$baseTheory = new BaseTheory();
+
+		$baseTheory->idStudy = $paramStudy;
+
+		$theoryBibliography = new TheoryBibliography();
+		$baseTheory->theoryBibliography = $theoryBibliography->getTheoryBibliographyForStudy($paramStudy);
+
+		$theoryGameStyle = new TheoryGameStyle();
+		$baseTheory->theoryGameStyle = $theoryGameStyle->getTheoryGameStyleForStudy($paramStudy);
+
+		$theoryHistory = new TheoryHistory();
+		$baseTheory->theoryHistory = $theoryHistory->getTheoryHistoryForStudy($paramStudy);
+
+		$theoryMainGrandMasters = new TheoryMainGrandMasters();
+		$baseTheory->theoryMainGrandMasters = $theoryMainGrandMasters->getTheoryMainGrandMastersForStudy($paramStudy);
+
+		return $baseTheory;
+	}
+
 }
 
 ?>

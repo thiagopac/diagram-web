@@ -34,6 +34,18 @@
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
 			</div>
+			<div class="page-bar">
+				 <ul class="page-breadcrumb">
+					 <li>
+							<i class="fa fa-home"></i>
+							<a href="#">Moderation</a>
+							<i class="fa fa-angle-right"></i>
+					 </li>
+						<li>
+							 <a href="./openings.php">Openings</a>
+						</li>
+				 </ul>
+			</div>
 			<!-- END PAGE HEADER-->
 
 <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -87,7 +99,7 @@
 											 <? $study->active == "0" ? $status = "Inactive" : $status = "Active"; echo $status; ?>
 										</td>
 										<td>
-											 <a href="editOpening.php?s=<?=$study->id?>">Editar</a> | <a href="../exec/?e=adm_del&s=<?=$study->id?>" class="confirmation">Apagar</a>
+											 <a href="edit-opening.php?s=<?=$study->id?>">Editar</a> | <a href="../exec/?e=adm_del&s=<?=$study->id?>" class="confirmation">Apagar</a>
 										</td>
 									</tr>
 									<?
