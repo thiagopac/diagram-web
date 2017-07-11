@@ -1,6 +1,8 @@
 <?php
 require_once('Country.php');
 require_once('Language.php');
+require_once('InterfaceLanguage.php');
+require_once('Theme.php');
 
 class User {
 
@@ -18,6 +20,8 @@ class User {
 	public $typeUser;
 	public $country;
 	public $language;
+	public $interfaceLanguage;
+	public $theme;
 
 	//construtor da classe
 	public function __construct($array){
@@ -38,8 +42,17 @@ class User {
 
 			$this->fullName = $this->firstName." ".$this->lastName;
 
-			$this->country = new Country($array);
-			$this->language = new Language($array);
+			$country = new Country();
+			$this->country = $country->getCountryWithID($array['COUNTRY_ID']);
+
+			$language = new Language();
+			$this->language = $language->getLanguageWithID($array['LANGUAGE_ID']);
+
+			$interfaceLanguage = new InterfaceLanguage();
+			$this->interfaceLanguage = $interfaceLanguage->getInterfaceLanguageWithID($array['INTERFACE_LANGUAGE_ID']);
+
+			$theme = new Theme();
+			$this->theme = $theme->getThemeWithID($array['THEME_ID']);
 		}
   }
 
@@ -64,14 +77,10 @@ class User {
        U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
        U.ID_TYPE_USER AS USER_TYPE_USER,
        U.ID_COUNTRY AS COUNTRY_ID,
-       CNT.CODE AS COUNTRY_CODE,
-       CNT.NAME AS COUNTRY_NAME,
-       ID_FIRST_LANGUAGE AS LANGUAGE_ID,
-       LANG.CODE AS LANGUAGE_CODE,
-       LANG.NAME AS LANGUAGE_NAME
+			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 U.ID_THEME AS THEME_ID
 FROM USER AS U
-INNER JOIN COUNTRY AS CNT ON CNT.ID = U.ID_COUNTRY
-INNER JOIN LANGUAGE AS LANG ON LANG.ID = U.ID_FIRST_LANGUAGE
 WHERE 1";
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
@@ -103,14 +112,10 @@ WHERE 1";
 			 U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
 			 U.ID_TYPE_USER AS USER_TYPE_USER,
 			 U.ID_COUNTRY AS COUNTRY_ID,
-			 CNT.CODE AS COUNTRY_CODE,
-			 CNT.NAME AS COUNTRY_NAME,
-			 ID_FIRST_LANGUAGE AS LANGUAGE_ID,
-			 LANG.CODE AS LANGUAGE_CODE,
-			 LANG.NAME AS LANGUAGE_NAME
+			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 U.ID_THEME AS THEME_ID
 FROM USER AS U
-INNER JOIN COUNTRY AS CNT ON CNT.ID = U.ID_COUNTRY
-INNER JOIN LANGUAGE AS LANG ON LANG.ID = U.ID_FIRST_LANGUAGE
 WHERE U.STATUS = 1";
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
@@ -142,14 +147,10 @@ WHERE U.STATUS = 1";
        U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
        U.ID_TYPE_USER AS USER_TYPE_USER,
        U.ID_COUNTRY AS COUNTRY_ID,
-       CNT.CODE AS COUNTRY_CODE,
-       CNT.NAME AS COUNTRY_NAME,
-       ID_FIRST_LANGUAGE AS LANGUAGE_ID,
-       LANG.CODE AS LANGUAGE_CODE,
-       LANG.NAME AS LANGUAGE_NAME
+			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 U.ID_THEME AS THEME_ID
 FROM USER AS U
-INNER JOIN COUNTRY AS CNT ON CNT.ID = U.ID_COUNTRY
-INNER JOIN LANGUAGE AS LANG ON LANG.ID = U.ID_FIRST_LANGUAGE
 WHERE U.ID_TYPE_USER = 1";
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
@@ -181,14 +182,10 @@ WHERE U.ID_TYPE_USER = 1";
        U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
        U.ID_TYPE_USER AS USER_TYPE_USER,
        U.ID_COUNTRY AS COUNTRY_ID,
-       CNT.CODE AS COUNTRY_CODE,
-       CNT.NAME AS COUNTRY_NAME,
-       ID_FIRST_LANGUAGE AS LANGUAGE_ID,
-       LANG.CODE AS LANGUAGE_CODE,
-       LANG.NAME AS LANGUAGE_NAME
+			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 U.ID_THEME AS THEME_ID
 FROM USER AS U
-INNER JOIN COUNTRY AS CNT ON CNT.ID = U.ID_COUNTRY
-INNER JOIN LANGUAGE AS LANG ON LANG.ID = U.ID_FIRST_LANGUAGE
 WHERE U.ID = $paramUser";
 
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
@@ -196,6 +193,20 @@ WHERE U.ID = $paramUser";
 		$user = new User($RESULT);
 
 		return $user;
+	}
+
+	public function updateInterfaceLanguageAndThemeForUser($paramLanguage, $paramTheme, $paramUser){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE USER AS U SET U.ID_INTERFACE_LANGUAGE = $paramLanguage,
+			U.ID_THEME = $paramTheme
+WHERE U.ID = $paramUser";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+	  fnDB_LOG_AUDIT_ADD($DB,"O usuário atualizou suas preferências.");
+
 	}
 
 }

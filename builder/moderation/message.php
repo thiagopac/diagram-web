@@ -1,16 +1,31 @@
 <?
    // #INCLUDES
    require_once ('../lib/config.php');
-   require_once('../models/Study.php');
+   require_once('../models/StudyAdministration.php');
+
+   if (empty($_REQUEST['m'])){
+     header('Location: ./');
+     exit;
+ 	 }
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ( 'administration-management');
+   fnInicia_Sessao ( 'moderation-inbox');
+
+
+   #BUSCAR TODAS AS VARIÁVEIS GET
+   $paramMessage = $_REQUEST['m'];
+   $paramUser = $_SESSION['USER']['ID'];
+
+   $studyAdministration = new StudyAdministration();
+   $studyAdministration = $studyAdministration->getStudyAdministrationWithIDForUser($paramMessage, $paramUser);
+
+   if ($studyAdministration->id == NULL){
+     header('Location: ./');
+     exit;
+    }
+
    include('../imports/header.php');
-
-   $study = new Study();
-   $arrStudies = $study->getAllStudies();
-
-   ?>
+?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">
@@ -19,7 +34,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Management <small></small>
+            Administration Message <small></small>
          </h3>
       </div>
    </div>
@@ -27,11 +42,15 @@
       <ul class="page-breadcrumb">
          <li>
             <i class="fa fa-home"></i>
-            <a href="#">Administration</a>
+            <a href="#">Moderation</a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="management.php">Management</a>
+            <a href="inbox.php">Inbox</a>
+            <i class="fa fa-angle-right"></i>
+         </li>
+         <li>
+            <a href="message.php?m=<?=$paramMessage?>">Message</a>
          </li>
       </ul>
    </div>
@@ -44,30 +63,26 @@
                <div class="form-group">
                   <label class="col-md-3 control-label">Study</label>
                   <div class="col-md-6">
-                     <select class="form-control select2me" name="options2">
-                        <option value="">Select...</option>
-
-                        <?php foreach ($arrStudies as $key => $study): ?>
-
-                          <option value="<?=$study->id?>">[<?=$study->author->fullName?>] - <?=$study->name?></option>
-
-                        <?php endforeach; ?>
-
-                     </select>
+                     <p class="form-control-static"><?=$studyAdministration->study->name?></p>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-md-3 control-label">Sent date</label>
+                  <div class="col-md-6">
+                     <p class="form-control-static"><?=$studyAdministration->dateCreated?></p>
                   </div>
                </div>
                <div class="form-group">
                   <label class="col-md-3 control-label">Message</label>
                   <div class="col-md-6">
-                     <textarea id="textarea_message" maxlength="250" class="form-control" rows="6"></textarea>
+                     <p class="form-control-static"><?=$studyAdministration->message?></p>
                   </div>
                </div>
             </div>
             <div class="form-actions">
                <div class="row">
                   <div class="col-md-offset-3 col-md-9">
-                     <button type="submit" class="btn green">Send</button>
-                     <button type="button" class="btn default">Cancel</button>
+                     <button type="button" class="btn default" onclick="window.history.go(-1)">Back</button>
                   </div>
                </div>
             </div>

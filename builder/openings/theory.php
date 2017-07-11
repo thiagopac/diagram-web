@@ -4,21 +4,34 @@
   require_once('../models/Study.php');
   require_once('../models/Variation.php');
   require_once('../models/Line.php');
+  require_once('../models/Acquisition.php');
 
-  // CONTROLE SESSAO
+  if (empty($_REQUEST['s'])){
+    header('Location: ./');
+    exit;
+  }
+
   fnInicia_Sessao ( 'openings' );
-  require_once('../imports/header.php');
-  require_once('../imports/opening_styles.php');
 
-  $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
+  $userID = $_SESSION['USER']['ID'];
 
   #BUSCAR TODAS AS VARIÁVEIS GET
-  $paramStudy = $_SESSION['s'];
-
-  #INICIO LOGICA
+  $paramStudy = $_REQUEST['s'];
 
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
+
+  $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
+
+  if ($userOwnsStudy == false) {
+    header('Location: ./');
+    exit;
+  }
+
+  // CONTROLE SESSAO
+
+  require_once('../imports/header.php');
+  require_once('../imports/opening_styles.php');
 ?>
 
 <script>

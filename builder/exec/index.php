@@ -1,7 +1,7 @@
 <?php
 ### INCLUDE
 	require_once('../lib/config.php');
-	
+
 ### INPUTS
 	$inREQUEST		= addslashes($_REQUEST['e']);
 

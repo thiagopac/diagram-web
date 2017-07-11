@@ -21,5 +21,20 @@ class Country {
 
 	}
 
+	public function getCountryWithID($paramCountry){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT CNT.ID AS COUNTRY_ID, CNT.CODE AS COUNTRY_CODE, CNT.NAME AS COUNTRY_NAME
+						FROM COUNTRY AS CNT
+						WHERE CNT.ID = $paramCountry";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		$country = new Country($RESULT);
+
+		return $country;
+	}
+
 }
 ?>

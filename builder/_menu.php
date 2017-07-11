@@ -37,9 +37,30 @@
 					</a>
 				</li>
 				<? } ?>
+        <? if (fnVerifica_Grant('news')) { ?>
+				<li class="last <? if (($MENU_ATIVO == 'news-general') || ($MENU_ATIVO == 'news-targeted')) echo 'active'; ?>">
+					<a href="<?=$rootpath?>/news/">
+					<i class="icon-book-open"></i>
+					<span class="title">News</span>
+					<span class="selected"></span>
+					</a>
+          <ul class="sub-menu">
+            <? if (fnVerifica_Grant('news-targeted')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'news-targeted') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/news/targeted.php"><i class="fa fa-angle-right"></i>Targeted News</a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('news-general')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'news-general') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/news/general.php"><i class="fa fa-angle-right"></i>General News</a>
+            </li>
+            <? } ?>
+          </ul>
+				</li>
+				<? } ?>
 				<? if (fnVerifica_Grant('moderation')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'moderation') echo 'active'; ?>">
-        <li class="last <? if (($MENU_ATIVO == 'moderation') || ($MENU_ATIVO == 'moderation-administrators') || ($MENU_ATIVO == 'moderation-users') || ($MENU_ATIVO == 'moderation-openings')) echo 'active'; ?>">
+        <li class="last <? if (($MENU_ATIVO == 'moderation') || ($MENU_ATIVO == 'moderation-administrators') || ($MENU_ATIVO == 'moderation-users') || ($MENU_ATIVO == 'moderation-openings')  || ($MENU_ATIVO == 'moderation-inbox') || ($MENU_ATIVO == 'moderation-feedback')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/moderation/">
 					<i class="icon-lock-open"></i>
 					<span class="title">Moderation</span>
@@ -59,6 +80,16 @@
             <? if (fnVerifica_Grant('moderation-openings')) { ?>
             <li class="<? if ($MENU_ATIVO == 'moderation-openings') echo 'active'; ?>">
               <a href="<?=$rootpath?>/moderation/openings.php"><i class="fa fa-angle-right"></i>Openings</a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('moderation-inbox')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'moderation-inbox') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/moderation/inbox.php"><i class="fa fa-angle-right"></i>Inbox</a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('moderation-feedback')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'moderation-feedback') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/moderation/feedback.php"><i class="fa fa-angle-right"></i>Feedback</a>
             </li>
             <? } ?>
           </ul>
@@ -98,27 +129,6 @@
             <? if (fnVerifica_Grant('openings-builder')) { ?>
             <li class="<? if ($MENU_ATIVO == 'openings-builder') echo 'active'; ?>">
               <a href="<?=$rootpath?>/openings-builder/list.php"><i class="fa fa-angle-right"></i>Builder</a>
-            </li>
-            <? } ?>
-          </ul>
-				</li>
-				<? } ?>
-        <? if (fnVerifica_Grant('administration')) { ?>
-				<li class="last <? if (($MENU_ATIVO == 'administration-inbox') || ($MENU_ATIVO == 'administration-management')) echo 'active'; ?>">
-					<a href="<?=$rootpath?>/administration/">
-					<i class="icon-drawer"></i>
-					<span class="title">Administration</span>
-					<span class="selected"></span>
-					</a>
-          <ul class="sub-menu">
-            <? if (fnVerifica_Grant('administration-inbox')) { ?>
-            <li class="<? if ($MENU_ATIVO == 'administration-inbox') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/administration/inbox.php"><i class="fa fa-angle-right"></i>Inbox</a>
-            </li>
-            <? } ?>
-            <? if (fnVerifica_Grant('administration-management')) { ?>
-            <li class="<? if ($MENU_ATIVO == 'administration-management') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/administration/management.php"><i class="fa fa-angle-right"></i>Management</a>
             </li>
             <? } ?>
           </ul>

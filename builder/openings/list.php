@@ -3,6 +3,7 @@
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
    require_once('../models/Acquisition.php');
+   require_once('../models/StudyRating.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings' );
@@ -49,30 +50,30 @@
 
 
   <?foreach($arrStudies as $KEY => $study){ ?> <!-- INCÍCIO foreach  -->
-    <?php
-          $acquisition = new Acquisition();
-          $acquisition = $acquisition->getAcquisitionForUserAndStudy($userID, $study->id);
+        <?php
+              $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
 
-          $userHasStudy = $acquisition->idStudy;
+              $color = "";
 
-          $color = "";
+              $selected = "";
 
-          $selected = "";
+              if ($userOwnsStudy == true) {
+                $color = "bg-red-sunglo";
+                $selected = "selected";
+              }else{
+                $color = "bg-grey-cascade";
+              }
 
-          if ($userHasStudy) {
-            $color = "bg-red-sunglo";
-            $selected = "selected";
-          }else{
-            $color = "bg-grey-cascade";
-          }
-     ?>
+                $studyRating = new StudyRating();
+                $studyRating = $studyRating->getAverageStudyRatingForStudy($study->id);
+         ?>
 
   <!-- INÍCIO VIEW OBJETO ESTUDO -->
   <a href="details.php?s=<?=$study->id?>">
     <div class="tile double <?=$selected?> <?=$color?>">
 
 <!-- só mostrar o V se o usuário já adquiriu o estudo -->
-      <?php if ($userHasStudy): ?>
+      <?php if ($userOwnsStudy == true): ?>
         <div class="corner">
         </div>
         <div class="check">
@@ -83,7 +84,7 @@
         <h4><?=$study->name?></h4><small>By: <?=$study->authorFullName?></small>
            <!--  rate-->
            <div style="margin-top:10px;">
-             <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="4.5" data-readonly="true" data-show-clear="false" data-show-caption="false">
+             <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="<?=$studyRating->rating?>" data-readonly="true" data-show-clear="false" data-show-caption="false">
            </div>
       </div>
       <div class="tile-object">

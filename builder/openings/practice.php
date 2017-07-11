@@ -3,21 +3,33 @@
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
    require_once('../models/PracticeLine.php');
+
+   if (empty($_REQUEST['s'])){
+     header('Location: ./');
+     exit;
+   }
+
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings' );
-   include('../imports/header.php');
-   include('../imports/opening_styles.php');
 
-   $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
    $userID = $_SESSION['USER']['ID'];
 
    #BUSCAR TODAS AS VARIÁVEIS GET
-   $paramStudy = $_SESSION['s'];
+   $paramStudy = $_REQUEST['s'];
+   $getEco = $_GET['eco'];
 
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
 
-   $getEco = $_GET['eco'];
+   $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
+
+   if ($userOwnsStudy == false) {
+     header('Location: ./');
+     exit;
+   }
+
+   include('../imports/header.php');
+   include('../imports/opening_styles.php');
 ?>
 
 <script>

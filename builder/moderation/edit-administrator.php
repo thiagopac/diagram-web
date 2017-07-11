@@ -3,6 +3,11 @@
 	require_once('../lib/config.php');
 	require_once('../models/User.php');
 
+	if (empty($_REQUEST['u'])){
+		header('Location: ./');
+		exit;
+	}
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('moderation-administrators');
 	include('../imports/header.php');
@@ -103,11 +108,9 @@
 								</div>
 
 
-								<div class="form-actions fluid">
-									<div class="col-md-offset-3 col-md-9">
-										<button type="submit" class="btn green">Salvar</button>
-										<button type="button" class="btn default" onClick="window.history.go(-1); return false;">Voltar</button>
-									</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
+									<button type="button" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->

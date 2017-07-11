@@ -4,21 +4,32 @@
   require_once('../models/Study.php');
   require_once('../models/InterfaceLanguage.php');
 
-  // CONTROLE SESSAO
-  fnInicia_Sessao ( 'openings' );
-  include('../imports/header.php');
-  include('../imports/opening_styles.php');
+  if (empty($_REQUEST['s'])){
+    header('Location: ./');
+    exit;
+  }
 
-  $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
+  // CONTROLE SESSAO
+  fnInicia_Sessao ('openings');
+
+  $userID = $_SESSION['USER']['ID'];
 
   #BUSCAR TODAS AS VARIÁVEIS GET
-  $paramStudy = $_SESSION['s'];
+  $paramStudy = $_REQUEST['s'];
 
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
 
+  if ($study->author->id != $userID){
+    header('Location: ./');
+    exit;
+  }
+
   $line = new Line();
   $arrLines = $line->getAllLinesForStudy($paramStudy);
+
+  include('../imports/header.php');
+  include('../imports/opening_styles.php');
 ?>
 <script>
   function resizeIframe(obj) {

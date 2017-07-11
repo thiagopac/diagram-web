@@ -3,21 +3,32 @@
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
 
+   if (empty($_REQUEST['s'])){
+     header('Location: ./');
+     exit;
+   }
+
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings' );
-   include('../imports/header.php');
-   include('../imports/opening_styles.php');
 
-   $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
+   $userID = $_SESSION['USER']['ID'];
 
    #BUSCAR TODAS AS VARIÁVEIS GET
-   $paramStudy = $_SESSION['s'];
+   $paramStudy = $_REQUEST['s'];
 
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
 
+   if ($study->author->id != $userID){
+     header('Location: ./');
+     exit;
+   }
+
    $variarion = new Variation();
    $arrVariations = $variarion->getAllVariationsForStudy($paramStudy);
+
+   include('../imports/header.php');
+   include('../imports/opening_styles.php');
 ?>
 
 <style type="text/css">

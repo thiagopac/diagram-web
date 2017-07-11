@@ -8,6 +8,11 @@
 	require_once('../models/InterfaceLanguage.php');
 	require_once('../models/Eco.php');
 
+	if (empty($_REQUEST['s'])){
+		header('Location: ./');
+		exit;
+	}
+
 #CONTROLE SESSAO
 	fnInicia_Sessao('moderation-openings');
 
@@ -15,10 +20,9 @@
 
 #INPUTS
 	$MSG = addslashes($_REQUEST['msg']);
-	$_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
 
 	#BUSCAR TODAS AS VARIÁVEIS GET
-	$paramStudy = $_SESSION['s'];
+	$paramStudy = $_REQUEST['s'];
 
 	$study = new Study();
 	$study = $study->getStudyWithID($paramStudy);
@@ -172,11 +176,9 @@
 								</div>
 
 
-								<div class="form-actions fluid">
-									<div class="col-md-offset-3 col-md-9">
-										<button type="submit" class="btn btn-primary">Save</button>
-										<button type="button" class="btn default" onClick="window.history.go(-1); return false;">Back</button>
-									</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
+									<button type="button" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->

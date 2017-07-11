@@ -44,12 +44,10 @@ date_default_timezone_set('America/Sao_Paulo');
 
 #MENU
 	$MENU_GRANT[]  = array('dashboard');
-	$MENU_GRANT[]  = array('administrators');
+	$MENU_GRANT[]  = array('moderation');
+	$MENU_GRANT[]  = array('news');
 	$MENU_GRANT[]  = array('settings');
 	$MENU_GRANT[]  = array('audit');
-	$MENU_GRANT[]  = array('listboards');
-	$MENU_GRANT[]  = array('buildpgn');
-	$MENU_GRANT[]  = array('buildfen');
 	$MENU_GRANT[]  = array('openings');
 	$MENU_GRANT[]  = array('openings-builder');
 
@@ -58,5 +56,4 @@ date_default_timezone_set('America/Sao_Paulo');
 
 //INCLUDES
 	include('funcoes.php');
-	include('funcoes_genericas.php');
 ?>

@@ -1,4 +1,109 @@
 <?php
+
+function fnLogText($strMessage,$booDie = false)
+	{
+	global $booDEV;
+
+	if ($booDEV)
+		echo $strMessage;
+
+	$fp = fopen(FILE_LOG, 'a');
+	fwrite($fp, date("Y/m/d H:i:s")." - (IP: {$_SERVER['REMOTE_ADDR']})(USER AGENT: {$_SERVER['HTTP_USER_AGENT']})(REQUEST_URI: {$_SERVER['REQUEST_URI']}) -  ".$strMessage.chr(13).chr(10));
+	fclose($fp);
+
+	if ($booDie)
+		{
+		die('FALHA GERAL: '.$strMessage);
+		}
+	}
+
+function fnDBConn()
+	{
+	global $MYSQL_HOST, $MYSQL_LOGIN, $MYSQL_SENHA, $MYSQL_PORTA, $MYSQL_DATABASE, $MYSQL_TIMEOUT;
+
+	$erro = false;
+	$DBtmp = mysqli_connect($MYSQL_HOST, $MYSQL_LOGIN, $MYSQL_SENHA, $MYSQL_DATABASE,$MYSQL_PORTA) or $erro = true;
+
+	$DBtmp->set_charset("utf8");
+
+	if ($erro)
+		{
+		$erro = false;
+		sleep(3);
+		$DBtmp = mysqli_connect($MYSQL_HOST, $MYSQL_LOGIN, $MYSQL_SENHA, $MYSQL_DATABASE,$MYSQL_PORTA) or $erro = true;
+		}
+
+	if ($erro)
+		{
+		sleep(3);
+		$DBtmp = mysqli_connect($MYSQL_HOST, $MYSQL_LOGIN, $MYSQL_SENHA, $MYSQL_DATABASE,$MYSQL_PORTA) or fnLogText('(fnDBConn) '.mysqli_connect_error(),true);
+		}
+
+	fnDB_DO_EXEC($DBtmp,"SET wait_timeout = {$MYSQL_TIMEOUT}");
+
+	return($DBtmp);
+	}
+
+function fnDB_DO_EXEC($DB, $strSQL)
+	{
+	global $DATABASE_NAME,$SQL_DUMP;
+
+	$error = false;
+
+	$SQL_DUMP .= "\n********************************************************************************\n";
+	$SQL_DUMP .= $strSQL;
+
+	$qy = mysqli_query($DB,$strSQL) or $error = true;
+
+	if ($error)
+		fnLogText('(fnDB_DO_EXEC) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
+
+	return(array((int)$DB->affected_rows, (int)mysqli_insert_id($DB)) );
+}
+
+function fnDB_DO_SELECT_WHILE($DB, $strSQL)
+{
+	global $DATABASE_NAME,$SQL_DUMP;
+	$error = false;
+
+	$SQL_DUMP .= "\n********************************************************************************\n";
+	$SQL_DUMP .= $strSQL;
+
+	$qy = mysqli_query($DB,$strSQL) or $error = true;
+
+	if($error) fnLogText('(fnDB_DO_SELECT_WHILE) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
+
+	$arItem = array();
+	$i=0;
+
+	while($linha = mysqli_fetch_assoc($qy))
+	{
+		$arItem[$i] = $linha;
+		$i++;
+	}
+
+	return($arItem);
+}
+
+function fnDB_DO_SELECT($DB, $strSQL)
+	{
+	global $DATABASE_NAME,$SQL_DUMP;
+
+	$SQL_DUMP .= "\n********************************************************************************\n";
+	$SQL_DUMP .= $strSQL;
+
+	$error = false;
+
+	$qy = mysqli_query($DB,$strSQL) or $error = true;
+
+	if ($error)
+		fnLogText('(fnDB_DO_SELECT) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
+
+	$linha = mysqli_fetch_assoc($qy);
+
+	return($linha);
+}
+
 function fnValidaChars($texto)
 	{
 	$arCHARS_VALIDOS = array('q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m',
@@ -92,7 +197,7 @@ function fnInicia_Sessao($strGrantPage)
 
 	if (!fnVerifica_Grant($strGrantPage))
 		{
-		header("location: ../../index.php?erroMsg=".urlencode('Sem acesso para a página. Tente novamente.'));
+		header("location: ../index.php?erroMsg=".urlencode('Sem acesso para a página. Tente novamente.'));
 		exit;
 		}
 
@@ -120,7 +225,7 @@ function fnHeaderLogin()
 		{
 		if (strpos($_SESSION['USER']['GRANTS'], '|'.$arItem[0].'|') !== false)
 			{
-			header("location: ../".$arItem[0].'/'); exit;
+			header("location: ../".$arItem[0].'/dashboard.php'); exit;
 			}
 		}
 	}
@@ -227,50 +332,5 @@ function fnRemoveAcentos($str, $enc = "UTF-8")
 						   array_keys($acentos),
 						   htmlentities($str,ENT_NOQUOTES, $enc));
 	}
-
-function sanitizaLocal($DB, $localDoador, $localRecebedor){
-
-    $result = mysqli_query($DB,"SELECT qt_checkin FROM CHECKINS_CORRENTES WHERE id_local = '" . $localDoador . "';");
-
-    $qt_checkin_doador = mysqli_fetch_array($result);
-
-    $result = mysqli_query($DB,"SELECT qt_checkin FROM CHECKINS_CORRENTES WHERE id_local = '" . $localRecebedor . "';");
-
-    $qt_checkin_recebedor = mysqli_fetch_array($result);
-
-    $qt_checkin = $qt_checkin_doador[0] + $qt_checkin_recebedor[0];
-
-    $result1 = mysqli_query($DB,"UPDATE CHECKINS_CORRENTES SET qt_checkin = '" . $qt_checkin . "' WHERE id_local = '" . $localRecebedor . "';");
-
-    $result2 = mysqli_query($DB,"UPDATE CHECKINS_CORRENTES SET qt_checkin = 0 WHERE id_local = '" . $localDoador . "';");
-
-    $result3 = mysqli_query($DB,"UPDATE CHECKIN SET id_local = '" . $localRecebedor . "' WHERE id_local = '" . $localDoador . "';");
-
-    $result4 = mysqli_query($DB,"UPDATE LOCAL SET dt_exclusao = NOW() WHERE id_local = '" . $localDoador . "';");
-
-    if($result1 && $result2 && $result3 && $result4){
-
-    	//Adiciona registro na tabela de auditoria
-    	fnDB_LOG_AUDIT_ADD($DB,'Efetuou trasferência de checkins.',false);
-
-            return $MSG = "Checkins transferidos com sucesso";
-    }else{
-            return $MSG = "Erro na transferencia de checkins";
-    }
-
-}
-
-function alteraTempo($DB, $txt_t_local, $txt_t_checkin){
-	$result = mysqli_query($DB,"UPDATE CONFIGURACAO SET T_CHECKIN = '" . $txt_t_checkin . "', T_LOCAL = '" . $txt_t_local . "';");
-	if($result){
-
-		//Adiciona registro na tabela de auditoria
-		fnDB_LOG_AUDIT_ADD($DB,'Alterou configuração de tempo.',false);
-
-		return $MSG = "Tempo alterado com sucesso";
-	}else{
-		return $MSG = "Erro ao alterar tempo";
-	}
-}
 
 ?>

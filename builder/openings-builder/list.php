@@ -2,6 +2,7 @@
    // #INCLUDES
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
+   require_once('../models/StudyRating.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings-builder' );
@@ -50,10 +51,6 @@
    							<div class="tools">
    								<a href="javascript:;" class="collapse" data-original-title="" title="">
    								</a>
-   								<a href="javascript:;" class="reload" data-original-title="" title="">
-   								</a>
-   								<a href="" class="fullscreen" data-original-title="" title="">
-   								</a>
    							</div>
    						</div>
    						<div class="portlet-body">
@@ -61,6 +58,11 @@
 
                   <?foreach($arrStudies as $KEY => $study){ ?> <!-- INCÍCIO foreach  -->
                     <!-- INÍCIO VIEW OBJETO ESTUDO -->
+
+                    <?php
+                        $studyRating = new StudyRating();
+                        $studyRating = $studyRating->getAverageStudyRatingForStudy($study->id);
+                     ?>
 
                   <a href="details.php?s=<?=$study->id?>">
                     <div class="tile double bg-grey-cascade double">
@@ -70,7 +72,7 @@
                         <p>
                           <!--  rate-->
                           <div style="margin-top:10px;">
-                            <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="4.5" data-readonly="true" data-show-clear="false" data-show-caption="false">
+                            <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="<?=$studyRating->rating?>" data-readonly="true" data-show-clear="false" data-show-caption="false">
                           </div>
                         </p>
                       </div>

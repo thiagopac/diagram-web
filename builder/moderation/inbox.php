@@ -4,7 +4,7 @@
 	require_once('../models/StudyAdministration.php');
 
 #CONTROLE SESSAO
-	fnInicia_Sessao('administration-inbox');
+	fnInicia_Sessao('moderation-inbox');
 
 	include('../imports/header.php');
 
@@ -38,7 +38,7 @@
 				 <ul class="page-breadcrumb">
 					 <li>
 					 	 <i class="fa fa-home"></i>
-					 	 <a href="#">Administration</a>
+					 	 <a href="#">Moderation</a>
 					 	 <i class="fa fa-angle-right"></i>
 					 </li>
 						<li>
@@ -49,7 +49,7 @@
 			<!-- END PAGE HEADER-->
 
 <!-- BEGIN SAMPLE TABLE PORTLET-->
-<p> Here you will receive all administrative messages about the studies you have created. Updates, news, suggestions and warnings for corrections will be concentrated here, in <strong>Administration</strong> <i class="fa fa-angle-right"></i> <strong>Inbox</strong></p>
+<p> Here you will receive all administrative messages about the studies you have created. Updates, news, suggestions and warnings for corrections will be concentrated here, in <strong>Moderation</strong> <i class="fa fa-angle-right"></i> <strong>Inbox</strong></p>
 					<div class="portlet gren">
 
 						<div class="portlet-body">

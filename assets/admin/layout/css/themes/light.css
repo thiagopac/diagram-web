@@ -456,6 +456,7 @@ Page Header
 .page-sidebar .page-sidebar-menu .sub-menu > li.open > a,
 .page-sidebar .page-sidebar-menu .sub-menu > li.active > a {
   background: #F1F1F1 !important;
+  color: darkgoldenrod;
 }
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li:hover > a > i, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.open > a > i, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.active > a > i,
 .page-sidebar .page-sidebar-menu .sub-menu > li:hover > a > i,
@@ -928,7 +929,8 @@ body {
   border-top: 20px double transparent;
   border-bottom: 20px double transparent;
   border-right: 0;
-  border-left: 8px solid #3FD5C0;
+  /*border-left: 8px solid #3FD5C0;*/
+  border-left: 8px solid #2ecc71;
 }
 .page-sidebar-reversed .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open > a > .selected, .page-sidebar-reversed .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a > .selected, .page-sidebar-reversed
 .page-sidebar .page-sidebar-menu > li.active.open > a > .selected, .page-sidebar-reversed

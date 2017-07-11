@@ -3,6 +3,7 @@
    require_once ('../lib/config.php');
 
    // CONTROLE SESSAO
+   fnInicia_Sessao ('news');
    include('../imports/header.php');
    ?>
 <!-- BEGIN CONTENT -->
@@ -18,9 +19,11 @@
          <h3>Oops! You're lost.</h3>
          <p>
             We can not find the page you're looking for.<br/>
+            You may have accessed a non-existent page or content belonging to the other person.<br/>
+            <br/>
            <a onclick="window.history.go(-1)">
            Return </a>
-           to the last page you were.
+           to the last page you were on.
          </p>
        </div>
      </div>

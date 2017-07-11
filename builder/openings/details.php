@@ -2,16 +2,23 @@
   // #INCLUDES
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
+  require_once('../models/StudyRating.php');
 
   // CONTROLE SESSAO
-  fnInicia_Sessao ( 'openings' );
-  require_once('../imports/header.php');
+  fnInicia_Sessao ('openings');
 
-  $_SESSION['s'] = isset($_REQUEST['s']) ? addslashes($_REQUEST['s']) : $_SESSION['s'];
   $userID = $_SESSION['USER']['ID'];
 
   #BUSCAR TODAS AS VARIÁVEIS GET
-  $paramStudy = $_SESSION['s'];
+  $paramStudy = $_REQUEST['s'];
+
+
+  if (empty($_REQUEST['s'])){
+    header('Location: ./');
+    exit;
+  }
+
+  require_once('../imports/header.php');
 
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
@@ -21,6 +28,11 @@
   }else{
     $study->currencyAndPrice = "FREE";
   }
+
+  $studyRating = new StudyRating();
+  $studyRating = $studyRating->getStudyRatingForStudyAndUser($paramStudy, $userID);
+
+  $userHasNotRated = $studyRating == NULL ? "true" : "false";
 
   // var_dump($study);
 ?>
@@ -111,17 +123,24 @@
                    <i class="fa fa-usd"></i> <?=$study->currencyAndPrice?>
                  </li>
                </ul>
+
+               <?php
+                    $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
+                    $readOnly = 'true';
+
+                    if ($userOwnsStudy == true) {
+                      $readOnly = 'false';
+                    }else{
+                      $readOnly = 'true';
+                    }
+                ?>
                <form>
                  <p>
-                   <input id="rating" name="rating" class="rating" data-size="sm" data-min="0" data-max="5" data-step="0.5" value="" data-readonly="false" data-show-clear="false" data-show-caption="true">
+                   <input id="rating" name="rating" class="rating" data-size="sm" data-min="0" data-max="5" data-step="0.5" value="<?=$studyRating->rating?>" data-readonly="<?=$readOnly?>" data-show-clear="false" data-show-caption="<?=$userHasNotRated?>">
                  </p>
               </form>
                <br/>
-               <?php
-
-               $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
-
-               if ($userOwnsStudy == true): ?>
+            <?php if ($userOwnsStudy == true): ?>
                   <a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> THEORY</a>
                   <a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> PRACTICE</a>
                   <!-- <a href="#modalPurchase" class="btn btn-lg btn-success" title="Donate" data-toggle="modal"><i class="fa fa-usd"></i> DONATE </a> -->

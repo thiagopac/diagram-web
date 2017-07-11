@@ -1,7 +1,7 @@
 		<!-- BEGIN TOP NAVIGATION MENU -->
 		<div class="top-menu">
 			<ul class="nav navbar-nav pull-right">
-				<li class="dropdown dropdown-language">
+				<!-- <li class="dropdown dropdown-language">
 					<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 					<img alt="" src="../../assets/global/img/flags/us.png">
 					<span class="langname">
@@ -14,7 +14,7 @@
 							<img alt="" src="../../assets/global/img/flags/br.png"> Português Brasileiro </a>
 						</li>
 					</ul>
-				</li>
+				</li> -->
 				<li class="dropdown dropdown-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 					<!--img alt="" class="img-circle" src="../../assets/admin/layout/img/avatar3_small.jpg"/-->

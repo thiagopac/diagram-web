@@ -3,7 +3,7 @@
    require_once ('../lib/config.php');
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ('dashboard');
+   fnInicia_Sessao ('news-targeted');
    include('../imports/header.php');
    ?>
 <!-- BEGIN CONTENT -->
@@ -16,7 +16,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Dashboard <small></small>
+            Targeted News <small></small>
          </h3>
       </div>
    </div>
@@ -24,7 +24,11 @@
       <ul class="page-breadcrumb">
          <li>
             <i class="fa fa-home"></i>
-            <a href="#">Dashboard</a>
+            <a href="#">News</a>
+            <i class="fa fa-angle-right"></i>
+         </li>
+         <li>
+            <a href="targeted.php">Targeted News</a>
          </li>
       </ul>
    </div>
