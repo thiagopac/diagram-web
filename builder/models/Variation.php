@@ -11,9 +11,21 @@ class Variation {
 	public $dateCreated;
 	public $idStudy;
 	public $lines;
+	public $deleted;
+
+	static $showDeleted;
+	static $whereDeleted;
+
+	static $showLineDeleted;
+	static $showPracticeLineDeleted;
 
 	//construtor da classe
 	public function __construct($array){
+
+		self::$whereDeleted = self::$showDeleted == true ? "" : " AND OSTV.DELETED = 0";
+
+		Line::$showDeleted = self::$showLineDeleted;
+		Line::$showPracticeLineDeleted = self::$showPracticeLineDeleted;
 
 		//se o array não estiver vazio, inicializar as propriedades do objeto com os valores do array
 		if (!empty($array)) {
@@ -22,6 +34,7 @@ class Variation {
 			$this->text = $array['OPENING_VARIATION_TEXT'];
 			$this->dateCreated = $array['OPENING_VARIATION_DATE_CREATED'];
 			$this->idStudy = $array['OPENING_STUDY_ID'];
+			$this->deleted = $array['OPENING_VARIATION_DELETED'];
 
 			$eco = new Eco();
 			$this->eco = $eco->getEcoWithID($array['OPENING_STUDY_ECO_ID']);
@@ -36,22 +49,25 @@ class Variation {
 
 		$DB = fnDBConn();
 
-		$SQLLISTAVARIATIONS = "SELECT OSTV.ID AS OPENING_VARIATION_ID,
+		$SQL = "SELECT OSTV.ID AS OPENING_VARIATION_ID,
        OSTV.NAME AS OPENING_VARIATION_NAME,
        OSTV.TEXT AS OPENING_VARIATION_TEXT,
        OSTV.DIN AS OPENING_VARIATION_DATE_CREATED,
        OSTV.ID_OPENING_STUDY AS OPENING_STUDY_ID,
-			 OSTV.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID
+			 OSTV.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID,
+			 OSTV.DELETED AS OPENING_VARIATION_DELETED
 FROM OPENING_STUDY_THEORY_VARIATION AS OSTV
 INNER JOIN OPENING_STUDY AS OS ON OS.ID = OSTV.ID_OPENING_STUDY
 WHERE OS.ID = $paramStudy";
 
-		$RESULTLISTAVARIATIONS = fnDB_DO_SELECT_WHILE($DB,$SQLLISTAVARIATIONS);
+		$SQL = $SQL.self::$whereDeleted;
+
+		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
 		$arrVariations = [];
 
 
-		foreach($RESULTLISTAVARIATIONS as $KEY => $ROW){
+		foreach($RESULT as $KEY => $ROW){
 			$variation = new Variation($ROW);
 
 			$line = new Line();
@@ -77,10 +93,13 @@ WHERE OS.ID = $paramStudy";
        OSTV.TEXT AS OPENING_VARIATION_TEXT,
        OSTV.DIN AS OPENING_VARIATION_DATE_CREATED,
        OSTV.ID_OPENING_STUDY AS OPENING_STUDY_ID,
-       OSTV.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID
+       OSTV.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID,
+			 OSTV.DELETED AS OPENING_VARIATION_DELETED
 FROM OPENING_STUDY_THEORY_VARIATION AS OSTV
 INNER JOIN OPENING_ECO AS OE ON OE.ID = OSTV.ID_OPENING_ECO
 WHERE OSTV.ID = $variationID";
+
+		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
 
@@ -90,4 +109,5 @@ WHERE OSTV.ID = $variationID";
 	}
 
 }
+
 ?>

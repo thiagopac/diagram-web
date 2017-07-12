@@ -22,9 +22,15 @@ class User {
 	public $language;
 	public $interfaceLanguage;
 	public $theme;
+	public $deleted;
+
+	static $showDeleted;
+	static $whereDeleted;
 
 	//construtor da classe
 	public function __construct($array){
+
+		self::$whereDeleted = self::$showDeleted == true ? "" : " AND U.DELETED = 0";
 
 		//se o array não estiver vazio, inicializar as propriedades do objeto com os valores do array
 		if (!empty($array)) {
@@ -39,6 +45,7 @@ class User {
 			$this->dateCreated = $array['USER_DATE_CREATED'];
 			$this->dateLastLogin = $array['USER_LAST_LOGIN'];
 			$this->typeUser = $array['USER_TYPE_USER'];
+			$this->deleted = $array['USER_DELETED'];
 
 			$this->fullName = $this->firstName." ".$this->lastName;
 
@@ -77,11 +84,14 @@ class User {
        U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
        U.ID_TYPE_USER AS USER_TYPE_USER,
        U.ID_COUNTRY AS COUNTRY_ID,
-			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_LANGUAGE AS LANGUAGE_ID,
 			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
-			 U.ID_THEME AS THEME_ID
+			 U.ID_THEME AS THEME_ID,
+			 U.DELETED AS USER_DELETED
 FROM USER AS U
 WHERE 1";
+
+		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -112,11 +122,15 @@ WHERE 1";
 			 U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
 			 U.ID_TYPE_USER AS USER_TYPE_USER,
 			 U.ID_COUNTRY AS COUNTRY_ID,
-			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_LANGUAGE AS LANGUAGE_ID,
 			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
-			 U.ID_THEME AS THEME_ID
+			 U.ID_THEME AS THEME_ID,
+			 U.DELETED AS USER_DELETED
 FROM USER AS U
-WHERE U.STATUS = 1";
+WHERE U.STATUS = 1
+AND U.DELETED = 0";
+
+		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -147,11 +161,14 @@ WHERE U.STATUS = 1";
        U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
        U.ID_TYPE_USER AS USER_TYPE_USER,
        U.ID_COUNTRY AS COUNTRY_ID,
-			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_LANGUAGE AS LANGUAGE_ID,
 			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
-			 U.ID_THEME AS THEME_ID
+			 U.ID_THEME AS THEME_ID,
+			 U.DELETED AS USER_DELETED
 FROM USER AS U
 WHERE U.ID_TYPE_USER = 1";
+
+		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -182,11 +199,14 @@ WHERE U.ID_TYPE_USER = 1";
        U.DIN_LAST_LOGIN AS USER_LAST_LOGIN,
        U.ID_TYPE_USER AS USER_TYPE_USER,
        U.ID_COUNTRY AS COUNTRY_ID,
-			 U.ID_FIRST_LANGUAGE AS LANGUAGE_ID,
+			 U.ID_LANGUAGE AS LANGUAGE_ID,
 			 U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
-			 U.ID_THEME AS THEME_ID
+			 U.ID_THEME AS THEME_ID,
+			 U.DELETED AS USER_DELETED
 FROM USER AS U
 WHERE U.ID = $paramUser";
+
+		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
 

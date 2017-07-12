@@ -4,21 +4,24 @@
    require_once('../models/Study.php');
    require_once('../models/Acquisition.php');
    require_once('../models/StudyRating.php');
+   require_once('../models/StudyProgressTheory.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings' );
-
-   require_once('../imports/header.php');
 
    #BUSCAR TODAS AS VARIÁVEIS GET
    	$MSG = addslashes($_REQUEST['MSG']);
 
     $userID = $_SESSION['USER']['ID'];
 
+    Study::$showDeleted = false;
     $study = new Study();
     $arrStudies = $study->getAllActiveStudies();
 
+    $studyProgressTheory = new StudyProgressTheory();
+
     // var_dump($arrStudies);
+    require_once('../imports/header.php');
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -66,6 +69,11 @@
 
                 $studyRating = new StudyRating();
                 $studyRating = $studyRating->getAverageStudyRatingForStudy($study->id);
+
+                $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
+
+                $strProgress = $userOwnsStudy == true ? $progress."%" : "";
+
          ?>
 
   <!-- INÍCIO VIEW OBJETO ESTUDO -->
@@ -89,7 +97,7 @@
       </div>
       <div class="tile-object">
         <div class="name">
-          85%
+          <?=$strProgress?>
         </div>
         <div class="number">
            <small>Updated: <?=$study->dateUpdated?></small>

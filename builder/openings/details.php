@@ -3,6 +3,7 @@
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
   require_once('../models/StudyRating.php');
+  require_once('../models/StudyProgressTheory.php');
 
   // CONTROLE SESSAO
   fnInicia_Sessao ('openings');
@@ -18,10 +19,14 @@
     exit;
   }
 
-  require_once('../imports/header.php');
-
+  Study::$showDeleted = true;
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
+
+  if ($study->deleted == true){
+    header('Location: ./');
+    exit;
+  }
 
   if ($study->monetization->price->value != 0.00) {
     $study->currencyAndPrice = $study->monetization->currency->symbol.' '.$study->monetization->price->value;
@@ -34,7 +39,11 @@
 
   $userHasNotRated = $studyRating == NULL ? "true" : "false";
 
+  $studyProgressTheory = new StudyProgressTheory();
+  $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
+
   // var_dump($study);
+  require_once('../imports/header.php');
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -96,8 +105,8 @@
            <ul class="list-unstyled profile-nav">
              <li>
                <div class="easy-pie-chart">
-                 <div class="number opening" data-percent="85" style="width:200px;padding-top:60px;">
-                   <h1>85<small>%</small></h1>
+                 <div class="number opening" data-percent="<?=$progress?>" style="width:200px;padding-top:60px;">
+                   <h1><?=$progress?><small>%</small></h1>
                  </div>
                </div>
              </li>

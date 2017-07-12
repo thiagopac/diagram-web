@@ -17,10 +17,20 @@
   #BUSCAR TODAS AS VARIÁVEIS GET
   $paramStudy = $_REQUEST['s'];
 
+  //escondendo estudo, variations e linhas deletadas
+  Study::$showDeleted = false;
+  Study::$showVariationDeleted = false;
+  Study::$showLineDeleted = false;
+
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
 
   if ($study->author->id != $userID){
+    header('Location: ./');
+    exit;
+  }
+
+  if ($study->deleted == true){
     header('Location: ./');
     exit;
   }

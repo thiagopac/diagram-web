@@ -24,6 +24,9 @@
      exit;
    }
 
+   Variation::$showLineDeleted = false;
+   Variation::$showPracticeLineDeleted = false;
+
    $variarion = new Variation();
    $arrVariations = $variarion->getAllVariationsForStudy($paramStudy);
 

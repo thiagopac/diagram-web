@@ -30,9 +30,21 @@ class Study {
 	public $variations;
 	public $variationsCount;
 	public $linesCount;
+	public $deleted;
+
+	static $showDeleted;
+	static $whereDeleted;
+
+	static $showVariationDeleted;
+	static $showLineDeleted;
 
 	//construtor da classe
 	public function __construct($array){
+
+		self::$whereDeleted = self::$showDeleted == true ? "" : " AND OS.DELETED = 0";
+
+		Variation::$showDeleted = self::$showVariationDeleted;
+		Line::$showDeleted = self::$showLineDeleted;
 
 		//se o array não estiver vazio, inicializar as propriedades do objeto com os valores do array
 		if (!empty($array)) {
@@ -61,6 +73,8 @@ class Study {
 			$this->baseTheory = $baseTheory->getBaseTheoryForStudy($array['OPENING_STUDY_ID']);
 
 			$this->basePractice = new BasePractice($array);
+
+			$this->deleted = $array['OPENING_STUDY_DELETED'];
 		}
   }
 
@@ -72,7 +86,7 @@ class Study {
 
 		$DB = fnDBConn();
 
-    $SQLISTAESTUDOS = "SELECT OS.ID AS OPENING_STUDY_ID,
+    $SQL = "SELECT OS.ID AS OPENING_STUDY_ID,
        OS.NAME AS OPENING_STUDY_NAME,
        OS.SIDE AS OPENING_STUDY_SIDE,
        OS.ID_USER AS USER_ID,
@@ -80,40 +94,43 @@ class Study {
        OS.DIN_LAST_UPDATE AS OPENING_STUDY_UPDATED,
 			 OS.ACTIVE AS OPENING_STUDY_ACTIVE,
 			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 OS.DELETED AS OPENING_STUDY_DELETED,
        DATE_FORMAT(OS.DIN,'%M %D, %Y') AS OPENING_STUDY_CREATED
 FROM OPENING_STUDY AS OS
 WHERE OS.ID = $paramStudy";
 
-     $RESULTLISTAESTUDOS = fnDB_DO_SELECT($DB,$SQLISTAESTUDOS);
+		$SQL = $SQL.self::$whereDeleted;
 
-		 $study = new Study($RESULTLISTAESTUDOS);
+    $RESULT = fnDB_DO_SELECT($DB,$SQL);
 
-	   $variarion = new Variation();
-	   $arrVariations = $variarion->getAllVariationsForStudy($paramStudy);
+		$study = new Study($RESULT);
 
-		 $study->variations = $arrVariations;
+	  $variarion = new Variation();
+	  $arrVariations = $variarion->getAllVariationsForStudy($paramStudy);
 
-		 $study->variationsCount = count($arrVariations);
+		$study->variations = $arrVariations;
 
-		 foreach ($arrVariations as $key => $variation) {
-		 		$variarionObj = new Variation();
-				$variarionObj = $variation;
+		$study->variationsCount = count($arrVariations);
 
-				foreach ($variation->lines as $key => $line) {
-					$lineObj = new Line();
-					$lineObj = $line;
-					$study->linesCount ++;
-				}
-		 }
+		foreach ($arrVariations as $key => $variation) {
+		 	$variarionObj = new Variation();
+			$variarionObj = $variation;
 
-		 return $study;
+			foreach ($variation->lines as $key => $line) {
+				$lineObj = new Line();
+				$lineObj = $line;
+				$study->linesCount ++;
+			}
+		}
+
+		return $study;
 	}
 
 	public function getBasicDataStudyWithID($paramStudy){
 
 		$DB = fnDBConn();
 
-    $SQLISTAESTUDOS = "SELECT OS.ID AS OPENING_STUDY_ID,
+    $SQL = "SELECT OS.ID AS OPENING_STUDY_ID,
        OS.NAME AS OPENING_STUDY_NAME,
        OS.SIDE AS OPENING_STUDY_SIDE,
        OS.ID_USER AS USER_ID,
@@ -121,13 +138,16 @@ WHERE OS.ID = $paramStudy";
        OS.DIN_LAST_UPDATE AS OPENING_STUDY_UPDATED,
 			 OS.ACTIVE AS OPENING_STUDY_ACTIVE,
 			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 OS.DELETED AS OPENING_STUDY_DELETED,
        DATE_FORMAT(OS.DIN,'%M %D, %Y') AS OPENING_STUDY_CREATED
 FROM OPENING_STUDY AS OS
 WHERE OS.ID = $paramStudy";
 
-     $RESULTLISTAESTUDOS = fnDB_DO_SELECT($DB,$SQLISTAESTUDOS);
+		 $SQL = $SQL.self::$whereDeleted;
 
-		 $study = new Study($RESULTLISTAESTUDOS);
+     $RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		 $study = new Study($RESULT);
 
 		 return $study;
 	}
@@ -142,6 +162,7 @@ WHERE OS.ID = $paramStudy";
        OS.ID_USER AS USER_ID,
 			 OS.ACTIVE AS OPENING_STUDY_ACTIVE,
 			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 OS.DELETED AS OPENING_STUDY_DELETED,
        OS.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID,
        DATE_FORMAT(OS.DIN,'%M %D, %Y') AS OPENING_STUDY_CREATED,
        DATE_FORMAT(OS.DIN_LAST_UPDATE,'%M %D, %Y') AS OPENING_STUDY_UPDATED,
@@ -150,6 +171,8 @@ WHERE OS.ID = $paramStudy";
 FROM OPENING_STUDY AS OS
 INNER JOIN USER AS U ON OS.ID_USER = U.ID
 WHERE 1";
+
+		$SQL = $SQL.self::$whereDeleted;
 
    	$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -174,6 +197,7 @@ WHERE 1";
 			 OS.ACTIVE AS OPENING_STUDY_ACTIVE,
        OS.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID,
 			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 OS.DELETED AS OPENING_STUDY_DELETED,
        DATE_FORMAT(OS.DIN,'%M %D, %Y') AS OPENING_STUDY_CREATED,
        DATE_FORMAT(OS.DIN_LAST_UPDATE,'%M %D, %Y') AS OPENING_STUDY_UPDATED,
        U.FIRSTNAME AS USER_FIRSTNAME,
@@ -181,6 +205,8 @@ WHERE 1";
 FROM OPENING_STUDY AS OS
 INNER JOIN USER AS U ON OS.ID_USER = U.ID
 WHERE OS.ACTIVE = 1";
+
+		$SQL = $SQL.self::$whereDeleted;
 
    	$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -200,8 +226,11 @@ WHERE OS.ACTIVE = 1";
 
 		$SQL = "SELECT OSACQ.ACTIVE
 FROM OPENING_STUDY_ACQUISITION AS OSACQ
-WHERE OSACQ.ID_OPENING_STUDY = $studyID
-  AND OSACQ.ID_USER = $userID";
+INNER JOIN OPENING_STUDY AS OS ON OS.ID = OSACQ.ID_OPENING_STUDY
+WHERE (OSACQ.ID_OPENING_STUDY = $studyID AND OSACQ.ID_USER = $userID)
+OR (OSACQ.ID_OPENING_STUDY = $studyID  AND OS.ID_USER = $userID)";
+
+//o usuário que criou o estudo terá ele listado
 
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
 
@@ -222,6 +251,7 @@ WHERE OSACQ.ID_OPENING_STUDY = $studyID
        OS.ID_USER AS USER_ID,
        OS.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID,
 			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+			 OS.DELETED AS OPENING_STUDY_DELETED,
        DATE_FORMAT(OS.DIN,'%M %D, %Y') AS OPENING_STUDY_CREATED,
        DATE_FORMAT(OS.DIN_LAST_UPDATE,'%M %D, %Y') AS OPENING_STUDY_UPDATED,
        U.FIRSTNAME AS USER_FIRSTNAME,
@@ -229,6 +259,8 @@ WHERE OSACQ.ID_OPENING_STUDY = $studyID
 FROM OPENING_STUDY AS OS
 INNER JOIN USER AS U ON OS.ID_USER = U.ID
 WHERE OS.ID_USER = $paramStudy";
+
+		$SQL = $SQL.self::$whereDeleted;
 
    	$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 

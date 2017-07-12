@@ -11,6 +11,7 @@
 
    $authorID = $_SESSION['USER']['ID'];
 
+   Study::$showDeleted = true;
    $study = new Study();
    $arrStudies = $study->getAllStudiesForAuthor($authorID);
    ?>
@@ -65,7 +66,7 @@
                      ?>
 
                   <a href="details.php?s=<?=$study->id?>">
-                    <div class="tile double bg-grey-cascade double">
+                    <div class="tile double bg-red-sunglo double">
 
                       <div class="tile-body">
                         <h4><?=$study->name?></h4><small>By: <?=$study->authorFullName?></small>
@@ -112,7 +113,7 @@
 
                      <div class="tiles">
                        <a href="create-study.php">
-                         <div class="tile double bg-red">
+                         <div class="tile double bg-green-meadow">
                            <div class="tile-body">
                              <h3>New opening study</h3>
 

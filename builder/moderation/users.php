@@ -15,6 +15,7 @@
 
 	$userID = $_SESSION['USER']['ID'];
 
+	User::$showDeleted = true;
 	$user = new User();
 	$arrUsers = $user->getAllUsers();
 

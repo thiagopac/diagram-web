@@ -3,6 +3,7 @@
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
    require_once('../models/PracticeLine.php');
+   require_once('../models/StudyProgressPractice.php');
 
    if (empty($_REQUEST['s'])){
      header('Location: ./');
@@ -27,6 +28,9 @@
      header('Location: ./');
      exit;
    }
+
+   $studyProgressPractice = new StudyProgressPractice();
+   $progress = $studyProgressPractice->getTotalProgressStudyProgressPracticeForUserAndStudy($userID, $study->id);
 
    include('../imports/header.php');
    include('../imports/opening_styles.php');

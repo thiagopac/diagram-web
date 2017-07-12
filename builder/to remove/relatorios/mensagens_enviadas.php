@@ -1,3 +1,0 @@
-<?
-die('falta fazer ainda');
-?>

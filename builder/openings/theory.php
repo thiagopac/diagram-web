@@ -5,12 +5,14 @@
   require_once('../models/Variation.php');
   require_once('../models/Line.php');
   require_once('../models/Acquisition.php');
+  require_once('../models/StudyProgressTheory.php');
 
   if (empty($_REQUEST['s'])){
     header('Location: ./');
     exit;
   }
 
+  // CONTROLE SESSAO
   fnInicia_Sessao ( 'openings' );
 
   $userID = $_SESSION['USER']['ID'];
@@ -28,7 +30,14 @@
     exit;
   }
 
-  // CONTROLE SESSAO
+  $showHistory = $study->baseTheory->theoryHistory->text != '' ? true : false;
+  $showGameStyle = $study->baseTheory->theoryGameStyle->text != '' ? true : false;
+  $showMainGrandMasters = $study->baseTheory->theoryMainGrandMasters->text != '' ? true : false;
+  $showVariations = count($study->variations) > 0 ? true : false;
+  $showBibliography = $study->baseTheory->theoryBibliography->text != '' ? true : false;
+
+  $studyProgressTheory = new StudyProgressTheory();
+  $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
 
   require_once('../imports/header.php');
   require_once('../imports/opening_styles.php');
@@ -94,9 +103,9 @@
    <!-- END PAGE TITLE & BREADCRUMB-->
    <? include('../imports/alert.php'); ?>
    <div class="progress">
-      <div class="progress-bar blue-hoki" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
-         <span>
-         85% Complete </span>
+      <div class="progress-bar blue-hoki" role="progressbar" aria-valuenow="<?=$progress?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$progress?>%">
+         <span style="color: <? $color = $progress < 5 ? "black" : "white"; echo $color; ?>">
+         <?=$progress?>% Complete </span>
       </div>
    </div>
    <div class="row">
@@ -138,28 +147,44 @@
                   <!--  BEGIN MENU APRENDIZADO -->
                   <div class="row">
                      <ul class="ver-inline-menu tabbable margin-bottom-10">
+
+                      <?php if ($showHistory == true): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_1">
                            <i class="fa fa-birthday-cake"></i> History </a>
                            <span class="after">
                            </span>
                         </li>
+                      <?php endif; ?>
+
+                      <?php if ($showGameStyle == true): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_2">
                            <i class="fa fa-puzzle-piece"></i> Game Style </a>
                         </li>
+                      <?php endif; ?>
+
+                      <?php if ($showMainGrandMasters): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_3">
                            <i class="fa fa-users"></i> Main Grandmasters </a>
                         </li>
+                      <?php endif; ?>
+
+                      <?php if ($showVariations): ?>
                         <li class="active">
                            <a data-toggle="tab" href="#tab_4">
                            <i class="fa fa-bars"></i> Variations </a>
                         </li>
+                      <?php endif; ?>
+
+                      <?php if ($showBibliography): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_5">
                            <i class="fa fa-graduation-cap"></i> Bibliography </a>
                         </li>
+                      <?php endif; ?>
+
                      </ul>
                   </div>
                   <!--  FIM MENU APRENDIZADO -->
@@ -187,7 +212,7 @@
                                        <div class="caption">
                                           <span class="caption-subject bold uppercase"> History</span>
                                        </div>
-                                       <div class="actions">
+                                       <!-- <div class="actions">
                                           <div class="btn-group">
                                              <div class="md-checkbox">
                                                 <input type="checkbox" id="checkbox-history" class="md-check" >
@@ -198,7 +223,7 @@
                                                 Mark as learned </label>
                                              </div>
                                           </div>
-                                       </div>
+                                       </div> -->
                                     </div>
                                     <div class="portlet-body">
                                        <div>
@@ -215,7 +240,7 @@
                                        <div class="caption">
                                           <span class="caption-subject bold uppercase"> Game Style</span>
                                        </div>
-                                       <div class="actions">
+                                       <!-- <div class="actions">
                                           <div class="btn-group">
                                              <div class="md-checkbox">
                                                 <input type="checkbox" id="checkbox-game-style" class="md-check" >
@@ -226,7 +251,7 @@
                                                 Mark as learned </label>
                                              </div>
                                           </div>
-                                       </div>
+                                       </div> -->
                                     </div>
                                     <div class="portlet-body">
                                        <div>
@@ -243,7 +268,7 @@
                                        <div class="caption">
                                           <span class="caption-subject bold uppercase"> Main Grandmasters</span>
                                        </div>
-                                       <div class="actions">
+                                       <!-- <div class="actions">
                                           <div class="btn-group">
                                              <div class="md-checkbox">
                                                 <input type="checkbox" id="checkbox-main-players" class="md-check" >
@@ -254,7 +279,7 @@
                                                 Mark as learned </label>
                                              </div>
                                           </div>
-                                       </div>
+                                       </div> -->
                                     </div>
                                     <div class="portlet-body">
                                        <div>
@@ -265,6 +290,8 @@
                                     </div>
                                  </div>
                               </div>
+
+                            <?php if ($showVariations == true): ?>
                               <div id="tab_4" class="tab-pane active">
                                  <div class="portlet light">
                                     <div class="portlet-title">
@@ -372,6 +399,7 @@
                                     </div>
                                  </div>
                               </div>
+                          <?php endif; ?>
                               <div id="tab_5" class="tab-pane">
                                  <div class="portlet light">
                                     <div class="portlet-title">

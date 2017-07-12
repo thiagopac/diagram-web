@@ -21,11 +21,17 @@
    #BUSCAR TODAS AS VARIÁVEIS GET
    $paramStudy = $_REQUEST['s'];
 
+   Study::$showDeleted = false;
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
 
 
    if ($study->author->id != $userID){
+     header('Location: ./');
+     exit;
+   }
+
+   if ($study->deleted == true){
      header('Location: ./');
      exit;
    }
@@ -83,7 +89,7 @@
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="details.php"><?=$study->name?></a>
+            <a href="details.php?s=<?=$study->id?>"><?=$study->name?></a>
          </li>
       </ul>
    </div>

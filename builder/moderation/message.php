@@ -11,7 +11,6 @@
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'moderation-inbox');
 
-
    #BUSCAR TODAS AS VARIÁVEIS GET
    $paramMessage = $_REQUEST['m'];
    $paramUser = $_SESSION['USER']['ID'];
