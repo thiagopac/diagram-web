@@ -4,6 +4,7 @@
   require_once('../models/Study.php');
   require_once('../models/StudyRating.php');
   require_once('../models/StudyProgressTheory.php');
+  require_once('../models/Statistics.php');
 
   // CONTROLE SESSAO
   fnInicia_Sessao ('openings');
@@ -41,6 +42,11 @@
 
   $studyProgressTheory = new StudyProgressTheory();
   $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
+
+  $statistics = new Statistics();
+  $totalPracticeSessions = $statistics->getTotalOfPracticeSessionsForStudyAndUser($paramStudy, $userID);
+  $totalPracticePerfects = $statistics->getTotalOfPracticePerfectsForStudyAndUser($paramStudy, $userID);
+  $totalLinesPracticed = $statistics->getTotalProgressStudyProgressPracticeForUserAndStudy($paramStudy, $userID);
 
   // var_dump($study);
   require_once('../imports/header.php');
@@ -234,31 +240,31 @@
                <div class="portlet sale-summary">
                  <div class="portlet-title">
                    <div class="caption">
-                      Your progress
+                      Statistics
                    </div>
                  </div>
                  <div class="portlet-body">
                    <ul class="list-unstyled">
                      <li>
                        <span class="sale-info">
-                       NUMBER OF TIMES STUDIED <i class="fa fa-img-up"></i>
+                       TOTAL PRACTICE SESSIONS <i class="fa fa-img-up"></i>
                        </span>
                        <span class="sale-num">
-                       85  </span>
+                       <?=$totalPracticeSessions;?>  </span>
                      </li>
                      <li>
                        <span class="sale-info">
-                       TOTAL OF STUDIED LINES <i class="fa fa-img-up"></i>
+                       PRACTICE PERFECT LINES <i class="fa fa-img-up"></i>
                        </span>
                        <span class="sale-num">
-                       11  </span>
+                       <?=$totalPracticePerfects;?>  </span>
                      </li>
                      <li>
                        <span class="sale-info">
-                       PERFECT PERFORMANCE <i class="fa fa-img-down"></i>
+                       TOTAL LINES PRACTICED  <i class="fa fa-img-down"></i>
                        </span>
                        <span class="sale-num">
-                       31 </span>
+                       <?=$totalLinesPracticed?>% </span>
                      </li>
                    </ul>
                  </div>

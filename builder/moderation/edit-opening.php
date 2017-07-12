@@ -77,7 +77,7 @@
 							 <i class="fa fa-angle-right"></i>
 						</li>
 						<li>
-							 <a href="edit-opening.php">Edit Opening</a>
+							 <a href="edit-opening.php?s=<?=$study->id?>">Edit Opening</a>
 						</li>
 				 </ul>
 			</div>

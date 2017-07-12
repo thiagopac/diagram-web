@@ -42,7 +42,7 @@
          <form action="details.php" class="form-horizontal">
             <div class="form-body">
                <div class="form-group">
-                  <label class="col-md-3 control-label">Study</label>
+                  <label class="col-md-3 control-label">Author / Study</label>
                   <div class="col-md-6">
                      <select class="form-control select2me" name="options2">
                         <option value="">Select...</option>

@@ -1,23 +1,37 @@
 <?
-##INCLUDES.
+##INCLUDES
 	require_once('../lib/config.php');
+	require_once('../models/Acquisition.php');
+	require_once('../models/Study.php');
 	require_once('../models/User.php');
 
-	if (empty($_REQUEST['u'])){
+	if (empty($_REQUEST['a'])){
 		header('Location: ./');
 		exit;
 	}
 
 #CONTROLE SESSAO
-	fnInicia_Sessao('moderation-users');
-	include('../imports/header.php');
+	fnInicia_Sessao('moderation-acquisitions');
 
 #INPUTS
 	$MSG = addslashes($_REQUEST['msg']);
-	$paramUser  = (int)$_REQUEST['u'];
+	$paramAcquisition  = (int)$_REQUEST['a'];
+
+	Acquisition::$showDeleted = true;
+	$acquisition = new Acquisition();
+	$acquisition = $acquisition->getAcquisitionWithID($paramAcquisition);
 
 	$user = new User();
-	$user = $user->getUserWithId($paramUser);
+	$user->getUserWithId($acquisition->userID);
+
+	$arrUser = $user->getAllUsers();
+
+	$study = new Study();
+	$study->getBasicDataStudyWithID($acquisition->studyID);
+
+	$arrStudies = $study->getAllStudies();
+
+	include('../imports/header.php');
 ?>
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
@@ -30,7 +44,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Edit User <small></small>
+					Edit Acquisition <small></small>
 					</h3>
 
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -44,11 +58,11 @@
 							<i class="fa fa-angle-right"></i>
 					 </li>
 						<li>
-							 <a href="./users.php">Users</a>
+							 <a href="./acquisitions.php">Acquisitions</a>
 							 <i class="fa fa-angle-right"></i>
 						</li>
 						<li>
-							 <a href="edit-user.php?u=<?=$user->id?>">Edit User</a>
+							 <a href="edit-acquisition.php?a=<?=$acquisition->id?>">Edit Acquisition</a>
 						</li>
 				 </ul>
 			</div>
@@ -56,7 +70,7 @@
 
 					<div class="portlet gren">
 						<div class="portlet-title">
-							<div class="caption">User Details</div>
+							<div class="caption">Acquisition Details</div>
 							</div>
 
 						<div class="portlet-body form">
@@ -72,63 +86,76 @@
 									</div>
 									<? } ?>
 									<div class="form-group">
-										<label class="control-label col-md-3">Full Name</label>
-										<div class="col-md-2">
-											<div class="input-icon right">
-												<input type="text" class="form-control" name="firstName" aria-required="true" aria-invalid="false" value="<?=$user->firstName?>">
-											</div>
+										<label class="control-label col-md-3">User</span>
+										</label>
+										<div class="col-md-5">
+											 <select class="form-control select2me" name="language">
+													<option value="">Select...</option>
+													<?php foreach ($arrUser as $key => $user): ?>
+
+														<?php $selected = ($acquisition->userID == $user->id) ? "selected" : null ;?>
+
+														<option value="<?=$user->id?>" <?=$selected?>>[ #<?=$user->id?> ] - <?=$user->fullName?></option>
+													<?php endforeach; ?>
+											 </select>
 										</div>
-										<div class="col-md-2">
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Study</span>
+										</label>
+										<div class="col-md-5">
+											 <select class="form-control select2me" name="language">
+													<option value="">Select...</option>
+													<?php foreach ($arrStudies as $key => $study): ?>
+
+														<?php $selected = ($study->id == $acquisition->studyID) ? "selected" : null ;?>
+
+														<option value="<?=$study->id?>" <?=$selected?>>[ #<?=$study->id?> ] - <?=$study->name?></option>
+													<?php endforeach; ?>
+											 </select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Date</span>
+										</label>
+										<div class="col-md-5">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="lastName" aria-required="true" aria-invalid="false" value="<?=$user->lastName?>">
+												<input disabled type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$acquisition->dateCreated?>">
 											</div>
 										</div>
 									</div>
+
 									<div class="form-group">
-										<label class="control-label col-md-3">Login</span>
+										<label class="control-label col-md-3">Approved</span>
 										</label>
-										<div class="col-md-4">
-											<div class="input-icon right">
-												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$user->login?>">
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">ELO Fide</span>
-										</label>
-										<div class="col-md-4">
-											<div class="input-icon right">
-												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$user->eloFide?>">
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">User status</span>
-										</label>
-										<div class="col-md-4">
+										<div class="col-md-5">
 											<div class="input-icon right">
 												<select class="form-control" name="select">
-													<?php $selectedInactive = ($user->status == "0") ? "selected" : null;?>
-													<?php $selectedActive = ($user->status == "1") ? "selected" : null;?>
-													 <option value="0" <?=$selectedInactive?>>Inactive</option>
-													 <option value="1" <?=$selectedActive?>>Active</option>
+													<?php $selectedInactive = ($acquisition->active == "0") ? "selected" : null;?>
+													<?php $selectedActive = ($acquisition->active == "1") ? "selected" : null;?>
+													 <option value="0" <?=$selectedInactive?>>NO</option>
+													 <option value="1" <?=$selectedActive?>>YES</option>
 												</select>
 											</div>
 										</div>
 									</div>
 
-									<div class="form-group last password-strength">
-										<label class="control-label col-md-3">Password</label>
-										<div class="col-md-4">
-											<input type="password" class="form-control" name="password" id="password_strength">
+									<div class="form-group">
+										<label class="control-label col-md-3">Deleted</span>
+										</label>
+										<div class="col-md-5">
+											<div class="input-icon right">
+												<select class="form-control" name="select">
+													<?php $selectedInactive = ($acquisition->deleted == "0") ? "selected" : null;?>
+													<?php $selectedActive = ($acquisition->deleted == "1") ? "selected" : null;?>
+													 <option value="0" <?=$selectedInactive?>>NO</option>
+													 <option value="1" <?=$selectedActive?>>YES</option>
+												</select>
+											</div>
 										</div>
-										<label for="chkShowPassword" style="margin:5px;">
-							                <input type="checkbox" id="chkShowPassword" />
-							                Show password
-							             </label>
 									</div>
-								</div>
-
 
 								<div class="modal-footer">
 									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>

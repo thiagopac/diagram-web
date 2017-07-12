@@ -49,7 +49,7 @@
 							 <i class="fa fa-angle-right"></i>
 						</li>
 						<li>
-							 <a href="editAdministrator.php">Edit Administrator</a>
+							 <a href="edit-administrator.php?u=<?=$administrator->id?>">Edit Administrator</a>
 						</li>
 				 </ul>
 			</div>

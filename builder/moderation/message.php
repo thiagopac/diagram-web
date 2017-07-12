@@ -15,6 +15,8 @@
    $paramMessage = $_REQUEST['m'];
    $paramUser = $_SESSION['USER']['ID'];
 
+   StudyAdministration::$showDeleted = false;
+
    $studyAdministration = new StudyAdministration();
    $studyAdministration = $studyAdministration->getStudyAdministrationWithIDForUser($paramMessage, $paramUser);
 

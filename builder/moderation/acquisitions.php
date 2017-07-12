@@ -1,12 +1,12 @@
 <?
 ##INCLUDES
 	require_once('../lib/config.php');
-	require_once('../models/StudyAdministration.php');
+	require_once('../models/Acquisition.php');
+	require_once('../models/Study.php');
+	require_once('../models/User.php');
 
 #CONTROLE SESSAO
-	fnInicia_Sessao('moderation-inbox');
-
-	include('../imports/header.php');
+	fnInicia_Sessao('moderation-acquisitions');
 
 #INPUTS
 	$MSG = addslashes($_REQUEST['MSG']);
@@ -15,11 +15,15 @@
 
 	$userID = $_SESSION['USER']['ID'];
 
-	StudyAdministration::$showDeleted = false;
+	Acquisition::$showDeleted = true;
 
-	$studyAdministration = new StudyAdministration();
-	$arrStudyAdministrations = $studyAdministration->getAllStudyAdministrationsForAuthor($userID);
+	$acquisition = new Acquisition();
+	$arrAcquisition = $acquisition->getAllAcquisitions();
 
+	$study = new Study();
+	$user = new User();
+
+	include('../imports/header.php');
 ?>
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
@@ -31,28 +35,28 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Inbox <small></small>
+					Acquisitions <small></small>
 					</h3>
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
 			</div>
 			<div class="page-bar">
-				 <ul class="page-breadcrumb">
+	       <ul class="page-breadcrumb">
 					 <li>
-					 	 <i class="fa fa-home"></i>
-					 	 <a href="#">Moderation</a>
-					 	 <i class="fa fa-angle-right"></i>
-					 </li>
-						<li>
-							 <a href="./inbox.php">Inbox</a>
-						</li>
-				 </ul>
-			</div>
+	            <i class="fa fa-home"></i>
+	            <a href="#">Moderation</a>
+	            <i class="fa fa-angle-right"></i>
+	         </li>
+	          <li>
+	             <a href="./acquisitions.php">Acquisitions</a>
+	          </li>
+	       </ul>
+	    </div>
 			<!-- END PAGE HEADER-->
 
 <!-- BEGIN SAMPLE TABLE PORTLET-->
-<p> Here you will receive all administrative messages about the studies you have created. Updates, news, suggestions and warnings for corrections will be concentrated here, in <strong>Moderation</strong> <i class="fa fa-angle-right"></i> <strong>Inbox</strong></p>
 					<div class="portlet gren">
+
 
 						<div class="portlet-body">
 							<div class="table-responsive">
@@ -63,40 +67,58 @@
 									</div>
 								<? } ?>
 
-								<table class="table table-hover" id="table_administrators">
+								<table class="table table-striped table-hover" id="table_acquisitions">
 								<thead>
 								<tr>
 									<th>
-										Study
+										 #
+									</th>
+									<th>
+										User
+									</th>
+									<th>
+										 Study
 									</th>
 									<th>
 										Date
 									</th>
 									<th>
-										Message
+										Approved
+									</th>
+									<th>
+										Deleted
+									</th>
+									<th>
+										 Actions
 									</th>
 								</tr>
 								</thead>
 								<tbody>
 								<?
-								foreach($arrStudyAdministrations as $KEY => $studyAdministration)
+								foreach($arrAcquisition as $KEY => $acquisition)
 									{
 									?>
-									<tr class="<? $read = $studyAdministration->read == '0' ? "info" : ""; echo $read; ?>">
+									<tr>
 										<td>
-											 <a href="message.php?m=<?=$studyAdministration->id?>">
- 													<?=$studyAdministration->study->name?>
- 										 	</a>
+											 <?=$acquisition->id?>
 										</td>
 										<td>
-											<a href="message.php?m=<?=$studyAdministration->id?>">
-													<?=$studyAdministration->dateCreated?>
-										 	</a>
+											 <? $user = $user->getUserWithId($acquisition->userID); echo $user->fullName; ?>
 										</td>
 										<td>
-											<a href="message.php?m=<?=$studyAdministration->id?>">
-													<?=substr($studyAdministration->message, 0, 100)."..." ?>
-										 	</a>
+											<? $study = $study->getBasicDataStudyWithID($acquisition->studyID); echo $study->name; ?>
+										</td>
+										<td>
+											 <?=$acquisition->dateCreated?>
+										</td>
+										<td>
+											 <?=$acquisition->active == true ? "YES" : "<span style='color:red'><strong>NOT YET</strong></span>"; ?>
+										</td>
+										<td>
+											 <?=$acquisition->deleted == true ? "YES" : "NO"; ?>
+										</td>
+										<td>
+											 <a href="edit-acquisition.php?a=<?=$acquisition->id?>">Edit</a> | <a href="../exec/?e=adm_del&a=<?=$acquisition->id?>" class="confirmation">Remove</a>
 										</td>
 									</tr>
 									<?
@@ -127,7 +149,7 @@
         return confirm('Tem certeza?');
     });
 
-		var table = $('#table_administrators');
+		var table = $('#table_acquisitions');
 
 		// begin first table
 		table.dataTable({
@@ -159,6 +181,14 @@
 				}, {
 						"orderable": true
 				}, {
+						"orderable": true
+				}, {
+						"orderable": true
+				}, {
+						"orderable": true
+				}, {
+						"orderable": true
+				}, {
 						"orderable": false
 				}],
 				"lengthMenu": [
@@ -182,7 +212,7 @@
 						'orderable': false,
 						'targets': [0]
 				}, {
-						"searchable": true,
+						"searchable": false,
 						"targets": [0]
 				}],
 				"order": [
