@@ -2,6 +2,9 @@
   // #INCLUDES
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
+  require_once('../models/Monetization.php');
+  require_once('../models/Variation.php');
+  require_once('../models/Line.php');
   require_once('../models/StudyRating.php');
   require_once('../models/StudyProgressTheory.php');
   require_once('../models/Statistics.php');
@@ -24,6 +27,20 @@
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
 
+  $monetization = new Monetization();
+  $study->monetization = $monetization->getMonetizationForStudy($study->id);
+
+  $variarion = new Variation();
+  $arrVariations = $variarion->getAllVariationsForStudy($study->id);
+
+  $variationsCount = count($arrVariations);
+
+  foreach ($arrVariations as $key => $variation) {
+  	foreach ($variation->lines as $key => $line) {
+  		$linesCount ++;
+  	}
+  }
+
   if ($study->deleted == true){
     header('Location: ./');
     exit;
@@ -37,6 +54,7 @@
 
   $studyRating = new StudyRating();
   $studyRating = $studyRating->getStudyRatingForStudyAndUser($paramStudy, $userID);
+  $studyRatingCount = $studyRating->getCountStudyRatingForStudy($paramStudy);
 
   $userHasNotRated = $studyRating == NULL ? "true" : "false";
 
@@ -132,7 +150,7 @@
                    <i class="fa fa-briefcase"></i> <?=$study->authorFullName?>
                  </li>
                  <li>
-                   <i class="fa fa-list-ol"></i> <?=$study->variationsCount ?> Var. | <?=$study->linesCount ?> Lines
+                   <i class="fa fa-list-ol"></i> <?=$variationsCount ?> Var. | <?=$linesCount ?> Lines
                  </li>
                  <li>
                    <i class="fa fa-usd"></i> <?=$study->currencyAndPrice?>
@@ -143,19 +161,25 @@
                     $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
                     $readOnly = 'true';
 
+                    //se é um estudo que o usuário autor está acessando, ele terá acesso total
+                    if ($study->authorID == $userID) {
+                      $userIsAuthorStudy = true;
+                    }
+
                     if ($userOwnsStudy == true) {
                       $readOnly = 'false';
                     }else{
                       $readOnly = 'true';
                     }
                 ?>
+                <small><i>(<?=$studyRatingCount ?> <?=$studyRatingCount == 1 ? "review" : "reviews";?>)</i></small>
                <form>
                  <p>
                    <input id="rating" name="rating" class="rating" data-size="sm" data-min="0" data-max="5" data-step="0.5" value="<?=$studyRating->rating?>" data-readonly="<?=$readOnly?>" data-show-clear="false" data-show-caption="<?=$userHasNotRated?>">
                  </p>
               </form>
-               <br/>
-            <?php if ($userOwnsStudy == true): ?>
+              <br/>
+                <?php if ($userOwnsStudy == true || $userIsAuthorStudy == true): ?>
                   <a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> THEORY</a>
                   <a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> PRACTICE</a>
                   <!-- <a href="#modalPurchase" class="btn btn-lg btn-success" title="Donate" data-toggle="modal"><i class="fa fa-usd"></i> DONATE </a> -->
@@ -192,7 +216,7 @@
                         							<div class="row list-separated profile-stat">
                         								<div class="col-md-4 col-sm-4 col-xs-6">
                         									<div class="uppercase profile-stat-title">
-                        										 <?=$study->variationsCount?>
+                        										 <?=$variationsCount?>
                         									</div>
                         									<div class="uppercase profile-stat-text">
                         										 Variations
@@ -200,7 +224,7 @@
                         								</div>
                         								<div class="col-md-4 col-sm-4 col-xs-6">
                         									<div class="uppercase profile-stat-title">
-                        										 <?=$study->linesCount?>
+                        										 <?=$linesCount?>
                         									</div>
                         									<div class="uppercase profile-stat-text">
                         										 Lines

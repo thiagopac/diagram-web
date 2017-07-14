@@ -60,18 +60,13 @@
 				<? } ?>
 				<? if (fnVerifica_Grant('moderation')) { ?>
 				<li class="last <? if ($MENU_ATIVO == 'moderation') echo 'active'; ?>">
-        <li class="last <? if (($MENU_ATIVO == 'moderation') || ($MENU_ATIVO == 'moderation-administrators') || ($MENU_ATIVO == 'moderation-users') || ($MENU_ATIVO == 'moderation-openings')  || ($MENU_ATIVO == 'moderation-inbox') || ($MENU_ATIVO == 'moderation-feedback') || ($MENU_ATIVO == 'moderation-acquisitions')) echo 'active'; ?>">
+        <li class="last <? if (($MENU_ATIVO == 'moderation') || ($MENU_ATIVO == 'moderation-users') || ($MENU_ATIVO == 'moderation-openings')  || ($MENU_ATIVO == 'moderation-inbox') || ($MENU_ATIVO == 'moderation-feedback') || ($MENU_ATIVO == 'moderation-acquisitions')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/moderation/">
 					<i class="icon-lock-open"></i>
 					<span class="title">Moderation</span>
 					<span class="selected"></span>
 					</a>
           <ul class="sub-menu">
-            <? if (fnVerifica_Grant('moderation-administrators')) { ?>
-            <li class="<? if ($MENU_ATIVO == 'moderation-administrators') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/moderation/administrators.php"><i class="fa fa-angle-right"></i>Administrators</a>
-            </li>
-            <? } ?>
             <? if (fnVerifica_Grant('moderation-users')) { ?>
             <li class="<? if ($MENU_ATIVO == 'moderation-users') echo 'active'; ?>">
               <a href="<?=$rootpath?>/moderation/users.php"><i class="fa fa-angle-right"></i>Users</a>

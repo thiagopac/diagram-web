@@ -106,7 +106,7 @@
 											 <? $user = $user->getUserWithId($acquisition->userID); echo $user->fullName; ?>
 										</td>
 										<td>
-											<? $study = $study->getBasicDataStudyWithID($acquisition->studyID); echo $study->name; ?>
+											<? $study = $study->getStudyWithID($acquisition->studyID); echo $study->name; ?>
 										</td>
 										<td>
 											 <?=$acquisition->dateCreated?>

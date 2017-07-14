@@ -24,6 +24,7 @@
 	#BUSCAR TODAS AS VARIÁVEIS GET
 	$paramStudy = $_REQUEST['s'];
 
+	Study::$showDeleted = true;
 	$study = new Study();
 	$study = $study->getStudyWithID($paramStudy);
 
@@ -93,9 +94,8 @@
 
 						<div class="portlet-body form">
 							<!-- BEGIN FORM-->
-							<form method="post" action="../exec/" id="form_sample_2" class="form-horizontal" novalidate="novalidate">
-							<input type="hidden" name="e" id="e" value="adm_edit" />
-							<input type="hidden" name="id" id="id" value="<?=$study->id?>" />
+							<form method="post" action="./action/edit-opening.php" class="form-horizontal" novalidate="novalidate">
+							<input type="hidden" name="id" value="<?=$study->id?>" />
 								<div class="form-body">
 									<? if ($MSG != '') { ?>
 									<div class="alert alert-danger display">
@@ -107,18 +107,18 @@
 										<label class="control-label col-md-3">Name</label>
 										<div class="col-md-6">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="firstName" aria-required="true" aria-invalid="false" value="<?=$study->name?>">
+												<input type="text" class="form-control" name="name" aria-required="true" aria-invalid="false" value="<?=$study->name?>">
 											</div>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="control-label col-md-3">Language</label>
 										<div class="col-md-6">
-											 <select class="form-control select2me" name="language">
+											 <select class="form-control select2me" name="interfaceLanguage">
 													<option value="">Select...</option>
 													<?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
-														<?php $selected = ($interfaceLanguage->id == $study->interfaceLanguage->id) ? "selected" : null ;?>
+														<?php $selected = ($interfaceLanguage->id == $study->interfaceLanguageID) ? "selected" : null ;?>
 
 														<option value="<?=$interfaceLanguage->id?>" <?=$selected?>>[<?=$interfaceLanguage->code?>] - <?=$interfaceLanguage->name?></option>
 													<?php endforeach; ?>
@@ -130,7 +130,7 @@
 										</label>
 										<div class="col-md-6">
 											<div class="input-icon right">
-												<textarea id="textarea_study" maxlength="250" class="form-control" rows="4"><?=$study->aboutStudy?></textarea>
+												<textarea name="about" maxlength="250" class="form-control" rows="4"><?=$study->aboutStudy?></textarea>
 											</div>
 										</div>
 									</div>
@@ -138,7 +138,7 @@
 										<label class="control-label col-md-3">Side</span>
 										</label>
 										<div class="col-md-6">
-											 <select class="form-control" name="select">
+											 <select class="form-control" name="side">
 												 <?php $selectedW = ($study->side == "W") ? "selected" : null;?>
 												 <?php $selectedB = ($study->side == "B") ? "selected" : null;?>
 													<option value="W" <?=$selectedW?>>White</option>
@@ -154,7 +154,7 @@
 													<option value="">Select...</option>
 													<?php foreach ($arrEcos as $key => $eco): ?>
 
-														<?php $selected = ($eco->id == $study->eco->id) ? "selected" : null ;?>
+														<?php $selected = ($eco->id == $study->ecoID) ? "selected" : null ;?>
 
 														<option value="<?=$eco->id?>" <?=$selected?>>[<?=$eco->code?>] - <?=$eco->name?> (<?=$eco->line?>)</option>
 													<?php endforeach; ?>
@@ -162,10 +162,10 @@
 										</div>
 									</div>
 
-									<div class="form-group last password-strength">
+									<div class="form-group">
 										<label class="control-label col-md-3">Status</label>
 										<div class="col-md-6">
-											<select class="form-control" name="select">
+											<select class="form-control" name="active">
 												<?php $inactive = ($study->active == "0") ? "selected" : null;?>
 												<?php $active = ($study->active == "1") ? "selected" : null;?>
 												 <option value="0" <?=$inactive?>>Inactive</option>
@@ -173,12 +173,24 @@
 											</select>
 										</div>
 									</div>
-								</div>
 
+									<div class="form-group last">
+										<label class="control-label col-md-3">Deleted</label>
+										<div class="col-md-6">
+											<select class="form-control" name="deleted">
+												<?php $notDeleted = ($study->deleted == "0") ? "selected" : null;?>
+												<?php $deleted = ($study->deleted == "1") ? "selected" : null;?>
+												 <option value="0" <?=$notDeleted?>>NO</option>
+												 <option value="1" <?=$deleted?>>YES</option>
+											</select>
+										</div>
+									</div>
+
+								</div>
 
 								<div class="modal-footer">
 									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-									<button type="button" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+									<button type="submit" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->

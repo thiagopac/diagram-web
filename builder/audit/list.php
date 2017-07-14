@@ -1,163 +1,209 @@
 <?
-   ##INCLUDES
-   	require_once('../lib/config.php');
+##INCLUDES
+	require_once('../lib/config.php');
+	require_once('../models/Audit.php');
+	require_once('../models/User.php');
 
-   #CONTROLE SESSAO
-   	fnInicia_Sessao('audit');
+#CONTROLE SESSAO
+	fnInicia_Sessao('audit');
 
-   #INPUTS
-   	$PESQUISA     = addslashes($_REQUEST['pesquisa']);
-   	$DAT_INICIO   = addslashes($_REQUEST['dat_inicio']);
-   	$DAT_FIM 	= addslashes($_REQUEST['dat_fim']);
-   	$DAT_COMPLETA = addslashes($_REQUEST['dat_completa']);
+#INPUTS
+	$MSG = addslashes($_REQUEST['MSG']);
 
-   	$menos30dias = time( ) - 86400 * 30;
+#INICIO LOGICA
 
-   	if ($DAT_INICIO == '') $DAT_INICIO = date('Y-m-d', $menos30dias);
-   	if ($DAT_FIM == '') $DAT_FIM = date('Y-m-d');
-   	if ($DAT_COMPLETA == '')	$DAT_COMPLETA = date('d/m/Y', $menos30dias).' - '.date('d/m/Y');
+	$userID = $_SESSION['USER']['ID'];
 
-   #INICIO LOGICA
-   	$DB = fnDBConn();
-   	$SQL = "SELECT USER.FIRSTNAME, USER.LASTNAME, USER.LOGIN, AUDIT.IP, AUDIT.ACTION_DESC, DATE_FORMAT(AUDIT.DIN,'%d/%m/%Y<br>%h:%i:%s') DIN FROM AUDIT, USER
-   			WHERE USER.ID = AUDIT.ID_USER
-   			  AND (AUDIT.ACTION_DESC LIKE '%$PESQUISA%' OR
-   				  USER.FIRSTNAME LIKE '%$PESQUISA%' OR
-   				  USER.LOGIN LIKE '%$PESQUISA%')
-   			  AND AUDIT.DIN BETWEEN '$DAT_INICIO 23:59:59' AND '$DAT_FIM 23:59:59'
-   			ORDER BY AUDIT.ID DESC";
+	$audit = new Audit();
+	$arrAudits = $audit->getAllAudits();
 
-   	$RET = fnDB_DO_SELECT_WHILE($DB,$SQL);
+	$user = new User();
 
-   include('../imports/header.php');
-   ?>
-<!-- BEGIN CONTENT -->
-<div class="page-content-wrapper">
-   <div class="page-content">
-      <? include('../imports/alert.php'); ?>
-      <!-- BEGIN PAGE HEADER-->
-      <div class="row">
-         <div class="col-md-12">
-            <!-- BEGIN PAGE TITLE & BREADCRUMB-->
-            <h3 class="page-title">
-               Audit <small></small>
-            </h3>
-            <!--button type="button" class="btn red" style="right: 15px; position: absolute; margin-top: -40px" onClick="parent.location='novo.php'">Novo Cliente</button-->
-            <!-- END PAGE TITLE & BREADCRUMB-->
-         </div>
-      </div>
-      <div class="page-bar">
-         <ul class="page-breadcrumb">
-            <li>
-               <i class="fa fa-home"></i>
-               <a href="./list.php">Audit</a>
-            </li>
-         </ul>
-      </div>
-      <!-- END PAGE HEADER-->
-      <!-- BEGIN PORTLET -->
-      <div class="portlet gren">
-         <div class="portlet-title">
-            <div class="caption">Search Details</div>
-         </div>
-         <div class="portlet-body form">
-            <form role="form">
-               <input type="hidden" name="dat_inicio" id="dat_inicio" value="" />
-               <input type="hidden" name="dat_fim" id="dat_fim" value="" />
-               <input type="hidden" name="dat_completa" id="dat_completa" value="" />
-               <div class="form-body">
-                  <div class="row form-group">
-                     <div class="col-md-8">
-                        <label>Pesquisa</label>
-                        <input type="text" name="pesquisa" class="form-control" placeholder="Digite o termo de pesquisa..." value="<?=$PESQUISA?>">
-                     </div>
-                  </div>
-                  <div class="row form-group">
-                     <div class="col-md-4">
-                        <label>Período da Pesquisa</label>
-                        <div id="reportrange" class="form-control">
-                           <i class="fa fa-calendar"></i>
-                           <span>&nbsp;</span>
-                           <b class="fa fa-angle-down"></b>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="form-actions">
-                  <button type="submit" class="btn red">Pesquisar</button>
-               </div>
-            </form>
-         </div>
-      </div>
-      <!-- END PORTLET -->
-      <!-- BEGIN SAMPLE TABLE PORTLET-->
-      <div class="portlet-body flip-scroll">
-         <table class="table table-bordered table-striped table-condensed flip-content">
-            <thead class="flip-content">
-               <tr>
-                  <th>
-                     Usuário
-                  </th>
-                  <th>
-                     IP
-                  </th>
-                  <th class="numeric">
-                     Ação
-                  </th>
-                  <th class="numeric">
-                     Hora
-                  </th>
-               </tr>
-            </thead>
-            <tbody>
-               <?
-                  foreach($RET as $KEY => $ROW)
-                  	{
-                  	$ROW['FIRSTNAME'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['FIRSTNAME']);
-                  	$ROW['LOGIN'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['LOGIN']);
-                  	$ROW['ACTION_DESC'] = str_ireplace($PESQUISA,'<FONT style="BACKGROUND-COLOR: yellow">'.$PESQUISA.'</FONT>',$ROW['ACTION_DESC']);
-                  	?>
-               <tr>
-                  <td>
-                     <?=$ROW['FIRSTNAME']?><br><?=$ROW['LOGIN']?>
-                  </td>
-                  <td>
-                     <?=$ROW['IP']?>
-                  </td>
-                  <td>
-                     <?=$ROW['ACTION_DESC']?>
-                  </td>
-                  <td>
-                     <?=$ROW['DIN']?>
-                  </td>
-               </tr>
-               <?
-                  }
-                  ?>
-            </tbody>
-         </table>
-      </div>
-   </div>
-   <!-- END SAMPLE TABLE PORTLET-->
+	include('../imports/header.php');
+?>
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
+		<div class="page-content">
 
-<!-- END CONTENT -->
+			<? include('../imports/alert.php'); ?>
+
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+					<h3 class="page-title">
+					Audit <small></small>
+					</h3>
+					<!-- END PAGE TITLE & BREADCRUMB-->
+				</div>
+			</div>
+			<div class="page-bar">
+				 <ul class="page-breadcrumb">
+					 <li>
+							<i class="fa fa-home"></i>
+							<a href="#">Audit</a>
+					 </li>
+				 </ul>
+			</div>
+			<!-- END PAGE HEADER-->
+
+<!-- BEGIN SAMPLE TABLE PORTLET-->
+					<div class="portlet gren">
+
+						<div class="portlet-body">
+							<div class="table-responsive">
+								<? if (strlen($MSG) > 0 ) { ?>
+								<div class="alert alert-danger display">
+										<button class="close" data-close="alert"></button>
+										<?=$MSG?>
+									</div>
+								<? } ?>
+
+								<table class="table table-striped table-hover" id="table_openings">
+								<thead>
+								<tr>
+									<th>
+										 #
+									</th>
+									<th>
+										 IP
+									</th>
+									<th>
+										User
+									</th>
+									<th>
+										Action Desc
+									</th>
+									<th>
+										Request
+									</th>
+									<th>
+										Date
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<?
+								foreach($arrAudits as $KEY => $audit)
+									{
+									?>
+									<tr>
+										<td>
+											 <?=$audit->id?>
+										</td>
+										<td>
+											<?=$audit->ip?>
+										</td>
+										<td>
+											 <? $user = $user->getUserWithID($audit->userID); echo $user->fullName; ?>
+										</td>
+										<td>
+											 <?=$audit->actionDesc?>
+										</td>
+										<td>
+											 <?=$audit->request?>
+										</td>
+										<td>
+											 <?=$audit->dateCreated?>
+										</td>
+									</tr>
+									<?
+									}
+								?>
+								</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- END SAMPLE TABLE PORTLET-->
+
+		</div>
+	<!-- END CONTENT -->
+
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-   jQuery(document).ready(function() {
-   // initiate layout and plugins
-   Metronic.init(); // init metronic core components
-   Layout.init(); // init current layout
-   QuickSidebar.init() // init quick sidebar
-   ComponentsPickers.init();
+        jQuery(document).ready(function() {
+           // initiate layout and plugins
+			Metronic.init(); // init metronic core components
+			Layout.init(); // init current layout
+			QuickSidebar.init() // init quick sidebar
+      // ComponentsFormTools.init();
+        });
 
-   $('#reportrange span').html('<?=$DAT_COMPLETA?>');
-   $('#dat_inicio').val('<?=$DAT_INICIO?>');
-   $('#dat_fim').val('<?=$DAT_FIM?>');
-   $('#dat_completa').val('<?=$DAT_COMPLETA?>');
-   });
+    $('.confirmation').on('click', function () {
+        return confirm('Tem certeza?');
+    });
 
-</script>
+		var table = $('#table_openings');
+
+		// begin first table
+		table.dataTable({
+
+				// Internationalisation. For more info refer to http://datatables.net/manual/i18n
+				"language": {
+						"aria": {
+								"sortAscending": ": activate to sort column ascending",
+								"sortDescending": ": activate to sort column descending"
+						},
+						"emptyTable": "No data available in table",
+						"info": "Showing _START_ to _END_ of _TOTAL_ entries",
+						"infoEmpty": "No entries found",
+						"infoFiltered": "(filtered1 from _MAX_ total entries)",
+						"lengthMenu": "Show _MENU_ entries",
+						"search": "Search:",
+						"zeroRecords": "No matching records found"
+				},
+
+				// Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+				// setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
+				// So when dropdowns used the scrollable div should be removed.
+				// "dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+
+				"bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
+
+				"columns": [{
+						"orderable": true
+				}, {
+						"orderable": true
+				}, {
+						"orderable": true
+				}, {
+						"orderable": true
+				}, {
+						"orderable": true
+				}, {
+						"orderable": true
+				}],
+				"lengthMenu": [
+						[20, 50, 100, -1],
+						[20, 50, 100, "All"] // change per page values here
+				],
+				// set the initial value
+				"pageLength": 20,
+				"pagingType": "bootstrap_full_number",
+				"language": {
+						"search": "Search: ",
+						"lengthMenu": "  _MENU_ records",
+						"paginate": {
+								"previous":"Prev",
+								"next": "Next",
+								"last": "Last",
+								"first": "First"
+						}
+				},
+				"columnDefs": [{  // set default column settings
+						'orderable': false,
+						'targets': [0]
+				}, {
+						"searchable": false,
+						"targets": [0]
+				}],
+				"order": [
+						[1, "asc"]
+				] // set first column as a default sort by asc
+		});
+
+ </script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

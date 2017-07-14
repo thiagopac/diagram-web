@@ -1,10 +1,16 @@
 <?
   require_once ('../models/Theme.php');
   require_once ('../models/User.php');
+  require_once ('../models/Theme.php');
 
   $userID = $_SESSION['USER']['ID'];
   $user = new User();
   $user = $user->getUserWithId($userID);
+
+  $theme = new Theme();
+  $theme = $theme->getThemeWithID($user->themeID);
+
+  $user->theme = $theme;
 
   $GLOBALS['absolutepath'] = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
   $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));

@@ -27,7 +27,7 @@
 	$arrUser = $user->getAllUsers();
 
 	$study = new Study();
-	$study->getBasicDataStudyWithID($acquisition->studyID);
+	$study->getStudyWithID($acquisition->studyID);
 
 	$arrStudies = $study->getAllStudies();
 

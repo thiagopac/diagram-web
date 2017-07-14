@@ -34,6 +34,26 @@ class Monetization {
 
 	}
 
+	public function getMonetizationWithID($paramMonetization){
+
+			$DB = fnDBConn();
+
+			$SQL = "SELECT OSM.ID AS OPENING_STUDY_MONETIZATION_ID,
+			 OSM.CURRENCY AS CURRENCY_ID,
+			 OSM.ID_OPENING_STUDY AS OPENING_STUDY_ID,
+			 OSM.DIN AS OPENING_STUDY_MONETIZATION_DATE_CREATED,
+			 OSM.ID_DETAILS_PAYMENT AS OPENING_STUDY_DETAILS_PAYMENT_ID,
+			 OSM.ID_PRICE AS PRICE_ID
+FROM OPENING_STUDY_MONETIZATION AS OSM
+WHERE OSM.ID = $paramMonetization";
+
+			$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+			$monetization = new Monetization($RESULT);
+
+			return $monetization;
+	}
+
 	public function getMonetizationForStudy($paramStudy){
 
 			$DB = fnDBConn();

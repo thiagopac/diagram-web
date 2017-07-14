@@ -76,6 +76,9 @@
 										Full Name
 									</th>
 									<th>
+										Role
+									</th>
+									<th>
 										 Actions
 									</th>
 								</tr>
@@ -94,6 +97,9 @@
 										</td>
 										<td>
 											 <?=$user->fullName?>
+										</td>
+										<td>
+											 <?=$strType = $user->typeUser == 1 ? "Admin" : "User" ;?>
 										</td>
 										<td>
 											 <a href="edit-user.php?u=<?=$user->id?>">Editar</a> | <a href="../exec/?e=adm_del&u=<?=$user->id?>" class="confirmation">Apagar</a>
@@ -155,6 +161,8 @@
 				"bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
 
 				"columns": [{
+						"orderable": true
+				}, {
 						"orderable": true
 				}, {
 						"orderable": true

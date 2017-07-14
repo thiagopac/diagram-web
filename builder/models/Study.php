@@ -15,25 +15,28 @@ class Study {
 	public $id;
 	public $name;
 	public $side;
-	public $eco;
 	public $dateCreated;
 	public $dateUpdated;
-	public $author;
-	public $authorFullName;
 	public $aboutStudy;
 	public $active;
-	public $monetization;
 	public $currencyAndPrice;
+	public $deleted;
+	public $ecoID;
+	public $authorID;
+	public $interfaceLanguageID;
+
+	//propriedades entidades
+	public $eco;
+	public $author;
+	public $monetization;
 	public $interfaceLanguage;
 	public $baseTheory;
 	public $basePractice;
 	public $variations;
-	public $variationsCount;
-	public $linesCount;
-	public $deleted;
 
 	static $showDeleted;
 	static $whereDeleted;
+	static $orderBy;
 
 	static $showVariationDeleted;
 	static $showLineDeleted;
@@ -55,24 +58,26 @@ class Study {
 			$this->dateUpdated = $array['OPENING_STUDY_UPDATED'];
 			$this->active = $array['OPENING_STUDY_ACTIVE'];;
 			$this->aboutStudy = $array['OPENING_STUDY_ABOUT_STUDY'];
+			$this->ecoID = $array['OPENING_STUDY_ECO_ID'];
+			$this->authorID = $array['USER_ID'];
+			$this->interfaceLanguageID = $array['INTERFACE_LANGUAGE_ID'];
 
-			$user = new User();
-			$this->author = $user->getUserWithId($array['USER_ID']);
-			$this->authorFullName = $this->author->firstName.' '.$this->author->lastName;
-
-			$eco = new Eco();
-			$this->eco = $eco->getEcoForStudy($array['OPENING_STUDY_ID']);
-
-			$monetization = new Monetization();
-			$this->monetization = $monetization->getMonetizationForStudy($array['OPENING_STUDY_ID']);
-
-			$interfaceLanguage = new InterfaceLanguage();
-			$this->interfaceLanguage = $interfaceLanguage->getInterfaceLanguageWithID($array['INTERFACE_LANGUAGE_ID']);
-
-			$baseTheory = new BaseTheory();
-			$this->baseTheory = $baseTheory->getBaseTheoryForStudy($array['OPENING_STUDY_ID']);
-
-			$this->basePractice = new BasePractice($array);
+//NÃO ESTÁ MAIS POPULANDO AS PROPRIEDADES ENTIDADES POIS ESTAVA IMPACTANDO NA PERFORMANCE
+			// $user = new User();
+			// $this->author = $user->getUserWithId($array['USER_ID']);
+			// $this->authorFullName = $this->author->firstName.' '.$this->author->lastName;
+			//
+			// $eco = new Eco();
+			// $this->eco = $eco->getEcoForStudy($array['OPENING_STUDY_ID']);
+			//
+			// $monetization = new Monetization();
+			// $this->monetization = $monetization->getMonetizationForStudy($array['OPENING_STUDY_ID']);
+			//
+			// $interfaceLanguage = new InterfaceLanguage();
+			// $this->interfaceLanguage = $interfaceLanguage->getInterfaceLanguageWithID($array['INTERFACE_LANGUAGE_ID']);
+			//
+			// $baseTheory = new BaseTheory();
+			// $this->baseTheory = $baseTheory->getBaseTheoryForStudy($array['OPENING_STUDY_ID']);
 
 			$this->deleted = $array['OPENING_STUDY_DELETED'];
 		}
@@ -91,6 +96,7 @@ class Study {
        OS.SIDE AS OPENING_STUDY_SIDE,
        OS.ID_USER AS USER_ID,
        OS.ABOUT AS OPENING_STUDY_ABOUT_STUDY,
+			 OS.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID,
        OS.DIN_LAST_UPDATE AS OPENING_STUDY_UPDATED,
 			 OS.ACTIVE AS OPENING_STUDY_ACTIVE,
 			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
@@ -105,52 +111,55 @@ WHERE OS.ID = $paramStudy";
 
 		$study = new Study($RESULT);
 
-	  $variarion = new Variation();
-	  $arrVariations = $variarion->getAllVariationsForStudy($paramStudy);
 
-		$study->variations = $arrVariations;
-
-		$study->variationsCount = count($arrVariations);
-
-		foreach ($arrVariations as $key => $variation) {
-		 	$variarionObj = new Variation();
-			$variarionObj = $variation;
-
-			foreach ($variation->lines as $key => $line) {
-				$lineObj = new Line();
-				$lineObj = $line;
-				$study->linesCount ++;
-			}
-		}
+//NÃO POPULANDO MAIS DADOS DE VARIATIONS POIS NEM SEMPRE OS DADOS SÃO NECESSÁRIOS E HAVIA IMPACTO NA PERFORMANCE
+	  // $variarion = new Variation();
+	  // $arrVariations = $variarion->getAllVariationsForStudy($paramStudy);
+		//
+		// $study->variations = $arrVariations;
+		//
+		// $study->variationsCount = count($arrVariations);
+		//
+		// foreach ($arrVariations as $key => $variation) {
+		//  	$variarionObj = new Variation();
+		// 	$variarionObj = $variation;
+		//
+		// 	foreach ($variation->lines as $key => $line) {
+		// 		$lineObj = new Line();
+		// 		$lineObj = $line;
+		// 		$study->linesCount ++;
+		// 	}
+		// }
 
 		return $study;
 	}
 
-	public function getBasicDataStudyWithID($paramStudy){
-
-		$DB = fnDBConn();
-
-    $SQL = "SELECT OS.ID AS OPENING_STUDY_ID,
-       OS.NAME AS OPENING_STUDY_NAME,
-       OS.SIDE AS OPENING_STUDY_SIDE,
-       OS.ID_USER AS USER_ID,
-       OS.ABOUT AS OPENING_STUDY_ABOUT_STUDY,
-       OS.DIN_LAST_UPDATE AS OPENING_STUDY_UPDATED,
-			 OS.ACTIVE AS OPENING_STUDY_ACTIVE,
-			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
-			 OS.DELETED AS OPENING_STUDY_DELETED,
-       DATE_FORMAT(OS.DIN,'%M %D, %Y') AS OPENING_STUDY_CREATED
-FROM OPENING_STUDY AS OS
-WHERE OS.ID = $paramStudy";
-
-		 $SQL = $SQL.self::$whereDeleted;
-
-     $RESULT = fnDB_DO_SELECT($DB,$SQL);
-
-		 $study = new Study($RESULT);
-
-		 return $study;
-	}
+// 	public function getBasicDataStudyWithID($paramStudy){
+//
+// 		$DB = fnDBConn();
+//
+//     $SQL = "SELECT OS.ID AS OPENING_STUDY_ID,
+//        OS.NAME AS OPENING_STUDY_NAME,
+//        OS.SIDE AS OPENING_STUDY_SIDE,
+//        OS.ID_USER AS USER_ID,
+//        OS.ABOUT AS OPENING_STUDY_ABOUT_STUDY,
+// 			 OS.ID_OPENING_ECO AS OPENING_STUDY_ECO_ID,
+//        OS.DIN_LAST_UPDATE AS OPENING_STUDY_UPDATED,
+// 			 OS.ACTIVE AS OPENING_STUDY_ACTIVE,
+// 			 OS.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID,
+// 			 OS.DELETED AS OPENING_STUDY_DELETED,
+//        DATE_FORMAT(OS.DIN,'%M %D, %Y') AS OPENING_STUDY_CREATED
+// FROM OPENING_STUDY AS OS
+// WHERE OS.ID = $paramStudy";
+//
+// 		 $SQL = $SQL.self::$whereDeleted;
+//
+//      $RESULT = fnDB_DO_SELECT($DB,$SQL);
+//
+// 		 $study = new Study($RESULT);
+//
+// 		 return $study;
+// 	}
 
 	public function getAllStudies(){
 
@@ -208,6 +217,8 @@ WHERE OS.ACTIVE = 1";
 
 		$SQL = $SQL.self::$whereDeleted;
 
+		$SQL = $SQL.self::$orderBy;
+
    	$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
 		$arrStudies = [];
@@ -227,8 +238,9 @@ WHERE OS.ACTIVE = 1";
 		$SQL = "SELECT OSACQ.ACTIVE
 FROM OPENING_STUDY_ACQUISITION AS OSACQ
 INNER JOIN OPENING_STUDY AS OS ON OS.ID = OSACQ.ID_OPENING_STUDY
-WHERE ((OSACQ.ID_OPENING_STUDY = $studyID AND OSACQ.ID_USER = $userID AND OSACQ.DELETED = 0)
-OR (OSACQ.ID_OPENING_STUDY = $studyID  AND OS.ID_USER = $userID))";
+WHERE OSACQ.ID_OPENING_STUDY = $studyID
+AND OSACQ.ID_USER = $userID
+AND OSACQ.DELETED = 0";
 
 //o usuário que criou o estudo terá ele listado
 
@@ -272,6 +284,53 @@ WHERE OS.ID_USER = $paramStudy";
 	  }
 
 		return $arrStudies;
+	}
+
+	public function insertStudy($paramStudy){
+		$DB = fnDBConn();
+
+		$SQL = "INSERT INTO OPENING_STUDY
+		(ID_INTERFACE_LANGUAGE,
+		NAME,
+		ABOUT,
+		SIDE,
+		ID_OPENING_ECO,
+		ID_USER)
+		VALUES('$paramStudy->interfaceLanguageID',
+		'$paramStudy->name',
+		'$paramStudy->aboutStudy',
+		'$paramStudy->side',
+		'$paramStudy->ecoID',
+		'$paramStudy->authorID')";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		$paramStudy->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+
+		//Adiciona registro na tabela de auditoria
+	  fnDB_LOG_AUDIT_ADD($DB,"Novo estudo criado.");
+
+		return $paramStudy;
+	}
+
+	public function editStudyWithStudy($paramStudy){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY AS OS SET
+		OS.ID_INTERFACE_LANGUAGE = '$paramStudy->interfaceLanguageID',
+		OS.NAME = '$paramStudy->name',
+		OS.ABOUT = '$paramStudy->aboutStudy',
+		OS.SIDE = '$paramStudy->side',
+		OS.ID_OPENING_ECO = '$paramStudy->ecoID',
+		OS.ID_USER = '$paramStudy->authorID',
+		OS.ACTIVE = '$paramStudy->active',
+		OS.DELETED = '$paramStudy->deleted'
+WHERE OS.ID = '$paramStudy->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Estudo editado.");
 	}
 
 }

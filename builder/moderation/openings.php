@@ -2,11 +2,10 @@
 ##INCLUDES
 	require_once('../lib/config.php');
 	require_once('../models/Study.php');
+	require_once('../models/User.php');
 
 #CONTROLE SESSAO
 	fnInicia_Sessao('moderation-openings');
-
-	include('../imports/header.php');
 
 #INPUTS
 	$MSG = addslashes($_REQUEST['MSG']);
@@ -15,9 +14,13 @@
 
 	$userID = $_SESSION['USER']['ID'];
 
+	Study::$showDeleted = true;
 	$study = new Study();
 	$arrStudies = $study->getAllStudies();
 
+	$user = new User();
+
+	include('../imports/header.php');
 ?>
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
@@ -93,10 +96,13 @@
 											<?=$study->name?>
 										</td>
 										<td>
-											 <?=$study->author->fullName?>
+											 <? $study->author = $user->getUserWithId($study->authorID); echo $study->author->fullName?>
 										</td>
 										<td>
-											 <? $study->active == "0" ? $status = "Inactive" : $status = "Active"; echo $status; ?>
+											 <? $study->active == "0" ? $status = "<span style='color:red'><strong>INACTIVE</strong></span>" : $status = "Active"; echo $status; ?>
+										</td>
+										<td>
+											<?=$study->dateUpdated?>
 										</td>
 										<td>
 											 <a href="edit-opening.php?s=<?=$study->id?>">Editar</a> | <a href="../exec/?e=adm_del&s=<?=$study->id?>" class="confirmation">Apagar</a>
@@ -158,6 +164,8 @@
 				"bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
 
 				"columns": [{
+						"orderable": true
+				}, {
 						"orderable": true
 				}, {
 						"orderable": true

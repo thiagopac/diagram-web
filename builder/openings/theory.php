@@ -2,6 +2,7 @@
   // #INCLUDES
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
+  require_once('../models/BaseTheory.php');
   require_once('../models/Variation.php');
   require_once('../models/Line.php');
   require_once('../models/Acquisition.php');
@@ -30,14 +31,21 @@
     exit;
   }
 
+  $baseTheory = new BaseTheory();
+  $study->baseTheory = $baseTheory->getBaseTheoryForStudy($study->id);
+
+  $variation = new Variation();
+  $study->variations = $variation->getAllVariationsForStudy($study->id);
+
+  $studyProgressTheory = new StudyProgressTheory();
+  $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
+
+  //controlar o que irá aparecer de item de menu de estudo
   $showHistory = $study->baseTheory->theoryHistory->text != '' ? true : false;
   $showGameStyle = $study->baseTheory->theoryGameStyle->text != '' ? true : false;
   $showMainGrandMasters = $study->baseTheory->theoryMainGrandMasters->text != '' ? true : false;
   $showVariations = count($study->variations) > 0 ? true : false;
   $showBibliography = $study->baseTheory->theoryBibliography->text != '' ? true : false;
-
-  $studyProgressTheory = new StudyProgressTheory();
-  $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
 
   require_once('../imports/header.php');
   require_once('../imports/opening_styles.php');

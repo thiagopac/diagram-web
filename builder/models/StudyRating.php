@@ -78,19 +78,30 @@ AND ORT.ID_USER = $paramAuthor";
 		return $studyRating;
 	}
 
-	public function getAverageStudyRatingForStudy($paramStudyRating){
+	public function getAverageStudyRatingForStudy($paramStudy){
 
 		$DB = fnDBConn();
 
 		$SQL = "SELECT ROUND(AVG(ORT.RATING),2) OPENING_RATING_RATING
 FROM OPENING_STUDY_RATING AS ORT
+WHERE ORT.ID_OPENING_STUDY = $paramStudy";
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		return $RESULT["OPENING_RATING_RATING"];
+	}
+
+	public function getCountStudyRatingForStudy($paramStudyRating){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT COUNT(ORT.ID) OPENING_RATING_RATING
+FROM OPENING_STUDY_RATING AS ORT
 WHERE ORT.ID_OPENING_STUDY = $paramStudyRating";
 
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
 
-		$studyRating = new StudyRating($RESULT);
-
-		return $studyRating;
+		return $RESULT["OPENING_RATING_RATING"];
 	}
 
 }

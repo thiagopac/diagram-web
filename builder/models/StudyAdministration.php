@@ -30,7 +30,7 @@ class StudyAdministration {
 			$this->user = $user->getUserWithId($array['USER_ID']);
 
 			$study = new Study();
-			$this->study = $study->getBasicDataStudyWithID($array['OPENING_STUDY_ID']);
+			$this->study = $study->getStudyWithID($array['OPENING_STUDY_ID']);
 
 			$this->read = $array['OPENING_STUDY_ADMINISTRATION_READ'];
 

@@ -2,6 +2,8 @@
    // #INCLUDES
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
+   require_once('../models/Variation.php');
+   require_once('../models/BasePractice.php');
    require_once('../models/PracticeLine.php');
    require_once('../models/StudyProgressPractice.php');
 
@@ -22,6 +24,11 @@
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
 
+   $study->basePractice = new basePractice($study->id);
+
+   $variation = new Variation();
+   $study->variations = $variation->getAllVariationsForStudy($study->id);
+
    $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
 
    if ($userOwnsStudy == false) {
@@ -34,6 +41,8 @@
 
    include('../imports/header.php');
    include('../imports/opening_styles.php');
+
+
 ?>
 
 <script>

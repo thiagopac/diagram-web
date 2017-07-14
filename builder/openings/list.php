@@ -2,6 +2,7 @@
    // #INCLUDES
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
+   require_once('../models/User.php');
    require_once('../models/Acquisition.php');
    require_once('../models/StudyRating.php');
    require_once('../models/StudyProgressTheory.php');
@@ -15,8 +16,12 @@
     $userID = $_SESSION['USER']['ID'];
 
     Study::$showDeleted = false;
+    Study::$orderBy = " ORDER BY DIN_LAST_UPDATE DESC";
+
     $study = new Study();
     $arrStudies = $study->getAllActiveStudies();
+
+    $user = new User();
 
     $studyProgressTheory = new StudyProgressTheory();
 
@@ -54,21 +59,30 @@
 
   <?foreach($arrStudies as $KEY => $study){ ?> <!-- INCÍCIO foreach  -->
         <?php
+              $userIsAuthorStudy = false;
+              $userOwnsStudy = false;
               $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
+
+              //se é um estudo que o usuário autor está acessando, ele terá acesso total
+              if ($study->authorID == $userID) {
+                $userIsAuthorStudy = true;
+              }
 
               $color = "";
 
               $selected = "";
 
-              if ($userOwnsStudy == true) {
+              if ($userOwnsStudy == true || $userIsAuthorStudy == true) {
                 $color = "bg-red-sunglo";
                 $selected = "selected";
               }else{
                 $color = "bg-grey-cascade";
               }
 
+                $study->author = $user->getUserWithId($study->authorID);
+
                 $studyRating = new StudyRating();
-                $studyRating = $studyRating->getAverageStudyRatingForStudy($study->id);
+                $studyRatingAverage = $studyRating->getAverageStudyRatingForStudy($study->id);
 
                 $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
 
@@ -84,15 +98,15 @@
       <?php if ($userOwnsStudy == true): ?>
         <div class="corner">
         </div>
-        <div class="check">
+        <div class="<?=$userOwnsStudy == $userID ? "check" : "check"; ?>">
         </div>
       <?php endif; ?>
 
       <div class="tile-body">
-        <h4><?=$study->name?></h4><small>By: <?=$study->authorFullName?></small>
+        <h4><?=$study->name?></h4><small>By: <?=$study->author->fullName?></small>
            <!--  rate-->
            <div style="margin-top:10px;">
-             <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="<?=$studyRating->rating?>" data-readonly="true" data-show-clear="false" data-show-caption="false">
+             <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="<?=$studyRatingAverage?>" data-readonly="true" data-show-clear="false" data-show-caption="false">
            </div>
       </div>
       <div class="tile-object">

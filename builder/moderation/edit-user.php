@@ -2,6 +2,10 @@
 ##INCLUDES.
 	require_once('../lib/config.php');
 	require_once('../models/User.php');
+	require_once('../models/Country.php');
+	require_once('../models/Language.php');
+	require_once('../models/InterfaceLanguage.php');
+	require_once('../models/Theme.php');
 
 	if (empty($_REQUEST['u'])){
 		header('Location: ./');
@@ -18,6 +22,19 @@
 
 	$user = new User();
 	$user = $user->getUserWithId($paramUser);
+
+	$country = new Country();
+	$arrCountries = $country->getAllCountries();
+
+	$language = new Language();
+	$arrLanguages = $language->getAllLanguages();
+
+	$interfaceLanguage = new InterfaceLanguage();
+	$arrInterfaceLanguages = $interfaceLanguage->getAllInterfaceLanguages();
+
+	$theme = new Theme();
+	$arrThemes = $theme->getAllThemes();
+
 ?>
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
@@ -61,16 +78,10 @@
 
 						<div class="portlet-body form">
 							<!-- BEGIN FORM-->
-							<form method="post" action="../exec/" id="form_sample_2" class="form-horizontal" novalidate="novalidate">
-							<input type="hidden" name="e" id="e" value="adm_edit" />
-							<input type="hidden" name="id" id="id" value="<?=$user->id?>" />
+							<form method="post" action="./action/edit-user.php" class="form-horizontal">
+							<input type="hidden" name="id" value="<?=$user->id?>" />
 								<div class="form-body">
-									<? if ($MSG != '') { ?>
-									<div class="alert alert-danger display">
-										<button class="close" data-close="alert"></button>
-										<?=$MSG?>
-									</div>
-									<? } ?>
+
 									<div class="form-group">
 										<label class="control-label col-md-3">Full Name</label>
 										<div class="col-md-2">
@@ -78,36 +89,120 @@
 												<input type="text" class="form-control" name="firstName" aria-required="true" aria-invalid="false" value="<?=$user->firstName?>">
 											</div>
 										</div>
-										<div class="col-md-2">
+
+										<div class="col-md-3">
 											<div class="input-icon right">
 												<input type="text" class="form-control" name="lastName" aria-required="true" aria-invalid="false" value="<?=$user->lastName?>">
 											</div>
 										</div>
 									</div>
+
 									<div class="form-group">
 										<label class="control-label col-md-3">Login</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-5">
 											<div class="input-icon right">
 												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$user->login?>">
 											</div>
 										</div>
 									</div>
+
 									<div class="form-group">
 										<label class="control-label col-md-3">ELO Fide</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-5">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$user->eloFide?>">
+												<input type="text" class="form-control" name="eloFide" aria-required="true" aria-invalid="true" value="<?=$user->eloFide?>">
 											</div>
 										</div>
 									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Grants</span>
+										</label>
+										<div class="col-md-5">
+											<div class="input-icon right">
+												<input type="text" class="form-control" name="grants" aria-required="true" aria-invalid="true" value="<?=$user->grants?>">
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Birthday</span>
+										</label>
+										<div class="col-md-3">
+											<input class="form-control form-control-inline input-medium date-picker" name="birthday" size="16" type="text" value="<?=fnDateDBtoVisual($user->birthday)?>"/>
+											<span class="help-block">
+											Month / Day / Year </span>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Country</label>
+										<div class="col-md-5">
+											 <select class="form-control select2me" name="country">
+													<option value="">Select...</option>
+													<?php foreach ($arrCountries as $key => $country): ?>
+
+														<?php $selected = ($country->id == $user->countryID) ? "selected" : null ;?>
+
+														<option value="<?=$country->id?>" <?=$selected?>> <?=$country->name?></option>
+													<?php endforeach; ?>
+											 </select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Language</label>
+										<div class="col-md-5">
+											 <select class="form-control select2me" name="language">
+													<option value="">Select...</option>
+													<?php foreach ($arrLanguages as $key => $language): ?>
+
+														<?php $selected = ($language->id == $user->languageID) ? "selected" : null ;?>
+
+														<option value="<?=$language->id?>" <?=$selected?>>[<?=$language->code?>] - <?=$language->name?></option>
+													<?php endforeach; ?>
+											 </select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Theme</label>
+										<div class="col-md-5">
+											 <select class="form-control select2me" name="theme">
+													<option value="">Select...</option>
+													<?php foreach ($arrThemes as $key => $theme): ?>
+
+														<?php $selected = ($theme->id == $user->themeID) ? "selected" : null ;?>
+
+														<option value="<?=$theme->id?>" <?=$selected?>><?=$theme->name?></option>
+													<?php endforeach; ?>
+											 </select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Interface Language</label>
+										<div class="col-md-5">
+											 <select class="form-control select2me" name="interfaceLanguage">
+													<option value="">Select...</option>
+													<?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
+
+														<?php $selected = ($interfaceLanguage->id == $user->interfaceLanguageID) ? "selected" : null ;?>
+
+														<option value="<?=$interfaceLanguage->id?>" <?=$selected?>>[<?=$interfaceLanguage->code?>] - <?=$interfaceLanguage->name?></option>
+													<?php endforeach; ?>
+											 </select>
+										</div>
+									</div>
+
 									<div class="form-group">
 										<label class="control-label col-md-3">User status</span>
 										</label>
-										<div class="col-md-4">
+										<div class="col-md-5">
 											<div class="input-icon right">
-												<select class="form-control" name="select">
+												<select class="form-control" name="status">
 													<?php $selectedInactive = ($user->status == "0") ? "selected" : null;?>
 													<?php $selectedActive = ($user->status == "1") ? "selected" : null;?>
 													 <option value="0" <?=$selectedInactive?>>Inactive</option>
@@ -118,21 +213,36 @@
 									</div>
 
 									<div class="form-group last password-strength">
-										<label class="control-label col-md-3">Password</label>
-										<div class="col-md-4">
-											<input type="password" class="form-control" name="password" id="password_strength">
+										<label class="control-label col-md-3">Role</label>
+										<div class="col-md-5">
+											<select class="form-control" name="typeUser">
+												<?php $selectedActive = ($user->typeUser == "1") ? "selected" : null;?>
+												<?php $selectedInactive = ($user->typeUser == "2") ? "selected" : null;?>
+												 <option value="1" <?=$selectedActive?>>Admin</option>
+												 <option value="2" <?=$selectedInactive?>>User</option>
+											</select>
 										</div>
-										<label for="chkShowPassword" style="margin:5px;">
-							                <input type="checkbox" id="chkShowPassword" />
-							                Show password
-							             </label>
 									</div>
 								</div>
 
+								<div class="form-group">
+									<label class="control-label col-md-3">Deleted</span>
+									</label>
+									<div class="col-md-5">
+										<div class="input-icon right">
+											<select class="form-control" name="deleted">
+												<?php $selectedInactive = ($user->deleted == "0") ? "selected" : null;?>
+												<?php $selectedActive = ($user->deleted == "1") ? "selected" : null;?>
+												 <option value="0" <?=$selectedInactive?>>NO</option>
+												 <option value="1" <?=$selectedActive?>>YES</option>
+											</select>
+										</div>
+									</div>
+								</div>
 
 								<div class="modal-footer">
 									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-									<button type="button" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+									<button type="submit" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->
@@ -147,6 +257,7 @@
            // initiate layout and plugins
            Metronic.init(); // init metronic core components
 			Layout.init(); // init current layout
+			ComponentsPickers.init();
 			QuickSidebar.init() // init quick sidebar
 
         });

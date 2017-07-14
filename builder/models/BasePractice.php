@@ -9,38 +9,32 @@ class BasePractice {
 	public $studyEcoPracticeLine;
 	public $practicePGNs;
 
-	public $idStudy;
+	public $studyID;
 	public $diagramLines;
 	public $openingBook;
 
 	//construtor da classe
-	public function __construct($array){
+	public function __construct($paramStudy){
 
-		//se o array não estiver vazio, inicializar as propriedades do objeto com os valores do array
-		if (!empty($array)) {
-			$this->idStudy = $array['OPENING_STUDY_ID'];
+		$this->studyID = $paramStudy;
 
-			// $variarion = new Variation();
-			//   	$arrVariations = $variarion->getAllVariationsForStudy($this->idStudy);
+		$eco = new Eco();
+		$eco = $eco->getEcoForStudy($this->studyID);
+		$this->studyEcoPracticeLine = $eco->ecoPracticeLine;
 
-			$eco = new Eco();
-			$eco = $eco->getEcoForStudy($this->idStudy);
-			$this->studyEcoPracticeLine = $eco->ecoPracticeLine;
+		$line = new Line();
+		$arrLines = $line->getAllLinesForStudy($this->studyID);
 
-			$line = new Line();
-			$arrLines = $line->getAllLinesForStudy($this->idStudy);
+		$arrPracticePGNs = [];
 
-			$arrPracticePGNs = [];
+		foreach($arrLines as $KEY => $line){
 
-			foreach($arrLines as $KEY => $line){
-
-				foreach ($line->practiceLines as $key => $PracticeLine) {
-					array_push($arrPracticePGNs, $PracticeLine->practicePGN);
-				}
+			foreach ($line->practiceLines as $key => $PracticeLine) {
+				array_push($arrPracticePGNs, $PracticeLine->practicePGN);
 			}
-
-			$this->practicePGNs = $arrPracticePGNs;
 		}
+
+		$this->practicePGNs = $arrPracticePGNs;
   }
 
 	public function __destruct(){

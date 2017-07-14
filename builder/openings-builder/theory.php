@@ -3,6 +3,9 @@
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
   require_once('../models/InterfaceLanguage.php');
+  require_once('../models/BaseTheory.php');
+  require_once('../models/Variation.php');
+  require_once('../models/Line.php');
 
   if (empty($_REQUEST['s'])){
     header('Location: ./');
@@ -25,6 +28,9 @@
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
 
+  $user = new User();
+  $study->author = $user->getUserWithID($userID);
+
   if ($study->author->id != $userID){
     header('Location: ./');
     exit;
@@ -35,8 +41,18 @@
     exit;
   }
 
+  $baseTheory = new BaseTheory();
+  $study->baseTheory = $baseTheory->getBaseTheoryForStudy($study->id);
+
+  $variation = new Variation();
+  $study->variations = $variation->getAllVariationsForStudy($study->id);
+
+  $variationsCount = count($study->variations);
+
   $line = new Line();
   $arrLines = $line->getAllLinesForStudy($paramStudy);
+
+  $linesCount = count($arrLines);
 
   include('../imports/header.php');
   include('../imports/opening_styles.php');
@@ -151,8 +167,8 @@
                           <textarea id="textarea_history" maxlength="1000" class="wysihtml5 form-control" rows="6" placeholder="E.g: The Caro–Kann is a common defense against the King's Pawn Opening and is classified as a Semi-Open Game like the Sicilian Defence and French Defence, although it is thought to be more solid and less dynamic than either of those openings. It often leads to good endgames for Black, who has the better pawn structure."><?=$study->baseTheory->theoryHistory->text?></textarea>
                           <span class="help-block">
                             <div id="countHistory" class="pull-right"></div>
-                            <a href="#" class="btn btn-lg btn-primary" id="btnSaveHistory" title="Save"><i class="fa fa-floppy-o"></i></a>
                           </span>
+                          <a href="#" class="btn btn-lg btn-primary" id="btnSaveHistory" title="Save"><i class="fa fa-floppy-o"></i></a>
                         </div>
                       </div>
                     </div>
@@ -202,7 +218,7 @@
                           </div>
                         </div>
                         <div class="portlet-body">
-                          <?php if ($study->variationsCount < 1): ?>
+                          <?php if ($variationsCount < 1): ?>
                           <small>This study does not have any Variation yet.</small>
                           <?php else: ?>
                           <table class="table table-hover">
@@ -265,7 +281,7 @@
                           </div>
                         </div>
                         <div class="portlet-body">
-                          <?php if ($study->linesCount < 1): ?>
+                          <?php if ($linesCount < 1): ?>
                           <small>This study does not have any Line yet.</small>
                           <?php else :?>
                             <table class="table table-hover">

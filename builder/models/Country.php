@@ -36,5 +36,25 @@ class Country {
 		return $country;
 	}
 
+	public function getAllCountries($paramCountry){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT CNT.ID AS COUNTRY_ID, CNT.CODE AS COUNTRY_CODE, CNT.NAME AS COUNTRY_NAME
+						FROM COUNTRY AS CNT
+						WHERE 1";
+
+		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
+
+		$arrCountries = [];
+
+		foreach ($RESULT as $KEY => $ROW) {
+			$country = new Country($ROW);
+			array_push($arrCountries, $country);
+		}
+
+		return $arrCountries;
+	}
+
 }
 ?>

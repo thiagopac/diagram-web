@@ -2,6 +2,7 @@
    // #INCLUDES
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
+   require_once('../models/User.php');
 
    if (empty($_REQUEST['s'])){
      header('Location: ./');
@@ -9,7 +10,7 @@
    }
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ( 'openings' );
+   fnInicia_Sessao ('openings-builder');
 
    $userID = $_SESSION['USER']['ID'];
 
@@ -18,6 +19,9 @@
 
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
+
+   $user = new User();
+   $study->author = $user->getUserWithId($study->authorID);
 
    if ($study->author->id != $userID){
      header('Location: ./');

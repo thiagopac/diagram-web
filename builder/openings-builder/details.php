@@ -2,6 +2,7 @@
    // #INCLUDES
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
+   require_once('../models/User.php');
    require_once('../models/Currency.php');
    require_once('../models/Price.php');
    require_once('../models/PaymentSystem.php');
@@ -25,6 +26,8 @@
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
 
+    $user = new User();
+    $study->author = $user->getUserWithId($study->authorID);
 
    if ($study->author->id != $userID){
      header('Location: ./');
@@ -34,12 +37,6 @@
    if ($study->deleted == true){
      header('Location: ./');
      exit;
-   }
-
-   if ($study->monetization->price->value != 0.00) {
-     $study->currencyAndPrice = $study->monetization->currency->symbol.' '.$study->monetization->price->value;
-   }else{
-     $study->currencyAndPrice = "FREE";
    }
 
    $interfaceLanguage = new InterfaceLanguage();
@@ -57,6 +54,26 @@
    $paymentSystem = new PaymentSystem();
    $arrPaymentSystems = $paymentSystem->getAllPaymentSystems();
 
+   $monetization = new Monetization();
+   $study->monetization = $monetization->getMonetizationForStudy($study->id);
+
+   if ($study->monetization->price->value != 0.00) {
+     $study->currencyAndPrice = $study->monetization->currency->symbol.' '.$study->monetization->price->value;
+   }else{
+     $study->currencyAndPrice = "FREE";
+   }
+
+   $variarion = new Variation();
+   $arrVariations = $variarion->getAllVariationsForStudy($study->id);
+
+   $variationsCount = count($arrVariations);
+
+   foreach ($arrVariations as $key => $variation) {
+   	foreach ($variation->lines as $key => $line) {
+   		$linesCount ++;
+   	}
+   }
+
   // var_dump($study);
   //  var_dump($arrInterfaceLanguages);
   //  var_dump($arrEcos);
@@ -69,6 +86,9 @@
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">
+
+  <? include('../imports/alert.php'); ?>
+
    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
    <div class="row">
       <div class="col-md-12">
@@ -94,7 +114,7 @@
       </ul>
    </div>
    <!-- END PAGE TITLE & BREADCRUMB-->
-   <? include('../imports/alert.php'); ?>
+
    <!-- BEGIN PAGE TITLE AND DESCRIPTION -->
    <!-- END BEGIN PAGE TITLE AND DESCRIPTION -->
    <div class="row profile">
@@ -115,7 +135,7 @@
                            <i class="fa fa-briefcase"></i> <?=$study->authorFullName?>
                         </li>
                         <li>
-                           <i class="fa fa-list-ol"></i> <?=$study->variationsCount ?> Var. | <?=$study->linesCount ?> Lines
+                           <i class="fa fa-list-ol"></i> <?=$variationsCount ?> Var. | <?=$linesCount ?> Lines
                         </li>
                         <li>
                            <i class="fa fa-usd"></i> <?=$study->currencyAndPrice?>

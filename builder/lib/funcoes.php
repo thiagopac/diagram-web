@@ -17,6 +17,18 @@ function fnLogText($strMessage,$booDie = false)
 		}
 	}
 
+function fnDateVisualToDB($dateVisual){
+	$dateDB = date("Y-m-d", strtotime($dateVisual));
+
+	return $dateDB;
+}
+
+function fnDateDBtoVisual($dateDB){
+	$dateVisual = date("m/d/Y", strtotime($dateDB));
+
+	return $dateVisual;
+}
+
 function fnDBConn()
 	{
 	global $MYSQL_HOST, $MYSQL_LOGIN, $MYSQL_SENHA, $MYSQL_PORTA, $MYSQL_DATABASE, $MYSQL_TIMEOUT;

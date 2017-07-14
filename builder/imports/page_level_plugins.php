@@ -27,4 +27,10 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 <script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
 
 <script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/bootstrap-confirmation/bootstrap-confirmation.min.js"></script>
+
+<script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/jquery-validation/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/jquery-validation/js/additional-methods.min.js"></script>
+
+<script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+<script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/bootstrap-markdown/lib/markdown.js"></script>
 <!-- END PAGE LEVEL PLUGINS -->

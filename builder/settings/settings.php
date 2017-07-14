@@ -48,7 +48,7 @@
    				<div class="col-md-12">
 
             <!-- BEGIN FORM-->
-            <form action="./action/update-settings.php" class="form-horizontal">
+            <form method="post" action="./action/settings.php" class="form-horizontal">
 
             <!-- BEGIN Portlet PORTLET-->
    					<div class="portlet">
@@ -72,7 +72,7 @@
 
                                  <?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
-                                   <?php $selected = $interfaceLanguage->id == $user->interfaceLanguage->id ? "selected" : "" ; ?>
+                                   <?php $selected = $interfaceLanguage->id == $user->interfaceLanguageID ? "selected" : "" ; ?>
 
                                    <option <?=$selected?> value="<?=$interfaceLanguage->id?>">[<?=$interfaceLanguage->code?>] - <?=$interfaceLanguage->name?></option>
 
@@ -108,7 +108,7 @@
 
                               <?php foreach ($arrThemes as $key => $theme): ?>
 
-                                <?php $selected = $theme->id == $user->theme->id ? "selected" : "" ; ?>
+                                <?php $selected = $theme->id == $user->themeID ? "selected" : "" ; ?>
 
                                 <option <?=$selected?> value="<?=$theme->id?>"><?=$theme->name?></option>
 

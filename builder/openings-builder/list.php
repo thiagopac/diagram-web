@@ -2,19 +2,22 @@
    // #INCLUDES
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
+   require_once('../models/User.php');
    require_once('../models/StudyRating.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ( 'openings-builder' );
-
-   include('../imports/header.php');
 
    $authorID = $_SESSION['USER']['ID'];
 
    Study::$showDeleted = true;
    $study = new Study();
    $arrStudies = $study->getAllStudiesForAuthor($authorID);
-   ?>
+
+   $user = new User();
+
+   include('../imports/header.php');
+?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">
@@ -62,18 +65,20 @@
 
                     <?php
                         $studyRating = new StudyRating();
-                        $studyRating = $studyRating->getAverageStudyRatingForStudy($study->id);
+                        $studyRatingAverage = $studyRating->getAverageStudyRatingForStudy($study->id);
+
+                        $study->author = $user->getUserWithId($study->authorID);
                      ?>
 
                   <a href="details.php?s=<?=$study->id?>">
                     <div class="tile double bg-red-sunglo double">
 
                       <div class="tile-body">
-                        <h4><?=$study->name?></h4><small>By: <?=$study->authorFullName?></small>
+                        <h4><?=$study->name?></h4><small>By: <?=$study->author->fullName?></small>
                         <p>
                           <!--  rate-->
                           <div style="margin-top:10px;">
-                            <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="<?=$studyRating->rating?>" data-readonly="true" data-show-clear="false" data-show-caption="false">
+                            <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="<?=$studyRatingAverage?>" data-readonly="true" data-show-clear="false" data-show-caption="false">
                           </div>
                         </p>
                       </div>

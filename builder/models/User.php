@@ -8,6 +8,8 @@ class User {
 
 	public $id;
 	public $login;
+	public $password;
+	public $grants;
 	public $firstName;
 	public $lastName;
 	public $fullName;
@@ -17,12 +19,18 @@ class User {
 	public $birthday;
 	public $dateCreated;
 	public $dateLastLogin;
+	public $languageID;
+	public $interfaceLanguageID;
+	public $themeID;
+	public $countryID;
 	public $typeUser;
-	public $country;
-	public $language;
+	public $deleted;
+
+	//propriedades entidades
 	public $interfaceLanguage;
 	public $theme;
-	public $deleted;
+	public $country;
+	public $language;
 
 	static $showDeleted;
 	static $whereDeleted;
@@ -36,6 +44,7 @@ class User {
 		if (!empty($array)) {
 			$this->id = $array['USER_ID'];
 			$this->login = $array['USER_LOGIN'];
+			$this->grants = $array['USER_GRANTS'];
 			$this->firstName = $array['USER_FIRSTNAME'];
 			$this->lastName = $array['USER_LASTNAME'];
 			$this->avatar = $array['USER_AVATAR'];
@@ -46,20 +55,24 @@ class User {
 			$this->dateLastLogin = $array['USER_LAST_LOGIN'];
 			$this->typeUser = $array['USER_TYPE_USER'];
 			$this->deleted = $array['USER_DELETED'];
+			$this->languageID = $array['LANGUAGE_ID'];
+			$this->interfaceLanguageID = $array['INTERFACE_LANGUAGE_ID'];
+			$this->countryID = $array['COUNTRY_ID'];
+			$this->themeID = $array['THEME_ID'];
 
 			$this->fullName = $this->firstName." ".$this->lastName;
 
-			$country = new Country();
-			$this->country = $country->getCountryWithID($array['COUNTRY_ID']);
-
-			$language = new Language();
-			$this->language = $language->getLanguageWithID($array['LANGUAGE_ID']);
-
-			$interfaceLanguage = new InterfaceLanguage();
-			$this->interfaceLanguage = $interfaceLanguage->getInterfaceLanguageWithID($array['INTERFACE_LANGUAGE_ID']);
-
-			$theme = new Theme();
-			$this->theme = $theme->getThemeWithID($array['THEME_ID']);
+			// $country = new Country();
+			// $this->country = $country->getCountryWithID($array['COUNTRY_ID']);
+			//
+			// $language = new Language();
+			// $this->language = $language->getLanguageWithID($array['LANGUAGE_ID']);
+			//
+			// $interfaceLanguage = new InterfaceLanguage();
+			// $this->interfaceLanguage = $interfaceLanguage->getInterfaceLanguageWithID($array['INTERFACE_LANGUAGE_ID']);
+			//
+			// $theme = new Theme();
+			// $this->theme = $theme->getThemeWithID($array['THEME_ID']);
 		}
   }
 
@@ -226,7 +239,31 @@ WHERE U.ID = $paramUser";
 
 		//Adiciona registro na tabela de auditoria
 	  fnDB_LOG_AUDIT_ADD($DB,"O usuário atualizou suas preferências.");
+	}
 
+	public function updateUserData($paramUser){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE USER AS U SET
+		U.LOGIN = '$paramUser->login',
+		U.FIRSTNAME = '$paramUser->firstName',
+		U.LASTNAME = '$paramUser->lastName',
+		U.GRANTS = '$paramUser->grants',
+		U.ELO_FIDE = '$paramUser->eloFide',
+		U.STATUS = '$paramUser->status',
+		U.BIRTHDAY = '$paramUser->birthday',
+		U.ID_TYPE_USER = '$paramUser->typeUser',
+		U.ID_COUNTRY = '$paramUser->countryID',
+		U.ID_LANGUAGE = '$paramUser->languageID',
+		U.ID_THEME = '$paramUser->themeID',
+		U.ID_INTERFACE_LANGUAGE = '$paramUser->interfaceLanguageID',
+		U.DELETED = '$paramUser->deleted'
+WHERE U.ID = '$paramUser->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+	  fnDB_LOG_AUDIT_ADD($DB,"O usuário atualizou os Dados de Usuário.");
 	}
 
 }
