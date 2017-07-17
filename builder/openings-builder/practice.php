@@ -117,7 +117,7 @@
                                 </div>
                              </div>
                              <div class="portlet-body">
-                               <?php if ($study->variationsCount < 1): ?>
+                               <?php if (count($arrVariations) < 1): ?>
                                 <small>This study does not have any line yet.</small>
                               <?php else: ?>
                                 <div class="portlet-body">

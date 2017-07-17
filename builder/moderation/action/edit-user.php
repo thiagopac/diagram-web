@@ -23,19 +23,6 @@
   $typeUser = trim(addslashes($_REQUEST['typeUser'])); //role
   $deleted = trim(addslashes($_REQUEST['deleted']));
 
-  $callBackSuccess = "location: ../edit-user.php?u=$id&success=";
-  $callBackError = "location: ../edit-user.php?u=$id&error=";
-
-  // if ($paramInterfaceLanguage == '') {
-  //   header($callBackError.urlencode('Error. Choose the language of the site.'));
-  //   exit;
-  // }
-  //
-  // if ($paramTheme == '') {
-  //   header($callBackError.urlencode('Error. Choose the theme of the site.'));
-  //   exit;
-  // }
-
   $user = new User();
 
   $user->id = $id;
@@ -54,9 +41,14 @@
   $user->typeUser = $typeUser;
   $user->deleted = $deleted;
 
-  $user = $user->updateUserData($user);
+  $operation = $user->updateUserData($user);
 
-  header($callBackSuccess.urlencode('Alterações realizadas com sucesso!'));
-  exit;
+  $arrResponse = [];
+  if ($operation[2] == true) {
+    $arrResponse[status] = "error";
+  }else{
+    $arrResponse[status] = "success";
+  }
 
+  echo json_encode($arrResponse);
 ?>

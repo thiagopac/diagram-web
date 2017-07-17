@@ -14,7 +14,7 @@
   }
 
   // CONTROLE SESSAO
-  fnInicia_Sessao ( 'openings' );
+  fnInicia_Sessao ('openings');
 
   $userID = $_SESSION['USER']['ID'];
 
@@ -26,7 +26,12 @@
 
   $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
 
-  if ($userOwnsStudy == false) {
+  //se é um estudo que o usuário autor está acessando, ele terá acesso total
+  if ($study->authorID == $userID) {
+    $userIsAuthorStudy = true;
+  }
+
+  if ($userOwnsStudy == false && $userIsAuthorStudy == false) {
     header('Location: ./');
     exit;
   }
@@ -313,10 +318,17 @@
                                     </div>
                                     <div class="portlet-body">
                                        <div class="row">
+                                         <div class="tabbable">
                                           <ul class="nav nav-tabs">
                                              <?
                                                 $flag = "active";
+
                                                 foreach ($study->variations as $key => $variation) {
+
+                                                  if (count($variation->lines) < 1) {
+                                                    continue;
+                                                  }
+
                                                   if (count($variation->lines) > 1) {
                                                     $href = "javascript:;";
                                                     $dataToggle = "dropdown";
@@ -350,7 +362,7 @@
                                              <?$flag = "active";
                                              foreach ($study->variations as $key => $variation) {
                                                 foreach ($variation->lines as $key => $line) {
-                                                    $tab = "tab_".$line->idVariation."_".$line->id; ?>
+                                                    $tab = "tab_".$line->variationID."_".$line->id; ?>
                                              <div class="tab-pane <?=$flag?>" id="<?=$tab?>">
                                                 <div class="portlet light">
 
@@ -403,6 +415,7 @@
                                               <?} ?>
                                              <?} ?>
                                           </div>
+                                        </div>
                                        </div>
                                     </div>
                                  </div>

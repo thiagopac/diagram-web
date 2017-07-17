@@ -70,7 +70,7 @@ function fnDB_DO_EXEC($DB, $strSQL)
 	if ($error)
 		fnLogText('(fnDB_DO_EXEC) MySQL Error: '.mysqli_error($DB).' (SQL: '.$strSQL.')',true);
 
-	return(array((int)$DB->affected_rows, (int)mysqli_insert_id($DB)) );
+	return(array((int)$DB->affected_rows, (int)mysqli_insert_id($DB), $error));
 }
 
 function fnDB_DO_SELECT_WHILE($DB, $strSQL)

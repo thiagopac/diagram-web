@@ -7,11 +7,13 @@ class Variation {
 	public $id;
 	public $name;
 	public $text;
-	public $eco;
+	public $ecoID;
 	public $dateCreated;
-	public $idStudy;
-	public $lines;
+	public $studyID;
 	public $deleted;
+
+	public $eco;
+	public $lines;
 
 	static $showDeleted;
 	static $whereDeleted;
@@ -33,8 +35,9 @@ class Variation {
 			$this->name = $array['OPENING_VARIATION_NAME'];
 			$this->text = $array['OPENING_VARIATION_TEXT'];
 			$this->dateCreated = $array['OPENING_VARIATION_DATE_CREATED'];
-			$this->idStudy = $array['OPENING_STUDY_ID'];
+			$this->studyID = $array['OPENING_STUDY_ID'];
 			$this->deleted = $array['OPENING_VARIATION_DELETED'];
+			$this->ecoID = $array['OPENING_STUDY_ECO_ID'];
 
 			$eco = new Eco();
 			$this->eco = $eco->getEcoWithID($array['OPENING_STUDY_ECO_ID']);
@@ -106,6 +109,45 @@ WHERE OSTV.ID = $variationID";
 		$variation = new Variation($RESULT);
 
 		return $variation;
+	}
+
+	public function insertVariation($paramVariation){
+		$DB = fnDBConn();
+
+		$SQL = "INSERT INTO OPENING_STUDY_THEORY_VARIATION
+		(NAME,
+		TEXT,
+		ID_OPENING_STUDY,
+		ID_OPENING_ECO)
+		VALUES('$paramVariation->name',
+		'$paramVariation->text',
+		'$paramVariation->studyID',
+		'$paramVariation->ecoID')";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		$paramVariation->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Nova Variation criada.");
+
+		return $paramVariation;
+	}
+
+	public function editVariationForVariation($paramVariation){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_THEORY_VARIATION AS OSTV SET
+		OSTV.NAME = '$paramVariation->name',
+		OSTV.TEXT = '$paramVariation->text',
+		OSTV.ID_OPENING_STUDY = '$paramVariation->studyID',
+		OSTV.ID_OPENING_ECO = '$paramVariation->ecoID'
+WHERE OSTV.ID = '$paramVariation->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Variation editada.");
 	}
 
 }

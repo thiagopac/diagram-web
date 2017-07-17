@@ -94,27 +94,23 @@
 
 						<div class="portlet-body form">
 							<!-- BEGIN FORM-->
-							<form method="post" action="./action/edit-opening.php" class="form-horizontal" novalidate="novalidate">
-							<input type="hidden" name="id" value="<?=$study->id?>" />
+							<form id="formStudy" class="form-horizontal">
+
+							<input type="hidden" id="id" name="id" value="<?=$study->id?>" />
 								<div class="form-body">
-									<? if ($MSG != '') { ?>
-									<div class="alert alert-danger display">
-										<button class="close" data-close="alert"></button>
-										<?=$MSG?>
-									</div>
-									<? } ?>
+
 									<div class="form-group">
 										<label class="control-label col-md-3">Name</label>
 										<div class="col-md-6">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="name" aria-required="true" aria-invalid="false" value="<?=$study->name?>">
+												<input type="text" class="form-control" id="name" name="name" value="<?=$study->name?>">
 											</div>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="control-label col-md-3">Language</label>
 										<div class="col-md-6">
-											 <select class="form-control select2me" name="interfaceLanguage">
+											 <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
 													<option value="">Select...</option>
 													<?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
@@ -130,7 +126,7 @@
 										</label>
 										<div class="col-md-6">
 											<div class="input-icon right">
-												<textarea name="about" maxlength="250" class="form-control" rows="4"><?=$study->aboutStudy?></textarea>
+												<textarea id="about" name="about" maxlength="250" class="form-control" rows="4"><?=$study->aboutStudy?></textarea>
 											</div>
 										</div>
 									</div>
@@ -138,7 +134,7 @@
 										<label class="control-label col-md-3">Side</span>
 										</label>
 										<div class="col-md-6">
-											 <select class="form-control" name="side">
+											 <select class="form-control" id="side" name="side">
 												 <?php $selectedW = ($study->side == "W") ? "selected" : null;?>
 												 <?php $selectedB = ($study->side == "B") ? "selected" : null;?>
 													<option value="W" <?=$selectedW?>>White</option>
@@ -150,7 +146,7 @@
 										<label class="control-label col-md-3">ECO Opening</span>
 										</label>
 										<div class="col-md-6">
-											 <select class="form-control select2me" name="eco">
+											 <select class="form-control select2me" id="eco" name="eco">
 													<option value="">Select...</option>
 													<?php foreach ($arrEcos as $key => $eco): ?>
 
@@ -165,7 +161,7 @@
 									<div class="form-group">
 										<label class="control-label col-md-3">Status</label>
 										<div class="col-md-6">
-											<select class="form-control" name="active">
+											<select class="form-control" id="active" name="active">
 												<?php $inactive = ($study->active == "0") ? "selected" : null;?>
 												<?php $active = ($study->active == "1") ? "selected" : null;?>
 												 <option value="0" <?=$inactive?>>Inactive</option>
@@ -177,7 +173,7 @@
 									<div class="form-group last">
 										<label class="control-label col-md-3">Deleted</label>
 										<div class="col-md-6">
-											<select class="form-control" name="deleted">
+											<select class="form-control" id="deleted" name="deleted">
 												<?php $notDeleted = ($study->deleted == "0") ? "selected" : null;?>
 												<?php $deleted = ($study->deleted == "1") ? "selected" : null;?>
 												 <option value="0" <?=$notDeleted?>>NO</option>
@@ -189,8 +185,8 @@
 								</div>
 
 								<div class="modal-footer">
-									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-									<button type="submit" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+									<button type="button" class="btn btn-danger" title="Cancel"><i class="fa fa-close"></i></button>
+									<button type="submit" id="btnSaveStudy" class="btn btn-primary"  title="Save"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->
@@ -295,16 +291,115 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-        jQuery(document).ready(function() {
-           // initiate layout and plugins
-           Metronic.init(); // init metronic core components
-			Layout.init(); // init current layout
-			QuickSidebar.init() // init quick sidebar
+jQuery(document).ready(function() {
+	// initiate layout and plugins
+	Metronic.init(); // init metronic core components
+	Layout.init(); // init current layout
+	UIToastr.init();
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"positionClass": "toast-top-right",
+		"onclick": null,
+		"showDuration": "1000",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
 
-        });
+	var FormValidation = function () {
 
+		var handleValidation = function() {
 
-    </script>
+						var form1 = $('#formStudy');
+
+						form1.validate({
+								errorElement: 'span', //default input error message container
+								errorClass: 'help-block help-block-error', // default input error message class
+								focusInvalid: true, // do not focus the last invalid input
+								ignore: "",  // validate all fields including form hidden input
+								rules: {
+										interfaceLanguage: {
+												required: true
+										},
+										name: {
+												required: true
+										},
+										side: {
+												required: true
+										},
+										eco: {
+												required: true
+										},
+										about: {
+												required: true
+										},
+										active: {
+												required: true
+										},
+										deleted: {
+												required: true
+										}
+								},
+
+								invalidHandler: function (event, validator) { //display error alert on form submit
+										toastr.error("You have some form errors. Please check below.");
+								},
+
+								highlight: function (element) { // hightlight error inputs
+										$(element)
+												.closest('.form-group').addClass('has-error'); // set error class to the control group
+								},
+
+								unhighlight: function (element) { // revert the change done by hightlight
+										$(element)
+												.closest('.form-group').removeClass('has-error'); // set error class to the control group
+								},
+
+								success: function (label) {
+										label
+												.closest('.form-group').removeClass('has-error'); // set success class to the control group
+								},
+
+								submitHandler: function (form) {
+
+										$.ajax({
+												url: './action/edit-opening.php',
+												type: 'POST',
+												data: {id: $("#id").val(),
+															interfaceLanguage: $("#interfaceLanguage").val(),
+															name: $("#name").val(),
+															side: $("#side").val(),
+															eco: $("#eco").val(),
+															about: $("#about").val(),
+															active: $("#active").val(),
+															deleted: $("#deleted").val()},
+												success: function (result) {
+
+													var response = JSON.parse(result);
+
+													if(response["status"] == "success"){
+														toastr.success('Saved changes!');
+													}else{
+														toastr.error('Error. Please, try again later.');
+													}
+												}, error: function (result) {
+														toastr.error('Error. Please, try again later.');
+												}
+										});
+
+								}
+						});
+					}
+				handleValidation();
+		 }();
+
+});
+</script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

@@ -10,5 +10,6 @@
     "deleteMoves" : "Delete rest moves from here",
     "nags" : "NAGs menu",
     "pgn" : "Display PGN of current game",
-    "hidePGN" : "Hide the displayed PGN"
+    "hidePGN" : "Hide the displayed PGN",
+    "pgnUpdatedButton" : "Save current PGN"
 }

@@ -78,21 +78,21 @@
 
 						<div class="portlet-body form">
 							<!-- BEGIN FORM-->
-							<form method="post" action="./action/edit-user.php" class="form-horizontal">
-							<input type="hidden" name="id" value="<?=$user->id?>" />
+							<form id="formUser" class="form-horizontal">
+							<input type="hidden" id="id" name="id" value="<?=$user->id?>" />
 								<div class="form-body">
 
 									<div class="form-group">
 										<label class="control-label col-md-3">Full Name</label>
 										<div class="col-md-2">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="firstName" aria-required="true" aria-invalid="false" value="<?=$user->firstName?>">
+												<input type="text" class="form-control" id="firstName" name="firstName" aria-required="true" aria-invalid="false" value="<?=$user->firstName?>">
 											</div>
 										</div>
 
 										<div class="col-md-3">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="lastName" aria-required="true" aria-invalid="false" value="<?=$user->lastName?>">
+												<input type="text" class="form-control" id="lastName" name="lastName" aria-required="true" aria-invalid="false" value="<?=$user->lastName?>">
 											</div>
 										</div>
 									</div>
@@ -102,7 +102,7 @@
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$user->login?>">
+												<input type="text" class="form-control" id="login" name="login" aria-required="true" aria-invalid="true" value="<?=$user->login?>">
 											</div>
 										</div>
 									</div>
@@ -112,7 +112,7 @@
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="eloFide" aria-required="true" aria-invalid="true" value="<?=$user->eloFide?>">
+												<input type="text" class="form-control" id="eloFide" name="eloFide" aria-required="true" aria-invalid="true" value="<?=$user->eloFide?>">
 											</div>
 										</div>
 									</div>
@@ -122,7 +122,7 @@
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
-												<input type="text" class="form-control" name="grants" aria-required="true" aria-invalid="true" value="<?=$user->grants?>">
+												<input type="text" class="form-control" id="grants" name="grants" aria-required="true" aria-invalid="true" value="<?=$user->grants?>">
 											</div>
 										</div>
 									</div>
@@ -131,7 +131,7 @@
 										<label class="control-label col-md-3">Birthday</span>
 										</label>
 										<div class="col-md-3">
-											<input class="form-control form-control-inline input-medium date-picker" name="birthday" size="16" type="text" value="<?=fnDateDBtoVisual($user->birthday)?>"/>
+											<input class="form-control form-control-inline input-medium date-picker" id="birthday" name="birthday" size="16" type="text" value="<?=fnDateDBtoVisual($user->birthday)?>"/>
 											<span class="help-block">
 											Month / Day / Year </span>
 										</div>
@@ -140,7 +140,7 @@
 									<div class="form-group">
 										<label class="control-label col-md-3">Country</label>
 										<div class="col-md-5">
-											 <select class="form-control select2me" name="country">
+											 <select class="form-control select2me" id="country" name="country">
 													<option value="">Select...</option>
 													<?php foreach ($arrCountries as $key => $country): ?>
 
@@ -155,7 +155,7 @@
 									<div class="form-group">
 										<label class="control-label col-md-3">Language</label>
 										<div class="col-md-5">
-											 <select class="form-control select2me" name="language">
+											 <select class="form-control select2me" id="language" name="language">
 													<option value="">Select...</option>
 													<?php foreach ($arrLanguages as $key => $language): ?>
 
@@ -170,7 +170,7 @@
 									<div class="form-group">
 										<label class="control-label col-md-3">Theme</label>
 										<div class="col-md-5">
-											 <select class="form-control select2me" name="theme">
+											 <select class="form-control select2me" id="theme" name="theme">
 													<option value="">Select...</option>
 													<?php foreach ($arrThemes as $key => $theme): ?>
 
@@ -185,7 +185,7 @@
 									<div class="form-group">
 										<label class="control-label col-md-3">Interface Language</label>
 										<div class="col-md-5">
-											 <select class="form-control select2me" name="interfaceLanguage">
+											 <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
 													<option value="">Select...</option>
 													<?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
@@ -202,7 +202,7 @@
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
-												<select class="form-control" name="status">
+												<select class="form-control" id="status" name="status">
 													<?php $selectedInactive = ($user->status == "0") ? "selected" : null;?>
 													<?php $selectedActive = ($user->status == "1") ? "selected" : null;?>
 													 <option value="0" <?=$selectedInactive?>>Inactive</option>
@@ -215,7 +215,7 @@
 									<div class="form-group last password-strength">
 										<label class="control-label col-md-3">Role</label>
 										<div class="col-md-5">
-											<select class="form-control" name="typeUser">
+											<select class="form-control" id="typeUser" name="typeUser">
 												<?php $selectedActive = ($user->typeUser == "1") ? "selected" : null;?>
 												<?php $selectedInactive = ($user->typeUser == "2") ? "selected" : null;?>
 												 <option value="1" <?=$selectedActive?>>Admin</option>
@@ -230,7 +230,7 @@
 									</label>
 									<div class="col-md-5">
 										<div class="input-icon right">
-											<select class="form-control" name="deleted">
+											<select class="form-control" id="deleted" name="deleted">
 												<?php $selectedInactive = ($user->deleted == "0") ? "selected" : null;?>
 												<?php $selectedActive = ($user->deleted == "1") ? "selected" : null;?>
 												 <option value="0" <?=$selectedInactive?>>NO</option>
@@ -241,8 +241,8 @@
 								</div>
 
 								<div class="modal-footer">
-									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-									<button type="submit" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+									<button type="button" class="btn btn-danger" title="Cancel"><i class="fa fa-close"></i></button>
+									<button type="submit" class="btn btn-primary" title="Save"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->
@@ -253,32 +253,137 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-        jQuery(document).ready(function() {
-           // initiate layout and plugins
-           Metronic.init(); // init metronic core components
-			Layout.init(); // init current layout
-			ComponentsPickers.init();
-			QuickSidebar.init() // init quick sidebar
+jQuery(document).ready(function() {
+	// initiate layout and plugins
+	Metronic.init(); // init metronic core components
+	Layout.init(); // init current layou
+	ComponentsPickers.init();
+	UIToastr.init();
 
-        });
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"positionClass": "toast-top-right",
+		"onclick": null,
+		"showDuration": "1000",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
 
-        $(function () {
-            $("#chkShowPassword").bind("click", function () {
-                var txtPassword = $("[id*=password_strength]");
-                if ($(this).is(":checked")) {
-                    txtPassword.after('<input onchange = "PasswordChanged(this);" id = "txt_' + txtPassword.attr("id") + '" class="form-control" name="password" type = "text" value = "' + txtPassword.val() + '" />');
-                    txtPassword.hide();
-                } else {
-                    txtPassword.val(txtPassword.next().val());
-                    txtPassword.next().remove();
-                    txtPassword.show();
-                }
-            });
-        });
-        function PasswordChanged(txt) {
-            $(txt).prev().val($(txt).val());
-        }
-    </script>
+	var FormValidation = function () {
+
+		var handleValidation = function() {
+
+						var form1 = $('#formUser');
+
+						form1.validate({
+								errorElement: 'span', //default input error message container
+								errorClass: 'help-block help-block-error', // default input error message class
+								focusInvalid: true, // do not focus the last invalid input
+								ignore: "",  // validate all fields including form hidden input
+								rules: {
+										firstName: {
+												required: true
+										},
+										lastName: {
+												required: true
+										},
+										login: {
+												required: true
+										},
+										grants: {
+												required: true
+										},
+										birthday: {
+												required: true
+										},
+										country: {
+												required: true
+										},
+										language: {
+												required: true
+										},
+										theme: {
+												required: true
+										},
+										interfaceLanguage: {
+												required: true
+										},
+										status: {
+												required: true
+										},
+										typeUser: {
+												required: true
+										},
+										deleted: {
+												required: true
+										}
+								},
+
+								invalidHandler: function (event, validator) { //display error alert on form submit
+										toastr.error("You have some form errors. Please check below.");
+								},
+
+								highlight: function (element) { // hightlight error inputs
+										$(element)
+												.closest('.form-group').addClass('has-error'); // set error class to the control group
+								},
+
+								unhighlight: function (element) { // revert the change done by hightlight
+										$(element)
+												.closest('.form-group').removeClass('has-error'); // set error class to the control group
+								},
+
+								success: function (label) {
+										label
+												.closest('.form-group').removeClass('has-error'); // set success class to the control group
+								},
+
+								submitHandler: function (form) {
+
+									$.ajax({
+											url: './action/edit-user.php',
+											type: 'POST',
+											data: {id: $("#id").val(),
+														firstName: $("#firstName").val(),
+														lastName: $("#lastName").val(),
+														login: $("#login").val(),
+														eloFide: $("#eloFide").val(),
+														grants: $("#grants").val(),
+														birthday: $("#birthday").val(),
+														country: $("#country").val(),
+														language: $("#language").val(),
+														theme: $("#theme").val(),
+														interfaceLanguage: $("#interfaceLanguage").val(),
+														status: $("#status").val(),
+														typeUser: $("#typeUser").val(),
+														deleted: $("#deleted").val()},
+											success: function (result) {
+
+												var response = JSON.parse(result);
+
+												if(response["status"] == "success"){
+													toastr.success('Saved changes!');
+												}else if(response["status"] == "error"){
+													toastr.warning('Error. Please, try again later.');
+												}
+											}
+									});
+
+								}
+						});
+					}
+				handleValidation();
+		 }();
+
+});
+
+</script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

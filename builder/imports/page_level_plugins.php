@@ -33,4 +33,6 @@ $absolutepath = substr($absolutepath, 0, strpos($absolutepath, "builder"));
 
 <script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
 <script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/bootstrap-markdown/lib/markdown.js"></script>
+
+<script type="text/javascript" src=" <?=$absolutepath?>assets/global/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->

@@ -13,7 +13,7 @@
    }
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ( 'openings' );
+   fnInicia_Sessao ('openings');
 
    $userID = $_SESSION['USER']['ID'];
 
@@ -29,9 +29,14 @@
    $variation = new Variation();
    $study->variations = $variation->getAllVariationsForStudy($study->id);
 
+   //se é um estudo que o usuário autor está acessando, ele terá acesso total
+   if ($study->authorID == $userID && $userIsAuthorStudy == false) {
+     $userIsAuthorStudy = true;
+   }
+
    $userOwnsStudy = $study->checkIfUserHasStudy($userID, $study->id);
 
-   if ($userOwnsStudy == false) {
+   if ($userOwnsStudy == false && $userIsAuthorStudy == false) {
      header('Location: ./');
      exit;
    }

@@ -17,19 +17,6 @@
   $active = trim(addslashes($_REQUEST['active']));
   $deleted = trim(addslashes($_REQUEST['deleted']));
 
-  $callBackSuccess = "location: ../edit-opening.php?s=$id&success=";
-  $callBackError = "location: ../edit-opening.php?s=$id&error=";
-
-  // if ($paramInterfaceLanguage == '') {
-  //   header($callBackError.urlencode('Error. Choose the language of the site.'));
-  //   exit;
-  // }
-  //
-  // if ($paramTheme == '') {
-  //   header($callBackError.urlencode('Error. Choose the theme of the site.'));
-  //   exit;
-  // }
-
   $study = new Study();
 
   $study->id = $id;
@@ -42,10 +29,14 @@
   $study->active = $active;
   $study->deleted = $deleted;
 
+  $operation = $study->editStudyWithStudy($study);
 
-  $study = $study->editStudyWithStudy($study);
+  $arrResponse = [];
+  if ($operation[2] == true) {
+    $arrResponse[status] = "error";
+  }else{
+    $arrResponse[status] = "success";
+  }
 
-  header($callBackSuccess.urlencode("Estudo alterado com sucesso!"));
-
-  exit;
+  echo json_encode($arrResponse);
 ?>

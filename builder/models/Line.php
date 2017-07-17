@@ -8,14 +8,16 @@ class Line {
 	public $text;
 	public $pgn;
 	public $dateCreated;
-	public $idVariation;
+	public $variationID;
 	public $nameVariation;
-	public $idStudy;
+	public $studyID;
 	public $practiceLines;
 	public $deleted;
 
 	static $showDeleted;
 	static $whereDeleted;
+
+	static $orderBy;
 
 	static $showPracticeLineDeleted;
 
@@ -33,9 +35,9 @@ class Line {
 			$this->text = $array['OPENING_LINE_TEXT'];
 			$this->pgn = $array['OPENING_LINE_PGN'];
 			$this->dateCreated = $array['OPENING_LINE_DATE_CREATED'];
-			$this->idVariation = $array['OPENING_VARIATION_ID'];
+			$this->variationID = $array['OPENING_VARIATION_ID'];
 			$this->nameVariation = $array['OPENING_VARIATION_NAME'];
-			$this->idStudy = $array['OPENING_STUDY_ID'];
+			$this->studyID = $array['OPENING_STUDY_ID'];
 			$this->deleted = $array['OPENING_LINE_DELETED'];
 		}
   }
@@ -62,6 +64,8 @@ INNER JOIN OPENING_STUDY_THEORY_VARIATION AS OSTV ON OSTV.ID = OSTL.ID_OPENING_S
 WHERE OSTV.ID_OPENING_STUDY = $paramStudy";
 
 		$SQL = $SQL.self::$whereDeleted;
+
+		$SQL = $SQL.self::$orderBy;
 
     $RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -139,6 +143,45 @@ WHERE OSTL.ID = $paramLine";
 		$line = new Line($RESULT);
 
 		return $line;
+	}
+
+	public function insertLine($paramLine){
+		$DB = fnDBConn();
+
+		$SQL = "INSERT INTO OPENING_STUDY_THEORY_LINE
+		(NAME,
+		TEXT,
+		ID_OPENING_STUDY_THEORY_VARIATION,
+		PGN)
+		VALUES('$paramLine->name',
+		'$paramLine->text',
+		'$paramLine->variationID',
+		'$paramLine->pgn')";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		// $paramLine->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Nova Line criada.");
+
+		return $RET;
+	}
+
+	public function editLineForLine($paramLine){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_THEORY_LINE AS OSTL SET
+		OSTL.NAME = '$paramLine->name',
+		OSTL.TEXT = '$paramLine->text',
+		OSTL.ID_OPENING_STUDY_THEORY_VARIATION = '$paramLine->variationID',
+		OSTL.PGN = '$paramLine->pgn'
+WHERE OSTL.ID = '$paramLine->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Linha editada.");
 	}
 
 }

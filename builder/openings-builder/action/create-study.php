@@ -14,19 +14,6 @@
   $ecoID = trim(addslashes($_REQUEST['eco']));
   $about = trim(addslashes($_REQUEST['about']));
 
-  $callBackSuccess = "location: ../details.php";
-  $callBackError = "location: ../create-study.php?error=";
-
-  // if ($paramInterfaceLanguage == '') {
-  //   header($callBackError.urlencode('Error. Choose the language of the site.'));
-  //   exit;
-  // }
-  //
-  // if ($paramTheme == '') {
-  //   header($callBackError.urlencode('Error. Choose the theme of the site.'));
-  //   exit;
-  // }
-
   $study = new Study();
 
   $study->interfaceLanguageID = $interfaceLanguageID;
@@ -36,17 +23,16 @@
   $study->aboutStudy = $about;
   $study->authorID = $userID;
 
-  // var_dump($study);
-  // exit;
+  $operation = $study->insertStudy($study);
+  $insertedID = $operation[1];
 
-  $study = $study->insertStudy($study);
-  $insertedId = $study->id;
+  $arrResponse = [];
+  if ($operation[2] == false) {
+    $arrResponse[status] = "success";
+    $arrResponse[studyID] = $insertedID;
+  }else{
+    $arrResponse[status] = "error";
+  }
 
-  $callBackSuccess .= "?s=$insertedId";
-  $callBackSuccess .= "&success=";
-
-  header($callBackSuccess.urlencode("Estudo criado com sucesso!"));
-
-  exit;
-
+  echo json_encode($arrResponse);
 ?>

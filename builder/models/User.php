@@ -264,6 +264,8 @@ WHERE U.ID = '$paramUser->id'";
 
 		//Adiciona registro na tabela de auditoria
 	  fnDB_LOG_AUDIT_ADD($DB,"O usuário atualizou os Dados de Usuário.");
+
+		return $RET;
 	}
 
 }

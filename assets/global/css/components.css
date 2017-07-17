@@ -6267,10 +6267,10 @@ Tiles(new in v1.1.1)
   float: left;
 }
 .tiles .tile.double {
-  width: 280px !important;
+  width: 255px !important;
 }
 .tiles .tile.double-down {
-  height: 280px !important;
+  height: 255px !important;
 }
 .tiles .tile.double-down i {
   margin-top: 95px;

@@ -56,22 +56,13 @@
       <div class="portlet-body form">
          <!-- BEGIN FORM-->
 
-         <form method="post" id="formCreateStudy" class="form-horizontal" action="./action/create-study.php">
+         <form id="formCreateStudy" class="form-horizontal">
             <div class="form-body">
-
-              <div class="alert alert-danger display-hide">
-                <button class="close" data-close="alert"></button>
-                You have some form errors. Please check below.
-              </div>
-              <div class="alert alert-success display-hide">
-                <button class="close" data-close="alert"></button>
-                Your form validation is successful!
-              </div>
 
                <div class="form-group">
                   <label class="col-md-3 control-label">Language</label>
                   <div class="col-md-6">
-                     <select class="form-control select2me" name="interfaceLanguage">
+                     <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
                         <option value="">Select...</option>
 
                         <?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
@@ -89,7 +80,7 @@
                <div class="form-group">
                   <label class="col-md-3 control-label">Name</label>
                   <div class="col-md-6">
-                     <input type="text" class="form-control" placeholder="E.g: Caro-Kann for beginners" maxlength="50" name="name">
+                     <input type="text" class="form-control" placeholder="E.g: Caro-Kann for beginners" id="name" name="name">
                      <span class="help-block">
                      Use a small name for your study.</span>
                   </div>
@@ -98,7 +89,7 @@
                <div class="form-group">
                   <label class="col-md-3 control-label">Side</label>
                   <div class="col-md-6">
-                     <select class="form-control" name="side">
+                     <select class="form-control" id="side" name="side">
                         <option value="">Choose the side</option>
                         <option value="W">White</option>
                         <option value="B">Black</option>
@@ -111,7 +102,7 @@
                <div class="form-group">
                   <label class="col-md-3 control-label">ECO Opening</label>
                   <div class="col-md-6">
-                     <select class="form-control select2me" name="eco">
+                     <select class="form-control select2me" id="eco" name="eco">
                         <option value="">Select...</option>
                         <?php foreach ($arrEcos as $key => $eco): ?>
 
@@ -127,7 +118,7 @@
                <div class="form-group">
                   <label class="col-md-3 control-label">About this <strong>STUDY</strong></label>
                   <div class="col-md-6">
-                     <textarea name="about" id="about" maxlength="250" class="form-control" rows="6" placeholder="E.g: This study consists of the preparation of the most popular lines of the Caro-Kann defense. The lines prepared here are able to match the position quickly, guaranteeing a solid position, a very balanced half game, giving the black player the chance to reach the final with good advantages. All lines of this study were taken from Play the Caro-Kann, by International Master Jovanka Houska."></textarea>
+                     <textarea name="about" id="about" class="form-control" rows="6" placeholder="E.g: This study consists of the preparation of the most popular lines of the Caro-Kann defense. The lines prepared here are able to match the position quickly, guaranteeing a solid position, a very balanced half game, giving the black player the chance to reach the final with good advantages. All lines of this study were taken from Play the Caro-Kann, by International Master Jovanka Houska."></textarea>
                      <span class="help-block">
                        <div id="countAbout" class="pull-right"></div>
                      Describe the main details of your <strong>STUDY</strong>. </span>
@@ -164,26 +155,24 @@
    Metronic.init(); // init metronic core components
    Layout.init(); // init current layou
 
-   $('#about').on("keydown",function(event) {
-     var l = $(this).val().length;
-     var left = 250 - l;
-     $('#countAbout').html('<span class="label label-success">'+ left + ' / 250' +'</span>');
-     $('#countAbout').show();
-
-   });
+  //  $('#about').on("keydown",function(event) {
+  //    var l = $(this).val().length;
+  //    var left = 1000 - l;
+  //    $('#countAbout').html('<span class="label label-success">'+ left + ' / 1000' +'</span>');
+  //    $('#countAbout').show();
+   //
+  //  });
 
    var FormValidation = function () {
 
    var handleValidation = function() {
 
            var form1 = $('#formCreateStudy');
-           var error1 = $('.alert-danger', form1);
-           var success1 = $('.alert-success', form1);
 
            form1.validate({
                errorElement: 'span', //default input error message container
                errorClass: 'help-block help-block-error', // default input error message class
-               focusInvalid: false, // do not focus the last invalid input
+               focusInvalid: true, // do not focus the last invalid input
                ignore: "",  // validate all fields including form hidden input
                rules: {
                    name: {
@@ -198,8 +187,7 @@
                    },
                    about: {
                        required: true,
-                       minlength: 20,
-                       maxlength: 250
+                       minlength: 20
                    },
                    interfaceLanguage: {
                        required: true
@@ -207,9 +195,7 @@
                },
 
                invalidHandler: function (event, validator) { //display error alert on form submit
-                   success1.hide();
-                   error1.show();
-                   Metronic.scrollTo(error1, -200);
+                   toastr.error("You have some form errors. Please check below.");
                },
 
                highlight: function (element) { // hightlight error inputs
@@ -228,15 +214,35 @@
                },
 
                submitHandler: function (form) {
-                   success1.show();
-                   error1.hide();
+
+                 $.ajax({
+                     url: './action/create-study.php',
+                     type: 'POST',
+                     data: {interfaceLanguage: $("#interfaceLanguage").val(),
+                           name: $("#name").val(),
+                           side: $("#side").val(),
+                           eco: $("#eco").val(),
+                           about: $("#about").val()},
+                     success: function (result) {
+
+                       var response = JSON.parse(result);
+
+                       if(response["status"] == "success"){
+                         var insertedID = response["studyID"];
+                         sessionStorage.setItem("Success","Your study was successfully created!");
+                         window.location.replace("./details.php?s="+insertedID);
+                       }else{
+                         toastr.error('Error. Please, try again later.');
+                       }
+                     }, error: function (result) {
+                         toastr.error('Error. Please, try again later.');
+                     }
+                 });
+
                }
            });
-
          }
-
          handleValidation();
-
       }();
 
    });

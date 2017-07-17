@@ -704,3 +704,8 @@ div.pgn {
 .square-55d63.white-1e1d7.possible {
     background-color: #f8fbc1;
 }
+
+#pgnUpdated {
+  visibility: hidden;
+  position: absolute;
+}

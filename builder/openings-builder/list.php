@@ -10,7 +10,9 @@
 
    $authorID = $_SESSION['USER']['ID'];
 
-   Study::$showDeleted = true;
+   Study::$showDeleted = false;
+   Study::$orderBy = " ORDER BY DIN_LAST_UPDATE DESC";
+
    $study = new Study();
    $arrStudies = $study->getAllStudiesForAuthor($authorID);
 

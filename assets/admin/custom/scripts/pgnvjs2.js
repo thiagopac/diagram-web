@@ -21706,7 +21706,6 @@ var pgnBase = function (boardId, configuration) {
     function localPath() {
         var jsFileLocation = $('script[src*=pgnvjs]').attr('src');  // the js file path
         var index = jsFileLocation.indexOf('pgnvjs');
-        console.log("Local path: " + jsFileLocation.substring(0, index - 3));
         return jsFileLocation.substring(0, index - 1);   // the father of the js folder
     }
 
@@ -21850,6 +21849,9 @@ var pgnBase = function (boardId, configuration) {
         }
         unmarkMark(that.currentMove);
         updateUI(that.currentMove);
+
+				var str = that.mypgn.write_pgn();
+				$("#pgnUpdated").val(str);
     };
 
     // Utility function for generating general HTML elements with id, class (with theme)
@@ -21903,12 +21905,15 @@ var pgnBase = function (boardId, configuration) {
         };
         // Generates the edit buttons (only)
         var generateEditButtons = function(buttonDiv) {
-            // [["promoteVar", "fa-hand-o-up"], ["deleteMoves", "fa-scissors"]].forEach(function(entry) {
-            //     var but = addButton(entry, buttonDiv);
-            //     //but.className = but.className + " gray"; // just a test, worked.
-            //     // only gray out if not usable, check that later.
-            // });
+            [["promoteVar", "fa-hand-o-up"], ["deleteMoves", "fa-trash-o"]].forEach(function(entry) {
+                var but = addButton(entry, buttonDiv);
+                //but.className = but.className + " gray"; // just a test, worked.
+                // only gray out if not usable, check that later.
+            });
             [["pgn", "fa-paste"]].forEach(function(entry) {
+                var but = addButton(entry, buttonDiv);
+            });
+						[["pgnUpdatedButton", "fa-floppy-o"]].forEach(function(entry) {
                 var but = addButton(entry, buttonDiv);
             });
         };
@@ -21926,6 +21931,7 @@ var pgnBase = function (boardId, configuration) {
             createEle("label", null, "labelAfterComment", theme, radio).appendChild(document.createTextNode("After"));
             createEle("textarea", null, "comment", theme, commentDiv);
         };
+
         if (hasMarkup()) {
             if (boardId['header']) {
                 headersId = boardId['header']; // Real header will be built later
@@ -21999,15 +22005,18 @@ var pgnBase = function (boardId, configuration) {
 //                var outerPgnDiv = createEle("div", "outerpgn" + buttonsId, "outerpgn", theme, outerInnerBoardDiv);
 //                var pgnHideButton  = addButton(["hidePGN", "fa-times"], outerPgnDiv);
                 var pgnDiv  = createEle("textarea", "pgn" + buttonsId, "pgn", theme + " pgnCode", outerInnerBoardDiv);
+
                 var commentBoardDiv = createEle("div", "comment" + buttonsId, "comment", theme, outerInnerBoardDiv);
                 generateCommentDiv(commentBoardDiv);
+								var pgnDiv2  = createEle("textarea", "pgnUpdated", null,  " pgnCode2", outerInnerBoardDiv);
                 // Bind the paste key ...
                 $('#' + "pgn" + buttonsId).on('mousedown', function(e) {
 	                e = e || window.event;
                     e.preventDefault();
                     $(this).select();
                 });
-                $('#' + "pgn" + buttonsId).bind("paste", function(e) {
+                $("#pgnUpdated").val(that.configuration.pgn);
+								$('#' + "pgn" + buttonsId).bind("paste", function(e) {
                     var pastedData = e.originalEvent.clipboardData.getData('text');
                     that.configuration.pgn = pastedData;
                     pgnEdit(boardId, that.configuration);
@@ -22090,6 +22099,7 @@ var pgnBase = function (boardId, configuration) {
             if (comment && (typeof comment == "string")) {
                 span.appendChild(document.createTextNode(" " + comment + " "));
             }
+
             return span;
         };
 
@@ -22149,6 +22159,7 @@ var pgnBase = function (boardId, configuration) {
         span.appendChild(generateCommentSpan(move.commentAfter, "afterComment"));
         append_to_current_div(move.prev, span, movesDiv, varStack);
         //movesDiv.appendChild(span);
+
         if (that.mypgn.endVariation(move)) {
             //span.appendChild(document.createTextNode(" ) "));
             varStack.pop();
@@ -22164,6 +22175,7 @@ var pgnBase = function (boardId, configuration) {
             configuration.position = move.fen;
             pgnBoard(diaID, configuration);
         }
+
         return currentCounter;
     };
 
@@ -22190,6 +22202,10 @@ var pgnBase = function (boardId, configuration) {
      * Check which buttons should be grayed out
      */
     var updateUI = function (next) {
+
+			var str = that.mypgn.write_pgn();
+			$("#pgnUpdated").val(str);
+
         $("div.buttons .gray").removeClass('gray');
         var move = that.mypgn.getMove(next);
         if (next === null) {
@@ -22409,6 +22425,7 @@ var pgnBase = function (boardId, configuration) {
                 makeMove(that.currentMove, that.mypgn.getMoves().length - 1, fen);
             });
             var togglePgn = function() {
+
                 var pgnButton = $('#' + buttonsId + "pgn")[0];
                 var pgnText = $("#" + boardId + " .outerpgn")[0];
                 $('#' + buttonsId + "pgn").toggleClass('selected');
@@ -22420,10 +22437,25 @@ var pgnBase = function (boardId, configuration) {
                     $( "#" + boardId + " .pgn").slideUp(400);//hide( "fold");
                 }
             }
+
+						var updatePgn = function() {
+
+                var pgnUpdateButton = $('#' + buttonsId + "pgnUpdatedButton")[0];
+                var pgnText = $("#" + boardId + " .outerpgn")[0];
+								var str = computePgn();
+								$("#pgnUpdated").val(str);
+            }
+
+
             if (hasMode('edit')) { // only relevant functions for edit mode
                 $('#' + buttonsId + "pgn").on('click', function() {
                     togglePgn();
                 });
+
+								$('#' + buttonsId + "pgnUpdatedButton").on('click', function() {
+                    updatePgn();
+                });
+
                 $('#' + buttonsId + "deleteMoves").on('click', function() {
                     var prev = that.mypgn.getMove(that.currentMove).prev;
                     var fen = that.mypgn.getMove(prev).fen;
@@ -22515,13 +22547,16 @@ var pgnBase = function (boardId, configuration) {
                 }
             }
         }
+
         regenerateMoves(myMoves);
+
+
         bindFunctions();
         generateHeaders();
         if (hasMode('edit')) {
             generateNAGMenu($("#edit" + boardId + "Button")[0]);
             $(function(){
-								
+
                 $("select#" + buttonsId + "nag").multiselect({
                     header: false,
                     selectedList: 4,

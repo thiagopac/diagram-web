@@ -350,12 +350,35 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-   jQuery(document).ready(function() {
-     // initiate layout and plugins
-     Metronic.init(); // init metronic core components
-     Layout.init(); // init current layou
+jQuery(document).ready(function() {
+  // initiate layout and plugins
+  Metronic.init(); // init metronic core components
+  Layout.init(); // init current layou
 
-   });
+  $(document).ready(function () {
+    if(sessionStorage.getItem("Success")){
+        toastr.success(sessionStorage.getItem("Success"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Warning")){
+        toastr.warning(sessionStorage.getItem("Warning"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Info")){
+        toastr.info(sessionStorage.getItem("Info"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Error")){
+        toastr.error(sessionStorage.getItem("Error"));
+        sessionStorage.clear();
+    }
+
+  });
+
+});
 </script>
 </body>
 </html>

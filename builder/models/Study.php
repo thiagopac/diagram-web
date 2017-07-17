@@ -274,6 +274,8 @@ WHERE OS.ID_USER = $paramStudy";
 
 		$SQL = $SQL.self::$whereDeleted;
 
+		$SQL = $SQL.self::$orderBy;
+
    	$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
 		$arrStudies = [];
@@ -305,12 +307,12 @@ WHERE OS.ID_USER = $paramStudy";
 
 		$RET = fnDB_DO_EXEC($DB,$SQL);
 
-		$paramStudy->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+		// $paramStudy->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
 
 		//Adiciona registro na tabela de auditoria
 	  fnDB_LOG_AUDIT_ADD($DB,"Novo estudo criado.");
 
-		return $paramStudy;
+		return $RET;
 	}
 
 	public function editStudyWithStudy($paramStudy){
