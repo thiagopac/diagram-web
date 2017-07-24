@@ -19,10 +19,13 @@
 
    #BUSCAR TODAS AS VARIÁVEIS GET
    $paramStudy = $_REQUEST['s'];
-   $getEco = $_GET['eco'];
 
    $study = new Study();
    $study = $study->getStudyWithID($paramStudy);
+
+   $eco = new Eco();
+   $eco = $eco->getEcoForStudy($study->id);
+   $study->eco = $eco;
 
    $study->basePractice = new basePractice($study->id);
 
@@ -46,16 +49,25 @@
 
    include('../imports/header.php');
    include('../imports/opening_styles.php');
-
-
 ?>
 
 <script>
 
+  var getVariationAndLineName = function(practiceLineID){
+    var variationName;
+    var lineName;
+
+
+  };
 
   var diagramLines = {};
+  var diagramIndexes = {};
+
   var arrPracticePGNs = [];
+  var arrPracticeIndexes = [];
+
   var arrAllPracticePGNs = [];
+  var arrAllPracticeIndexes = [];
 
   <?php foreach ($study->variations as $variation) : ?>
 
@@ -63,32 +75,40 @@
 
           <?php foreach ($line->practiceLines as $practiceLine) : ?>
 
-              arrPracticePGNs.push('<?php echo $practiceLine->practicePGN ?>');
+            <?php $practiceLine->lineName = $line->name; ?>
+            <?php $practiceLine->variationName = $variation->name; ?>
+
               arrAllPracticePGNs.push('<?php echo $practiceLine->practicePGN ?>');
+              arrAllPracticeIndexes.push('<?php echo json_encode($practiceLine); ?>');
+
+              arrPracticePGNs.push('<?php echo $practiceLine->practicePGN ?>');
+              arrPracticeIndexes.push('<?php echo json_encode($practiceLine); ?>');
 
           <?php endforeach; ?>
 
       <?php endforeach; ?>
 
       diagramLines['<?=$variation->eco->ecoPracticeLine?>'] = arrPracticePGNs;
+      diagramIndexes['<?=$variation->eco->ecoPracticeLine?>'] = arrPracticeIndexes;
 
       arrPracticePGNs = [];
+      arrPracticeIndexes = [];
 
   <?php endforeach; ?>
 
 //todas as variations serão criadas com uma chave do código ECO do estudo, para um estudo abrangente, ou estudo direcioado que poderá ser criado depois, com cada
 //variation sendo chave de suas linhas
   diagramLines['<?=$study->basePractice->studyEcoPracticeLine?>'] = arrAllPracticePGNs;
+  diagramIndexes['<?=$study->basePractice->studyEcoPracticeLine?>'] = arrAllPracticeIndexes;
 
 //o treinamento presume que o jogador vai jogar um estudo abrangente, de todas as variantes. Poderá ser iniciado um treinamento por variante, passando o ECO da variante para
 //um treinamento direcionado.
 
   ecoPracticeLine = '<?=$study->basePractice->studyEcoPracticeLine?>';
-  getEco = '<?=$getEco?>';
 
-  if(getEco != ''){
-    ecoPracticeLine = getEco;
-  }
+  // if(getEco != ''){
+  //   ecoPracticeLine = getEco;
+  // }
 
   side = '<?=$study->side?>';
 
@@ -122,26 +142,6 @@
 						<a href="#">Practice</a>
 					</li>
 				</ul>
-				<div class="page-toolbar">
-					<div class="btn-group pull-right">
-						<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
-						Actions <i class="fa fa-angle-down"></i>
-						</button>
-						<ul class="dropdown-menu pull-right" role="menu">
-							<li>
-								<a href="#">Restart stats</a>
-							</li>
-							<li>
-								<a href="#">Tell a friend</a>
-							</li>
-							<li class="divider">
-							</li>
-							<li>
-								<a href="#">Back to start</a>
-							</li>
-						</ul>
-					</div>
-				</div>
 			</div>
       <!-- END PAGE TITLE & BREADCRUMB-->
 
@@ -164,19 +164,7 @@
                               </a>
                               <ul class="dropdown-menu pull-right">
                                  <li>
-                                    <a href="javascript:;">
-                                    <i class="i"></i> Report an issue </a>
-                                 </li>
-                                 <li>
-                                    <a href="javascript:;">
-                                    Author's news <span class="badge badge-danger">
-                                    4 </span>
-                                    </a>
-                                 </li>
-                                 <li class="divider">
-                                 </li>
-                                 <li>
-                                    <a href="javascript:;">
+                                    <a href="details.php?s=<?=$study->id?>">
                                     <i class="i"></i> Finish training </a>
                                  </li>
                               </ul>
@@ -227,7 +215,9 @@
                      <div class="portlet-title">
                         <div class="caption">
                            <i class="icon-bar-chart font-green-sharp hide"></i>
-                           <span class="caption-helper">OPENING:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->eco->name?></span>
+                           <span class="caption-helper">OPENING:</span> &nbsp;<span class="caption-subject font-green-sharp bold uppercase"><?=$study->eco->name?></span><br />
+                           <span class="caption-helper">VARIATION:</span> &nbsp;<span class="caption-subject font-blue-madison bold uppercase" id="variationName"></span><br />
+                           <span class="caption-helper">LINE:</span> &nbsp;<span class="caption-subject font-red-pink bold uppercase" id="lineName"></span>
                         </div>
                         <div class="actions right">
                            <a href="javascript:;" class="btn blue" id="btnnew"><i class="fa fa-refresh"></i> Restart</a>
@@ -265,6 +255,10 @@
 
                         </div>
                      </div>
+
+                     <input type="hidden" id="studyID" value="<?=$study->id?>" name="studyID" />
+                     <input type="hidden" id="practiceLineID" value="VOU COLOCAR" name="practiceLineID" />
+                     <input type="hidden" id="userID" value="<?=$userID?>" name="userID" />
 
                      <div class="modal fade" id="finishedLine" tabindex="-1" role="basic" aria-hidden="true">
        								<div class="modal-dialog">
@@ -350,10 +344,9 @@ jQuery(document).ready(function() {
   $('#practiceVariation').on('change', function (evt) {
     // console.log($('#practiceVariation').select2('val'));
     ecoPracticeLine = $('#practiceVariation').select2('val');
-    console.log(ecoPracticeLine);
-    window.location.href = "practice.php?eco="+ecoPracticeLine;
-
-});
+    // console.log(ecoPracticeLine);
+    // window.location.href = "practice.php?eco="+ecoPracticeLine;
+  });
 
   UIAlertDialogApi.init();
 

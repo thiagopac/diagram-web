@@ -126,12 +126,12 @@ WHERE OSTV.ID = $variationID";
 
 		$RET = fnDB_DO_EXEC($DB,$SQL);
 
-		$paramVariation->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+		// $paramVariation->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
 
 		//Adiciona registro na tabela de auditoria
 		fnDB_LOG_AUDIT_ADD($DB,"Nova Variation criada.");
 
-		return $paramVariation;
+		return $RET;
 	}
 
 	public function editVariationForVariation($paramVariation){

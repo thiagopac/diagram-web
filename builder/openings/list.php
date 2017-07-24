@@ -72,11 +72,15 @@
 
               $selected = "";
 
-              if ($userOwnsStudy == true || $userIsAuthorStudy == true) {
-                $color = "bg-red-sunglo";
+              if ($userOwnsStudy == true) {
+                $color = "bg-red-intense";
                 $selected = "selected";
+              }else if($userIsAuthorStudy == true){
+                $color = "bg-red-sunglo";
+                $selected = "";
               }else{
                 $color = "bg-grey-cascade";
+                $selected = "";
               }
 
                 $study->author = $user->getUserWithId($study->authorID);

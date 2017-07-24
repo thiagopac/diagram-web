@@ -6,25 +6,22 @@
 	fnInicia_Sessao ('settings');
 
   $userID = $_SESSION['USER']['ID'];
-  $paramInterfaceLanguage = trim(addslashes($_REQUEST['selectInterfaceLanguage']));
-	$paramTheme = trim(addslashes($_REQUEST['selectTheme']));
-  $callBackSuccess = "location: ../settings.php?success=";
-  $callBackError = "location: ../settings.php?error=";
-
-  if ($paramInterfaceLanguage == '') {
-    header($callBackError.urlencode('Error. Choose the language of the site.'));
-    exit;
-  }
-
-  if ($paramTheme == '') {
-    header($callBackError.urlencode('Error. Choose the theme of the site.'));
-    exit;
-  }
+  $interfaceLanguage = trim(addslashes($_REQUEST['interfaceLanguage']));
+	$theme = trim(addslashes($_REQUEST['theme']));
 
   $user = new User();
-  $user = $user->updateInterfaceLanguageAndThemeForUser($paramInterfaceLanguage, $paramTheme, $userID);
+  $user->id = $userID;
+  $user->interfaceLanguageID = $interfaceLanguage;
+  $user->themeID = $theme;
 
-  header($callBackSuccess.urlencode('Alterações realizadas com sucesso!'));
-  exit;
+  $operation = $user->updateInterfaceLanguageAndThemeForUser($user);
 
+  $arrResponse = [];
+  if ($operation[2] == false) {
+    $arrResponse[status] = "success";
+  }else{
+    $arrResponse[status] = "error";
+  }
+
+  echo json_encode($arrResponse);
 ?>

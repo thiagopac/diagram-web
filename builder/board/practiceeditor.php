@@ -2,14 +2,9 @@
 <link href="<?=$absolutepath?>../../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link href="<?=$absolutepath?>../../assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <?
-require_once('../models/PracticeLine.php');
 
-$paramPracticeLine = $_GET['pl'];
+$pgn = $_GET['pgn'];
 
-if ($paramPracticeLine != null) {
-  $practiceLine = new PracticeLine();
-  $practiceLine = $practiceLine->getPracticeLineWithID($paramPracticeLine);
-}
 ?>
 
 <style media="screen">
@@ -62,7 +57,7 @@ if ($paramPracticeLine != null) {
     Metronic.init(); // init metronic core components
     Layout.init(); // init current layou
 
-    setIncomingPgn('<?=$practiceLine->pgn?>');
+    setIncomingPgn('<?=$pgn?>');
   });
 
   var board,

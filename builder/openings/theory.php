@@ -2,6 +2,7 @@
   // #INCLUDES
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
+  require_once('../models/Eco.php');
   require_once('../models/BaseTheory.php');
   require_once('../models/Variation.php');
   require_once('../models/Line.php');
@@ -44,6 +45,10 @@
 
   $studyProgressTheory = new StudyProgressTheory();
   $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
+
+  $eco = new Eco();
+  $eco = $eco->getEcoForStudy($study->id);
+  $study->eco = $eco;
 
   //controlar o que irá aparecer de item de menu de estudo
   $showHistory = $study->baseTheory->theoryHistory->text != '' ? true : false;
@@ -92,32 +97,12 @@
             <a href="#">Theory</a>
          </li>
       </ul>
-      <div class="page-toolbar">
-         <div class="btn-group pull-right">
-            <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
-            Actions <i class="fa fa-angle-down"></i>
-            </button>
-            <ul class="dropdown-menu pull-right" role="menu">
-               <li>
-                  <a href="#">Restart stats</a>
-               </li>
-               <li>
-                  <a href="#">Tell a friend</a>
-               </li>
-               <li class="divider">
-               </li>
-               <li>
-                  <a href="#">Back to start</a>
-               </li>
-            </ul>
-         </div>
-      </div>
    </div>
    <!-- END PAGE TITLE & BREADCRUMB-->
    <? include('../imports/alert.php'); ?>
    <div class="progress">
-      <div class="progress-bar blue-hoki" role="progressbar" aria-valuenow="<?=$progress?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$progress?>%">
-         <span style="color: <? $color = $progress < 5 ? "black" : "white"; echo $color; ?>">
+      <div class="progress-bar blue-hoki" id="progressBar" role="progressbar" aria-valuenow="<?=$progress?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$progress?>%">
+         <span id="progressCount" style="color: <? $color = $progress < 5 ? "black" : "white"; echo $color; ?>">
          <?=$progress?>% Complete </span>
       </div>
    </div>
@@ -137,26 +122,57 @@
                            <i class="icon-settings"></i> &nbsp; <i class="fa fa-angle-down"></i>
                            </a>
                            <ul class="dropdown-menu pull-right">
-                              <li>
-                                 <a href="javascript:;">
-                                 <i class="i"></i> Relatar um erro </a>
-                              </li>
-                              <li>
+                              <!-- <li>
+                                 <a class="openModalErrorReport" data-studyid="<?=$study->id?>"  data-userid="<?=$userID?>" >
+                                 <i class="i"></i> Report an error </a>
+                              </li> -->
+                              <!-- <li>
                                  <a href="javascript:;">
                                  Novidades do autor <span class="badge badge-danger">
                                  4 </span>
                                  </a>
-                              </li>
-                              <li class="divider">
-                              </li>
+                              </li> -->
+                              <!-- <li class="divider">
+                              </li> -->
                               <li>
-                                 <a href="javascript:;">
-                                 <i class="i"></i> Finalizar treinamento </a>
+                                 <a href="details.php?s=<?=$study->id?>">
+                                 <i class="i"></i> Finish training </a>
                               </li>
                            </ul>
                         </div>
                      </div>
                   </div>
+                  <!-- <div id="modalErrorReport" class="modal fade" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-md">
+                      <div class="modal-content">
+
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                          <h4 class="modal-title" id="lineNameTitle">Report an error</h4>
+                        </div>
+                        <div class="modal-body form">
+                          <form class="form-horizontal form-row-seperated">
+
+                            <input type="hidden" id="studyID" name="studyID" />
+
+                            <div class="form-group last">
+                              <div class="col-sm-12">
+
+                                  <div class="portlet-body">
+
+                                  </div>
+                            </div>
+                        </div>
+                          <div class="modal-footer">
+
+                            <button type="button" id="btnCloseModalErrorReport" class="btn btn-danger" title="Close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+               </div> -->
                   <!--  BEGIN MENU APRENDIZADO -->
                   <div class="row">
                      <ul class="ver-inline-menu tabbable margin-bottom-10">
@@ -311,115 +327,148 @@
                                        <div class="caption">
                                           <span class="caption-subject bold uppercase"> VARIATIONS</span>
                                        </div>
-                                       <div class="actions">
-                                          <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title="">
-                                          </a>
-                                       </div>
                                     </div>
                                     <div class="portlet-body">
                                        <div class="row">
-                                         <div class="tabbable">
-                                          <ul class="nav nav-tabs">
-                                             <?
-                                                $flag = "active";
+                                        <div class="col-md-12">
+                                          <div class="panel-group accordion" id="accordion">
 
-                                                foreach ($study->variations as $key => $variation) {
+                                    <?php foreach ($study->variations as $key => $variation): ?>
 
-                                                  if (count($variation->lines) < 1) {
-                                                    continue;
-                                                  }
+                                        <?php if (count($variation->lines) < 1) continue; ?>
 
-                                                  if (count($variation->lines) > 1) {
-                                                    $href = "javascript:;";
-                                                    $dataToggle = "dropdown";
-                                                    $class = "dropdown-toggle";
-                                                    $angleDown = "<i class=\"fa fa-angle-down\"></i>";
-                                                  }else{
-                                                    $line = $variation->lines[0];
-                                                    $href = "#tab_".$variation->id."_".$line->id;
-                                                    $dataToggle = "tab";
-                                                    $class = "";
-                                                    $angleDown = "";
-                                                  }?>
-                                             <li class="dropdown <?=$flag?>">
-                                                <a href="<?=$href?>" class="<?=$class?>" data-toggle="<?=$dataToggle?>">
-                                                <?=$variation->name?> <?=$angleDown?></a>
-                                                <ul class="dropdown-menu" role="menu">
-                                                   <?php foreach ($variation->lines as $key => $line):
-                                                      $href = "#tab_".$variation->id."_".$line->id;
-                                                      ?>
-                                                   <li>
-                                                      <a href="<?=$href?>" tabindex="-1" data-toggle="tab">
-                                                      <?=$line->name?></a>
-                                                   </li>
-                                                   <?php endforeach; ?>
-                                                </ul>
-                                             </li>
-                                             <? $flag = "" ?>
-                                             <?} ?>
-                                          </ul>
-                                          <div class="tab-content">
-                                             <?$flag = "active";
-                                             foreach ($study->variations as $key => $variation) {
-                                                foreach ($variation->lines as $key => $line) {
-                                                    $tab = "tab_".$line->variationID."_".$line->id; ?>
-                                             <div class="tab-pane <?=$flag?>" id="<?=$tab?>">
-                                                <div class="portlet light">
+                                                <div class="panel panel-default">
+                                									<div class="panel-heading">
+                                										<h4 class="panel-title">
+                                                      <?php $countLines = count($variation->lines); ?>
+                                										<a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse_<?=$variation->id?>">
+                                										   <?=$variation->name ?> <i> <small style="color:lightgray">- <? echo $countLines; echo $countLines != 1 ? " Lines" : " Line"; ?></small></i>
+                                                    </a>
+                                										</h4>
+                                									</div>
+                                									<div id="collapse_<?=$variation->id?>" class="panel-collapse collapse in">
+                                										<div class="panel-body">
+                                                   <!--  -->
+                                          <?php foreach ($variation->lines as $key => $line): ?>
 
-                                                  <?php if (strlen($variation->text)>0): ?>
-                                                  <div class="portlet">
-                                                  						<div class="portlet-title">
-                                                  							<div class="caption">
-                                                  								<?=$variation->name?>
-                                                  							</div>
-                                                  							<div class="tools">
-                                                  								<a href="javascript:;" class="collapse" data-original-title="" title="">
-                                                  								</a>
-                                                  								<a href="javascript:;" class="remove" data-original-title="" title="">
-                                                  								</a>
-                                                  							</div>
-                                                  						</div>
-                                                  						<div class="portlet-body">
-                                                  							 <?=$variation->text?>
-                                                  						</div>
-                                                  					</div>
-                                                  <?php endif; ?>
+                                            <ul class="" style="list-style-type: none !important;">
+                                              <li class="lineLink">
+                                                <?php
+                                                  $studyProgressTheory = new StudyProgressTheory();
+                                                  $studyProgressTheory = $studyProgressTheory->getStudyProgressTheoryForUserStudyAndLine($userID, $study->id, $line->id);
+                                                  $iconChecked = $studyProgressTheory->learned == "1" ? "fa fa-check-square-o" : "fa fa-square-o";
+                                                  $colorChecked = $studyProgressTheory->learned == "1" ? "color:limegreen" : "color:lightgray";
+                                                  $checked = $studyProgressTheory->learned == "1" ? true : false;
 
-                                                   <div class="portlet-title">
-                                                      <div class="caption">
-                                                         <span class="caption-subject uppercase"> <?=$line->name?></span>
-                                                      </div>
-                                                      <div class="actions">
-                                                         <div class="btn-group">
-                                                            <div class="md-checkbox">
-                                                               <input type="checkbox" id="checkbox-variante-classica" class="md-check" >
-                                                               <label for="checkbox-variante-classica">
-                                                               <span></span>
-                                                               <span class="check"></span>
-                                                               <span class="box"></span>
-                                                               Mark as learned </label>
-                                                            </div>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                   <div class="portlet-body">
-                                                      <iframe name='iframe1' id="iframe1" onload="resizeIframe(this)" src="../board/pgnviewer.php?pgn=<?=$line->pgn?>" scrolling="yes" frameborder="0" border="0" cellspacing="0"
-                                                         style="border-style: none;width: 100%; height: 480px;"></iframe>
-                                                         <?php if (strlen($line->text)>0): ?>
-                                                           <blockquote><h5><?=$line->text?></h5></blockquote>
-                                                         <?php endif; ?>
-                                                   </div>
-                                                </div>
-                                             </div>
-                                             <? $flag = "fade" ?>
-                                              <?} ?>
-                                             <?} ?>
-                                          </div>
+                                                  $cleanPgn = preg_replace("~(?:(\()|(\[)|(\{))(?(1)(?>[^()]++|(?R))*\))(?(2)(?>[^][]++|(?R))*\])(?(3)(?>[^{}]++|(?R))*\})~","",$line->pgn); //retirando parêntesis
+
+                                                ?>
+                                                <h4 style="cursor: pointer" class="openModalLine" id="<?=$line->variationID."_".$line->id?>" data-toggle="modal" data-studyid="<?=$study->id?>" data-varid="<?=$line->variationID?>" data-varname="<?=$variation->name?>" data-vartext="<?=$variation->text?>" data-lineid="<?=$line->id?>"
+                                                  data-linetext="<?=$line->text?>" data-linename="<?=$line->name?>" data-progress="<?=$checked?>" data-pgn="<?=$line->pgn?>">
+
+    									                             <span>&#8627; <?=$line->name ?></span> <i style="<?=$colorChecked?>" class="<?=$iconChecked?> pull-right"></i><span style="color:lightgray; font-weight:lighter" class="small light pull-right">(Updated: <?=fnDateDBtoVisual($line->dateCreated)?>)</span>
+                                                 </h4>
+    							                            </li>
+                                            </ul>
+
+                                          <?php endforeach; ?>
+                                                   <!--  -->
+                              										</div>
+                              									</div>
+                              								</div>
+                                    <?php endforeach; ?>
+                                            <!--  -->
+
                                         </div>
+                                      </div>
                                        </div>
                                     </div>
                                  </div>
+
+                                 <div id="modalLine" class="modal fade bs-modal-lg" role="dialog" aria-hidden="true">
+                                   <div class="modal-dialog modal-lg">
+                                     <div class="modal-content">
+
+                                       <div class="modal-header">
+                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                         <h4 class="modal-title" id="lineNameTitle">Opening Line</h4>
+                                       </div>
+                                       <div class="modal-body form">
+                                         <form class="form-horizontal form-row-seperated">
+
+                                           <input type="hidden" id="studyID" name="studyID" />
+                                           <input type="hidden" id="lineID" name="lineID" />
+
+
+                                           <div class="form-group last">
+                                             <div class="col-sm-12">
+
+
+                                                 <div class="panel-group accordion" id="accordion">
+                                                                <div class="panel panel-default">
+                                                                  <div class="panel-heading">
+                                                                    <h4 class="panel-title">
+                                                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse_variation" aria-expanded="false">
+                                                                    About <span id="variationName"></span> </a>
+                                                                    </h4>
+                                                                  </div>
+                                                                  <div id="collapse_variation" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                                                    <div class="panel-body">
+                                                                      <p>
+                                                                         <span id="variationText"></span>
+                                                                      </p>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                                <div class="panel panel-default">
+                                                                  <div class="panel-heading">
+                                                                    <h4 class="panel-title">
+                                                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_line" aria-expanded="false">
+                                                                    About <span id="lineName"></span> </a>
+                                                                    </h4>
+                                                                  </div>
+                                                                  <div id="collapse_line" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                                                    <div class="panel-body" style="overflow-y:auto;">
+                                                                      <p>
+                                                                         <span id="lineText"></span>
+                                                                      </p>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+
+                                                 <div class="portlet-body">
+                                                   <iframe name="iframeLine" id="iframeLine" onload="resizeIframe(this)" src="" scrolling="yes"
+                                                     frameborder="0" border="0" cellspacing="0"
+                                                     style="border-style: none;width: 100%; height: 500px;"></iframe>
+                                                 </div>
+
+
+                                           </div>
+                                       </div>
+                                         <div class="modal-footer">
+
+                                           <div class="btn-group pull-left">
+                                             <div class="md-checkbox">
+                                                <input type="checkbox" id="" class="md-check checkbox-learned" >
+                                                <label id="labelCheckbox" for="">
+                                                <span></span>
+                                                <span class="check"></span>
+                                                <span class="box"></span>
+                                                Mark as learned </label>
+                                             </div>
+                                          </div>
+
+                                           <button type="button" id="btnCloseModalLine" class="btn btn-danger" title="Close" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                                         </div>
+                                       </form>
+                                     </div>
+                                   </div>
+                                 </div>
+
                               </div>
+                            </div>
+
                           <?php endif; ?>
                               <div id="tab_5" class="tab-pane">
                                  <div class="portlet light">
@@ -439,42 +488,7 @@
                         </div>
                      </div>
                   </div>
-                  <div class="modal fade" id="finishedLine" tabindex="-1" role="basic" aria-hidden="true">
-                     <div class="modal-dialog">
-                        <div class="modal-content">
-                           <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                              <h4 class="modal-title">Title</h4>
-                           </div>
-                           <div class="modal-body">
-                              Body
-                           </div>
-                           <div class="modal-footer">
-                              <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="modal fade" id="lineinexistent" tabindex="-1" role="basic" aria-hidden="true">
-                     <div class="modal-dialog">
-                        <div class="modal-content">
-                           <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                              <h4 class="modal-title">Title</h4>
-                           </div>
-                           <div class="modal-body">
-                              Body
-                           </div>
-                           <div class="modal-footer">
-                              <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <audio id="soundMove" src="../../assets/admin/custom/sounds/move.wav" type="audio/wav"></audio>
-                  <audio id="soundTake" src="../../assets/admin/custom/sounds/take.wav" type="audio/wav"></audio>
-                  <audio id="soundCheck" src="../../assets/admin/custom/sounds/check.wav" type="audio/wav"></audio>
-                  <audio id="soundSuccess" src="../../assets/admin/custom/sounds/success.wav" type="audio/wav"></audio>
+
                </div>
             </div>
          </div>
@@ -512,6 +526,79 @@
      }
 
      UIAlertDialogApi.init();
+     var progress;
+
+     $(function(){
+         $(".openModalLine").click(function(){
+             $('#studyID').val($(this).data('studyid'));
+             $('#variationName').html($(this).data('varname'));
+             $('#variationText').html($(this).data('vartext'));
+             $('#lineID').val($(this).data('lineid'));
+             $('#lineNameTitle').html($(this).data('linename'));
+             $('#lineName').html($(this).data('linename'));
+             $('#lineText').html($(this).data('linetext'));
+             $('#linePGN').val($(this).data('pgn'));
+             $('#studyProgressID').val($(this).data('studyProgressID'));
+             $('.checkbox-learned').prop("checked", $(this).data('progress'));
+             $('.checkbox-learned').attr("id", $(this).data('lineid'));
+             $('#labelCheckbox').attr("for", $(this).data('lineid'));
+
+             if ($(this).data('pgn') != null) {
+               $('#iframeLine').attr("src", "../board/pgnviewer.php?pgn=" + $(this).data('pgn'));
+             }else{
+               $('#iframeLine').attr("src", "../board/pgnviewer.php");
+             }
+
+             $("#modalLine").modal("show");
+         });
+     });
+
+     $(function(){
+         $(".openModalErrorReport").click(function(){
+             $('#studyID').val($(this).data('studyid'));
+             $('#userID').html($(this).data('userid'));
+
+             $("#modalErrorReport").modal("show");
+         });
+     });
+
+     $(function(){
+         $('.checkbox-learned').on('change',function(){
+           var id = $(this).attr('id');
+           var isChecked = $(this).attr('checked') == "checked" ? 1 : 0;
+           $.ajax({
+               url: './action/theory-learned.php',
+               type: 'POST',
+               data: {studyID: $("#studyID").val(),
+                     lineID: id,
+                     learned: isChecked },
+               success: function (result) {
+                 var response = JSON.parse(result);
+
+                 if(response["status"] == "success"){
+                   progress = response["progress"];
+                  // console.log(response);
+                   toastr.success('Saved changes!');
+                 }else if(response["status"] == "error"){
+                   toastr.warning('Error. Please, try again later.');
+                 }
+               }, error: function (result) {
+                   toastr.error('Error. Please, try again later.');
+               }
+           });
+        });
+      });
+
+      $(function(){
+          $("#btnCloseModalLine").click(function(){
+            location.reload();
+            //
+            // $("#progressBar").attr("aria-valuenow", progress);
+            // $("#progressBar").attr("style", "width: " + progress + "%");
+            // $("#progressCount").html(progress + "% Complete");
+
+          });
+      });
 
    });
 </script>

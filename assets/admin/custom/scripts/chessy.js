@@ -14,7 +14,7 @@ Chessy.prototype.move = function(nextMove) {
 	// $('.square-' + move_obj.from).addClass('highlightLastMove');
 	// $('.square-' + move_obj.to).addClass('highlightLastMove');
 
-	console.log("chessy.js 17: "+nextMove);
+	// console.log("chessy.js 17: "+nextMove);
 
 	if (move_obj == null) {
 		console.log("20: "+move_obj);

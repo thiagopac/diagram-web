@@ -2,6 +2,7 @@
   // #INCLUDES
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
+  require_once('../models/User.php');
   require_once('../models/Monetization.php');
   require_once('../models/Variation.php');
   require_once('../models/Line.php');
@@ -26,6 +27,11 @@
   Study::$showDeleted = true;
   $study = new Study();
   $study = $study->getStudyWithID($paramStudy);
+
+  $user = new User();
+  $author = $user->getUserWithID($study->authorID);
+
+  $study->author = $author;
 
   $monetization = new Monetization();
   $study->monetization = $monetization->getMonetizationForStudy($study->id);
@@ -56,15 +62,15 @@
   $studyRating = $studyRating->getStudyRatingForStudyAndUser($paramStudy, $userID);
   $studyRatingCount = $studyRating->getCountStudyRatingForStudy($paramStudy);
 
-  $userHasNotRated = $studyRating == NULL ? "true" : "false";
+  $userHasNotRated = $studyRating->id == NULL ? "true" : "false";
 
   $studyProgressTheory = new StudyProgressTheory();
-  $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
+  $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $paramStudy);
 
   $statistics = new Statistics();
   $totalPracticeSessions = $statistics->getTotalOfPracticeSessionsForStudyAndUser($paramStudy, $userID);
   $totalPracticePerfects = $statistics->getTotalOfPracticePerfectsForStudyAndUser($paramStudy, $userID);
-  $totalLinesPracticed = $statistics->getTotalProgressStudyProgressPracticeForUserAndStudy($paramStudy, $userID);
+  $totalLinesPracticed = $statistics->getTotalProgressStudyProgressPracticeForUserAndStudy($userID, $paramStudy);
 
   // var_dump($study);
   require_once('../imports/header.php');
@@ -102,15 +108,15 @@
          </button>
          <ul class="dropdown-menu pull-right" role="menu">
            <li>
-             <a href="#">Restart stats</a>
+             <a id="restartTheoryStats" href="#">Restart theoretical statistics</a>
            </li>
            <li>
-             <a href="#">Tell a friend</a>
+             <a id="restartPracticeStats" href="#">Restart practical statistics</a>
            </li>
            <li class="divider">
            </li>
            <li>
-             <a href="#">Back to start</a>
+             <a href="list.php">Back to start</a>
            </li>
          </ul>
        </div>
@@ -147,7 +153,7 @@
                    <i class="fa fa-calendar"></i> <?=$study->dateCreated?>
                  </li>
                  <li>
-                   <i class="fa fa-briefcase"></i> <?=$study->authorFullName?>
+                   <i class="fa fa-briefcase"></i> <?=$study->author->fullName?>
                  </li>
                  <li>
                    <i class="fa fa-list-ol"></i> <?=$variationsCount ?> Var. | <?=$linesCount ?> Lines
@@ -164,6 +170,7 @@
                     //se é um estudo que o usuário autor está acessando, ele terá acesso total
                     if ($study->authorID == $userID) {
                       $userIsAuthorStudy = true;
+                      $userHasNotRated = false;
                     }
 
                     if ($userOwnsStudy == true) {
@@ -172,10 +179,12 @@
                       $readOnly = 'true';
                     }
                 ?>
-                <small><i>(<?=$studyRatingCount ?> <?=$studyRatingCount == 1 ? "review" : "reviews";?>)</i></small>
+                <p><small><i>(<?=$studyRatingCount ?> <?=$studyRatingCount == 1 ? "review" : "reviews";?>)</i></small></p>
                <form>
                  <p>
-                   <input id="rating" name="rating" class="rating" data-size="sm" data-min="0" data-max="5" data-step="0.5" value="<?=$studyRating->rating?>" data-readonly="<?=$readOnly?>" data-show-clear="false" data-show-caption="<?=$userHasNotRated?>">
+                   <input type="hidden" id="studyID" value="<?=$study->id?>">
+                   <input type="hidden" id="userID" value="<?=$userID?>">
+                   <input id="ratingStars" name="ratingStars" class="rating" data-size="sm" data-min="0" data-max="5" data-step="0.5" value="<?=$studyRating->rating?>" data-readonly="<?=$readOnly?>" data-show-clear="false" data-show-caption="<?=$userHasNotRated?>">
                  </p>
               </form>
               <br/>
@@ -204,7 +213,7 @@
                      											<span class="arrow">
                      											</span>
                      											<label>
-                     											<?=$study->authorFullName?> </label>
+                     											<?=$study->author->fullName?> </label>
                      											<span class="body">
                      											<p><?=$study->monetization->detailsPayment->text?></span></p>
                      										</div>
@@ -308,23 +317,165 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-   jQuery(document).ready(function() {
-     // initiate layout and plugins
-     Metronic.init(); // init metronic core components
-     Layout.init(); // init current layout
+jQuery(document).ready(function() {
+  // initiate layout and plugins
+  Metronic.init(); // init metronic core components
+  Layout.init(); // init current layout
 
-     $('.easy-pie-chart .number.opening').easyPieChart({
-         animate: 1000,
-         scaleColor: false,
-         size: 200,
-         lineWidth: 15,
-         barColor: '#586e8b',
-         onStep: function(from, to, percent) {
-				this.el.children[0].innerHTML = Math.round(percent)+"<small>%</small>";
-			}
+  $(document).ready(function () {
+    if(sessionStorage.getItem("Success")){
+        toastr.success(sessionStorage.getItem("Success"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Warning")){
+        toastr.warning(sessionStorage.getItem("Warning"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Info")){
+        toastr.info(sessionStorage.getItem("Info"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Error")){
+        toastr.error(sessionStorage.getItem("Error"));
+        sessionStorage.clear();
+    }
+
+  });
+
+  $('.easy-pie-chart .number.opening').easyPieChart({
+    animate: 1000,
+    scaleColor: false,
+    size: 200,
+    lineWidth: 15,
+    barColor: '#586e8b',
+    onStep: function(from, to, percent) {
+      this.el.children[0].innerHTML = Math.round(percent)+"<small>%</small>";
+    }
+  });
+
+  $(function(){
+      $('#ratingStars').on('change',function(){
+        var rating = $(this).val();
+        console.log(rating);
+        $.ajax({
+            url: './action/details-rate.php',
+            type: 'POST',
+            data: {studyID: $("#studyID").val(),
+                  rating: rating,
+                  userID: $("#userID").val()},
+            success: function (result) {
+              var response = JSON.parse(result);
+
+              if(response["status"] == "success"){
+                progress = response["progress"];
+               // console.log(response);
+                toastr.success('Your rating has been saved!');
+              }else if(response["status"] == "error"){
+                toastr.warning('Error. Please, try again later.');
+              }
+            }, error: function (result) {
+                toastr.error('Error. Please, try again later.');
+            }
+        });
+     });
+   });
+
+   $(document).ready(function () {
+         $("#restartTheoryStats").click(function () {
+           bootbox.dialog({
+               message: "Are you sure you want to restart statistics? You will not be able to reverse this action!",
+               title: "Restart theoretical stats",
+               buttons: {
+                 main: {
+                   label: "YES",
+                   className: "green",
+                   callback: function() {
+
+                     $.ajax({
+                         url: './action/details-restart-theory-stats.php',
+                         type: 'POST',
+                         data: {studyID: $("#studyID").val(),
+                               userID: $("#userID").val()},
+                         success: function (result) {
+                           var response = JSON.parse(result);
+
+                           if(response["status"] == "success"){
+                             //mostrar toaster após reload
+                             sessionStorage.setItem("Success","Your theoretical statistics were restarted!");
+                             location.reload();
+                           }else if(response["status"] == "error"){
+                             toastr.warning('Error. Please, try again later.');
+                           }
+                         }, error: function (result) {
+                             toastr.error('Error. Please, try again later.');
+                         }
+                     });
+
+                   }
+                 },
+                 danger: {
+                   label: "NO",
+                   className: "red",
+                   callback: function() {
+
+                   }
+                 }
+               }
+           });
+
+         });
      });
 
-   });
+     $(document).ready(function () {
+           $("#restartPracticeStats").click(function () {
+             bootbox.dialog({
+                 message: "Are you sure you want to restart statistics? You will not be able to reverse this action!",
+                 title: "Restart practical stats",
+                 buttons: {
+                   main: {
+                     label: "YES",
+                     className: "green",
+                     callback: function() {
+
+                       $.ajax({
+                           url: './action/details-restart-practice-stats.php',
+                           type: 'POST',
+                           data: {studyID: $("#studyID").val(),
+                                 userID: $("#userID").val()},
+                           success: function (result) {
+                             var response = JSON.parse(result);
+
+                             if(response["status"] == "success"){
+                               //mostrar toaster após reload
+                               sessionStorage.setItem("Success","Your practical statistics were restarted!");
+                               location.reload();
+                             }else if(response["status"] == "error"){
+                               toastr.warning('Error. Please, try again later.');
+                             }
+                           }, error: function (result) {
+                               toastr.error('Error. Please, try again later.');
+                           }
+                       });
+
+                     }
+                   },
+                   danger: {
+                     label: "NO",
+                     className: "red",
+                     callback: function() {
+
+                     }
+                   }
+                 }
+             });
+
+           });
+       });
+
+});
 </script>
 </body>
 </html>

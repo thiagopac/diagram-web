@@ -228,12 +228,12 @@ WHERE U.ID = $paramUser";
 		return $user;
 	}
 
-	public function updateInterfaceLanguageAndThemeForUser($paramLanguage, $paramTheme, $paramUser){
+	public function updateInterfaceLanguageAndThemeForUser($paramUser){
 		$DB = fnDBConn();
 
-		$SQL = "UPDATE USER AS U SET U.ID_INTERFACE_LANGUAGE = $paramLanguage,
-			U.ID_THEME = $paramTheme
-WHERE U.ID = $paramUser";
+		$SQL = "UPDATE USER AS U SET U.ID_INTERFACE_LANGUAGE = $paramUser->interfaceLanguageID,
+			U.ID_THEME = $paramUser->themeID
+WHERE U.ID = $paramUser->id";
 
 		$RET = fnDB_DO_EXEC($DB,$SQL);
 

@@ -11,15 +11,9 @@ class StudyProgressPractice {
 	public $userID;
 	public $studyID;
 	public $dateUpdated;
-	public $deleted;
-
-	static $showDeleted;
-	static $whereDeleted;
 
 	//construtor da classe
 	public function __construct($array){
-
-		self::$whereDeleted = self::$showDeleted == true ? "" : " AND OSPP.DELETED = 0";
 
 		//se o array não estiver vazio, inicializar as propriedades do objeto com os valores do array
 		if (!empty($array)) {
@@ -32,7 +26,6 @@ class StudyProgressPractice {
 			$this->userID = $array['USER_ID'];
 			$this->studyID = $array['OPENING_STUDY_ID'];
 			$this->dateUpdated = $array['OPENING_STUDY_PROGRESS_PRACTICE_UPDATED'];
-			$this->deleted = $array['OPENING_STUDY_PROGRESS_PRACTICE_DELETED'];
 		}
   }
 
@@ -52,12 +45,9 @@ class StudyProgressPractice {
        OSPP.PERFECTS AS OPENING_STUDY_PROGRESS_PRACTICE_PERFECTS,
        OSPP.ID_USER AS USER_ID,
        OSPP.DIN_LAST_UPDATE AS OPENING_STUDY_PROGRESS_PRACTICE_UPDATED,
-       OSPP.ID_OPENING_STUDY AS OPENING_STUDY_ID,
-       OSPP.DELETED AS OPENING_STUDY_PROGRESS_PRACTICE_DELETED
+       OSPP.ID_OPENING_STUDY AS OPENING_STUDY_ID
 FROM OPENING_STUDY_PROGRESS_PRACTICE AS OSPP
 WHERE 1 = $paramStudyProgressPractice";
-
-		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
 
@@ -78,13 +68,10 @@ WHERE 1 = $paramStudyProgressPractice";
        OSPP.PERFECTS AS OPENING_STUDY_PROGRESS_PRACTICE_PERFECTS,
        OSPP.ID_USER AS USER_ID,
        OSPP.DIN_LAST_UPDATE AS OPENING_STUDY_PROGRESS_PRACTICE_UPDATED,
-       OSPP.ID_OPENING_STUDY AS OPENING_STUDY_ID,
-       OSPP.DELETED AS OPENING_STUDY_PROGRESS_PRACTICE_DELETED
+       OSPP.ID_OPENING_STUDY AS OPENING_STUDY_ID
 FROM OPENING_STUDY_PROGRESS_PRACTICE AS OSPP
 WHERE OSPP.ID_OPENING_STUDY = $paramStudy
 AND OSPP.ID_USER = $paramUser";
-
-		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -110,14 +97,11 @@ AND OSPP.ID_USER = $paramUser";
        OSPP.PERFECTS AS OPENING_STUDY_PROGRESS_PRACTICE_PERFECTS,
        OSPP.ID_USER AS USER_ID,
        OSPP.DIN_LAST_UPDATE AS OPENING_STUDY_PROGRESS_PRACTICE_UPDATED,
-       OSPP.ID_OPENING_STUDY AS OPENING_STUDY_ID,
-       OSPP.DELETED AS OPENING_STUDY_PROGRESS_PRACTICE_DELETED
+       OSPP.ID_OPENING_STUDY AS OPENING_STUDY_ID
 FROM OPENING_STUDY_PROGRESS_PRACTICE AS OSPP
 WHERE OSPP.ID_OPENING_STUDY = $paramStudy
 AND OSPP.ID_USER = $paramUser
 AND OSPP.ID_OPENING_STUDY_PRACTICE_LINE = $paramPracticeLine";
-
-		$SQL = $SQL.self::$whereDeleted;
 
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
 
@@ -133,9 +117,8 @@ AND OSPP.ID_OPENING_STUDY_PRACTICE_LINE = $paramPracticeLine";
 		$SQLUSERHASPRACTICED = "SELECT COUNT(OSPP.ID) AS COUNT_PROGRESS_PRACTICED
 FROM OPENING_STUDY_PROGRESS_PRACTICE AS OSPP
 WHERE OSPP.ID_OPENING_STUDY = $paramStudy
-AND OSPP.ID_USER = $paramUser";
-
-		$SQLUSERHASPRACTICED = $SQLUSERHASPRACTICED.self::$whereDeleted;
+AND OSPP.ID_USER = $paramUser
+AND OSPP.SESSIONS > 0";
 
 		$RESULTUSERHASPRACTICED = fnDB_DO_SELECT($DB,$SQLUSERHASPRACTICED);
 
@@ -151,13 +134,77 @@ AND OSPL.DELETED = 0";
 
 		$progress = ($RESULTUSERHASPRACTICED["COUNT_PROGRESS_PRACTICED"] / $RESULTTOTALPRACTICELINES["TOTAL_STUDY_PRACTICE_LINES"]) * 100;
 
-		$roundedProgress = number_format((float)$progress, 1, '.', '');
+		$roundedProgress = number_format((float)$progress, 0, '.', '');
 
 		//evitar que de alguma forma, o valor ultrapasse 100%
 		$roundedProgress = $roundedProgress > 100 ? 100 : $roundedProgress;
 
 		return $roundedProgress;
 		// return round($progress);
+	}
+
+	public function restartStudyProgressPracticeForStudyProgressPractice($paramStudyProgressPractice){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_PROGRESS_PRACTICE AS OSPP SET
+		OSPP.SESSIONS = '0',
+		OSPP.ERRORS = '0',
+		OSPP.TIPS = '0',
+		OSPP.PERFECTS = '0'
+WHERE OSPP.ID_OPENING_STUDY = $paramStudyProgressPractice->studyID
+AND OSPP.ID_USER = $paramStudyProgressPractice->userID";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Usuário reiniciou as estatísticas práticas.");
+	}
+
+	public function insertStudyProgressPractice($paramStudyProgressPractice){
+		$DB = fnDBConn();
+
+		$SQL = "INSERT INTO OPENING_STUDY_PROGRESS_PRACTICE
+		(ID_OPENING_STUDY_PRACTICE_LINE,
+		SESSIONS,
+		TIPS,
+		ERRORS,
+		PERFECTS,
+		ID_OPENING_STUDY,
+		ID_USER)
+		VALUES('$paramStudyProgressPractice->practiceLineID',
+		1,
+		'$paramStudyProgressPractice->tips',
+		'$paramStudyProgressPractice->errors',
+		'$paramStudyProgressPractice->perfects',
+		'$paramStudyProgressPractice->studyID',
+		'$paramStudyProgressPractice->userID')";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		// $paramStudyProgressTheory->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Usuário iniciou progresso prático de nova linha.");
+
+		return $RET;
+	}
+
+	public function increaseProgressForStudyProgressPractice($paramStudyProgressPractice){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_PROGRESS_PRACTICE AS OSPP SET
+		OSPP.SESSIONS = OSPP.SESSIONS + 1,
+		OSPP.TIPS = OSPP.TIPS + '$paramStudyProgressPractice->tips',
+		OSPP.ERRORS = OSPP.ERRORS + '$paramStudyProgressPractice->errors',
+		OSPP.PERFECTS = OSPP.PERFECTS + '$paramStudyProgressPractice->perfects'
+WHERE OSPP.ID_OPENING_STUDY = $paramStudyProgressPractice->studyID
+AND OSPP.ID_USER = $paramStudyProgressPractice->userID
+AND OSPP.ID_OPENING_STUDY_PRACTICE_LINE = $paramStudyProgressPractice->practiceLineID";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Usuário fez progresso prático em linha já treinada.");
 	}
 
 }

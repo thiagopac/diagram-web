@@ -20,7 +20,6 @@ class StudyProgressTheory {
 			$this->userID = $array['USER_ID'];
 			$this->studyID = $array['OPENING_STUDY_ID'];
 			$this->dateUpdated = $array['OPENING_STUDY_PROGRESS_THEORY_UPDATED'];
-
 		}
   }
 
@@ -118,13 +117,63 @@ AND OSTL.DELETED = 0";
 
 		$progress = ($RESULTUSERHASLEARNED["SUM_PROGRESS_LEARNED"] / $RESULTTOTALLINES["TOTAL_STUDY_LINES"]) * 100;
 
-		$roundedProgress = number_format((float)$progress, 1, '.', '');
+		$roundedProgress = number_format((float)$progress, 0, '.', '');
 
 		//evitar que de alguma forma, o valor ultrapasse 100%
 		$roundedProgress = $roundedProgress > 100 ? 100 : $roundedProgress;
 
 		return $roundedProgress;
 		// return round($progress);
+	}
+
+	public function insertStudyProgressTheory($paramStudyProgressTheory){
+		$DB = fnDBConn();
+
+		$SQL = "INSERT INTO OPENING_STUDY_PROGRESS_THEORY
+		(LEARNED,
+		ID_OPENING_STUDY_THEORY_LINE,
+		ID_USER,
+		ID_OPENING_STUDY)
+		VALUES('$paramStudyProgressTheory->learned',
+		'$paramStudyProgressTheory->lineID',
+		'$paramStudyProgressTheory->userID',
+		'$paramStudyProgressTheory->studyID')";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		// $paramStudyProgressTheory->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Usuário aprendeu linha de estudo.");
+
+		return $RET;
+	}
+
+	public function editStudyProgressTheoryForStudyProgressTheory($paramStudyProgressTheory){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_PROGRESS_THEORY AS OSPT SET
+		OSPT.LEARNED = '$paramStudyProgressTheory->learned'
+WHERE OSPT.ID = '$paramStudyProgressTheory->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Usuário alterou status de aprendizado de linha de estudo.");
+	}
+
+	public function restartStudyProgressTheoryForStudyProgressTheory($paramStudyProgressTheory){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_PROGRESS_THEORY AS OSPT SET
+		OSPT.LEARNED = '0'
+WHERE OSPT.ID_OPENING_STUDY = $paramStudyProgressTheory->studyID
+AND OSPT.ID_USER = $paramStudyProgressTheory->userID";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Usuário reiniciou as estatísticas teóricas.");
 	}
 
 }

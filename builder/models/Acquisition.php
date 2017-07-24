@@ -114,5 +114,22 @@ WHERE 1";
 		return $arrAcquisition;
 	}
 
+	public function editAcquisitionForAcquisition($paramAcquisition){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_ACQUISITION AS OSACQ SET
+		OSACQ.ID_OPENING_STUDY = '$paramAcquisition->studyID',
+		OSACQ.ID_USER = '$paramAcquisition->userID',
+		OSACQ.APPROVING_USER = '$paramAcquisition->approvingUser',
+		OSACQ.ACTIVE = '$paramAcquisition->active',
+		OSACQ.DELETED = '$paramAcquisition->deleted'
+WHERE OSACQ.ID = '$paramAcquisition->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Acquisition editada.");
+	}
+
 }
 ?>

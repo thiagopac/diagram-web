@@ -141,21 +141,52 @@
                               <ul class="" style="list-style-type: none !important;">
                                           <li class="lineLink">
                                             <?php $countPracticeLines = count($line->practiceLines); $color = $countPracticeLines > 0 ? "" : "color:red"; ?>
-                                            <h4 href="modalEditLinePractice.php?s=<?=$study->id?>&l=<?=$line->id?>&pl=" data-target="#modalEditLinePractice" data-toggle="modal">
+                                            <h4 class="openModalLinePractice" data-toggle="modal" data-lineid="<?=$line->id?>">
 									                             <span style="<?=$color?>">&#8627; <?=$line->name ?></span> <i> <small style="color:lightgray">- <? echo $countPracticeLines; echo $countPracticeLines != 1 ? " Practice Lines" : " Practice Line"; ?></small></i> <i class="fa fa-plus-square pull-right"></i>
                                              </h4>
 							                            </li>
-                                          <!--  -->
-                                          <?php foreach ($line->practiceLines as $key => $practiceLine): ?>
+                                  <?php
+
+                                      $printSuggestion = true;
+
+                                      //retira os parêntesis de sublinhas e chaves de comentários dos PGNs
+                                      $cleanPgn = preg_replace("~(?:(\()|(\[)|(\{))(?(1)(?>[^()]++|(?R))*\))(?(2)(?>[^][]++|(?R))*\])(?(3)(?>[^{}]++|(?R))*\})~","",$line->pgn);
+                                  ?>
+                                  <!--  -->
+                                  <?php foreach ($line->practiceLines as $key => $practiceLine): ?>
                                         <ul class="" style="list-style-type: none !important;">
                                             <li class="practiceLineLink">
-                                              <h5 href="modalEditLinePractice.php?s=<?=$study->id?>&l=<?=$line->id?>&pl=<?=$practiceLine->id?>" data-target="#modalEditLinePractice" data-toggle="modal">
+                                              <h5 class="openModalLinePractice" data-toggle="modal" data-lineid="<?=$line->id?>" data-practicelineid="<?=$practiceLine->id?>" data-practicelinepgn="<?=$practiceLine->pgn?>">
   									                             &#8627; <?=$practiceLine->pgn ?> <i class="fa fa-edit pull-right"></i>
                                                </h5>
   							                            </li>
                                         </ul>
-                                          <?php endforeach; ?>
-                                          <!--  -->
+
+                                        <?php $strLine = $practiceLine->pgn; $strPgn = $cleanPgn;?>
+                                        <?php similar_text($strLine, $strPgn, $percent); // se a similaridade do PGN da linha teória com a de alguma linha já incluída for maior do que 95%, não sugerir a linha teórica com PGN limpo ?>
+
+                                        <?php if ($percent > 95): ?>
+                                          <?php $printSuggestion = false;  ?>
+                                        <?php endif; ?>
+
+                                  <?php endforeach; ?>
+                                  <!--  -->
+
+                                  <!-- SUGGESTED PRACTICE LINE BASED IN THEORY LINE -->
+
+                                  <?php if ($printSuggestion == true): ?>
+
+                                      <ul class="" style="list-style-type: none !important;">
+                                          <li class="practiceLineLink">
+                                            <h5 class="openModalLinePractice" style="color: darkgray" data-toggle="modal" data-lineid="<?=$line->id?>" data-practicelinepgn="<?=$cleanPgn?>">
+                                               &#8627; <?=$cleanPgn ?> <small><i style="color: darkgray">(Suggested based on theoretical line)</i></small> <i class="fa fa-edit pull-right"></i>
+                                             </h5>
+                                          </li>
+                                      </ul>
+                                  <?php endif; ?>
+                                  <!-- END SUGGESTED PRACTICE LINE -->
+
+
                                           </ul>
        <?php endforeach; ?>
        <!--  -->
@@ -181,9 +212,37 @@
       <!-- END TODO CONTENT -->
    </div>
 </div>
-<div id="modalEditLinePractice" class="modal fade bs-modal-lg" role="dialog" aria-hidden="true">
+<div id="modalLinePractice" class="modal fade bs-modal-lg" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title"><span id="modalTitle"></span></h4>
+      </div>
+      <div class="modal-body form">
+        <form class="form-horizontal form-row-seperated">
+          <input type="hidden" id="lineID" name="lineID" value="" />
+          <input type="hidden" id="practiceLineID" name="practiceLineID" value="" />
+          <!-- <input type="hidden" id="practiceLinePGN" name="practiceLinePGN" value="" /> -->
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="portlet-body">
+                <iframe name="iframePracticeLine" id="iframePracticeLine" onload="resizeIframe(this)" scrolling="yes"
+                  frameborder="0" border="0" cellspacing="0"
+                  style="border-style: none;width: 100%; height: 400px;"></iframe>
+              </div>
+              <span class="badge badge-roundless badge-danger">NOTE</span>
+              <small>To use an external PGN, paste it into the text field, then click the <i class="fa fa-pencil-square-o"></i> button.</small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
+        <button type="button" class="btn btn purple" id="btnDeletePracticeLine" title="Delete" data-dismiss="modal"><i class="fa fa-trash-o"></i></button>
+        <button type="button" class="btn btn-primary" id="btnSavePracticeLine" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+      </div>
+
     </div>
   </div>
 </div>
@@ -217,6 +276,79 @@
      }
 
      UIAlertDialogApi.init();
+
+     $(function(){
+         $(".openModalLinePractice").click(function(){
+             $('#lineID').val($(this).data('lineid'));
+             $('#practiceLineID').val($(this).data('practicelineid'));
+            //  $('#practiceLinePGN').val($(this).data('practicelinepgn'));
+
+             if($(this).data('practicelineid') != null){
+               $('#modalTitle').html("Edit Practice Line");
+               $('#btnDeletePracticeLine').show();
+             }else{
+               $('#modalTitle').html("Add new Practice Line");
+               $('#btnDeletePracticeLine').hide();
+             }
+
+             if ($(this).data('practicelinepgn') != null) {
+               $('#iframePracticeLine').attr("src", "../board/practiceeditor.php?pgn=" + $(this).data('practicelinepgn'));
+               console.log("aqui");
+             }else{
+               $('#iframePracticeLine').attr("src", "../board/practiceeditor.php");
+             }
+
+             $("#modalLinePractice").modal("show");
+         });
+     });
+
+     $(document).ready(function () {
+           $("#btnSavePracticeLine").click(function () {
+               $.ajax({
+                   url: './action/practice-edit-practice-line.php',
+                   type: 'POST',
+                   data: {lineID: $("#lineID").val(),
+                         practiceLineID: $("#practiceLineID").val(),
+                         practiceLinePGN: $("#iframePracticeLine").contents().find("#pgn").val()},
+                   success: function (result) {
+                     var response = JSON.parse(result);
+
+                     if(response["status"] == "success"){
+                       //mostrar toaster após reload
+                       sessionStorage.setItem("Success","Saved changes!");
+                       location.reload();
+                     }else if(response["status"] == "error"){
+                       toastr.warning('Error. Please, try again later.');
+                     }
+                   }, error: function (result) {
+                       toastr.error('Error. Please, try again later.');
+                   }
+               });
+           });
+       });
+
+       $(document).ready(function () {
+             $("#btnDeletePracticeLine").click(function () {
+                 $.ajax({
+                     url: './action/practice-delete-practice-line.php',
+                     type: 'POST',
+                     data: {practiceLineID: $("#practiceLineID").val()},
+                     success: function (result) {
+                       var response = JSON.parse(result);
+
+                       if(response["status"] == "success"){
+                         //mostrar toaster após reload
+                         sessionStorage.setItem("Success","Saved changes!");
+                         location.reload();
+                       }else if(response["status"] == "error"){
+                         toastr.warning('Error. Please, try again later.');
+                       }
+                     }, error: function (result) {
+                         toastr.error('Error. Please, try again later.');
+                     }
+                 });
+             });
+         });
 
    });
 </script>

@@ -75,9 +75,8 @@
 
 						<div class="portlet-body form">
 							<!-- BEGIN FORM-->
-							<form method="post" action="../exec/" id="form_sample_2" class="form-horizontal" novalidate="novalidate">
-							<input type="hidden" name="e" id="e" value="adm_edit" />
-							<input type="hidden" name="id" id="id" value="<?=$user->id?>" />
+							<form method="post" class="form-horizontal" id="formAcquisition">
+								<input type="hidden" name="id" id="id" value="<?=$acquisition->id?>" />
 								<div class="form-body">
 									<? if ($MSG != '') { ?>
 									<div class="alert alert-danger display">
@@ -89,7 +88,7 @@
 										<label class="control-label col-md-3">User</span>
 										</label>
 										<div class="col-md-5">
-											 <select class="form-control select2me" name="language">
+											 <select class="form-control select2me" id="user" name="user">
 													<option value="">Select...</option>
 													<?php foreach ($arrUser as $key => $user): ?>
 
@@ -105,7 +104,7 @@
 										<label class="control-label col-md-3">Study</span>
 										</label>
 										<div class="col-md-5">
-											 <select class="form-control select2me" name="language">
+											 <select class="form-control select2me" id="studyID" name="studyID">
 													<option value="">Select...</option>
 													<?php foreach ($arrStudies as $key => $study): ?>
 
@@ -122,7 +121,7 @@
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
-												<input disabled type="text" class="form-control" name="login" aria-required="true" aria-invalid="true" value="<?=$acquisition->dateCreated?>">
+												<input disabled type="text" class="form-control" name="date" aria-required="true" aria-invalid="true" value="<?=$acquisition->dateCreated?>">
 											</div>
 										</div>
 									</div>
@@ -132,7 +131,7 @@
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
-												<select class="form-control" name="select">
+												<select class="form-control" id="active" name="active">
 													<?php $selectedInactive = ($acquisition->active == "0") ? "selected" : null;?>
 													<?php $selectedActive = ($acquisition->active == "1") ? "selected" : null;?>
 													 <option value="0" <?=$selectedInactive?>>NO</option>
@@ -147,7 +146,7 @@
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
-												<select class="form-control" name="select">
+												<select class="form-control" id="deleted" name="deleted">
 													<?php $selectedInactive = ($acquisition->deleted == "0") ? "selected" : null;?>
 													<?php $selectedActive = ($acquisition->deleted == "1") ? "selected" : null;?>
 													 <option value="0" <?=$selectedInactive?>>NO</option>
@@ -159,7 +158,7 @@
 
 								<div class="modal-footer">
 									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-									<button type="button" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+									<button type="submit" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->
@@ -170,31 +169,86 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-        jQuery(document).ready(function() {
-           // initiate layout and plugins
-           Metronic.init(); // init metronic core components
-			Layout.init(); // init current layout
-			QuickSidebar.init() // init quick sidebar
+jQuery(document).ready(function() {
+	// initiate layout and plugins
+	Metronic.init(); // init metronic core components
+	Layout.init(); // init current layout
 
-        });
+	var FormValidation = function () {
 
-        $(function () {
-            $("#chkShowPassword").bind("click", function () {
-                var txtPassword = $("[id*=password_strength]");
-                if ($(this).is(":checked")) {
-                    txtPassword.after('<input onchange = "PasswordChanged(this);" id = "txt_' + txtPassword.attr("id") + '" class="form-control" name="password" type = "text" value = "' + txtPassword.val() + '" />');
-                    txtPassword.hide();
-                } else {
-                    txtPassword.val(txtPassword.next().val());
-                    txtPassword.next().remove();
-                    txtPassword.show();
-                }
-            });
-        });
-        function PasswordChanged(txt) {
-            $(txt).prev().val($(txt).val());
-        }
-    </script>
+		var handleValidation = function() {
+
+						var form1 = $('#formAcquisition');
+
+						form1.validate({
+								errorElement: 'span', //default input error message container
+								errorClass: 'help-block help-block-error', // default input error message class
+								focusInvalid: true, // do not focus the last invalid input
+								ignore: "",  // validate all fields including form hidden input
+								rules: {
+										user: {
+												required: true
+										},
+										studyID: {
+												required: true
+										},
+										active: {
+												required: true
+										},
+										deleted: {
+												required: true
+										}
+								},
+
+								invalidHandler: function (event, validator) { //display error alert on form submit
+										toastr.error("You have some form errors. Please check below.");
+								},
+
+								highlight: function (element) { // hightlight error inputs
+										$(element)
+												.closest('.form-group').addClass('has-error'); // set error class to the control group
+								},
+
+								unhighlight: function (element) { // revert the change done by hightlight
+										$(element)
+												.closest('.form-group').removeClass('has-error'); // set error class to the control group
+								},
+
+								success: function (label) {
+										label
+												.closest('.form-group').removeClass('has-error'); // set success class to the control group
+								},
+
+								submitHandler: function (form) {
+
+									$.ajax({
+											url: './action/edit-acquisition.php',
+											type: 'POST',
+											data: {id: $("#id").val(),
+														user: $("#user").val(),
+														studyID: $("#studyID").val(),
+														active: $("#active").val(),
+														deleted: $("#deleted").val()},
+											success: function (result) {
+
+												var response = JSON.parse(result);
+
+												if(response["status"] == "success"){
+													toastr.success('Saved changes!');
+												}else if(response["status"] == "error"){
+													toastr.warning('Error. Please, try again later.');
+												}
+											}
+									});
+
+								}
+						});
+					}
+				handleValidation();
+		 }();
+
+});
+</script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

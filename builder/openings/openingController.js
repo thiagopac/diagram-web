@@ -23,6 +23,7 @@ var currentOpening = '';
 var doRepeat = false;
 var mistakesCount = 0;
 var perfectLineCount = 0;
+var practiceLineID = null;
 
 function Line(moves, timeDue, nextBox) {
 	this.moves = moves;
@@ -51,7 +52,8 @@ function openingClass() {
 	var d = new Date();
 	this.unseenLineTime = d.getTime() + 315360000000;
 
-	console.log(diagramLines);
+	// console.log(diagramLines);
+	console.log(diagramIndexes);
 
 	$.each(diagramLines, function(parentLine) {
 		$.each(diagramLines[parentLine], function(innerLineIndex, childLine) {
@@ -117,15 +119,19 @@ openingClass.prototype.loadCandidateLines = function(openings) {
 			if (!(openingdata in diagramLines)) return true; // continue
 			$.each(diagramLines[openingdata], function(lineindex, linedata) {
 				openingObj.candidateLines.push(linedata);
+				// console.log(linedata);
 			});
 		} else if (chessy.orientation() == 'black') {
 			if (!(openingdata in diagramLines)) return true; // continue
 			$.each(diagramLines[openingdata], function(lineindex, linedata) {
 				openingObj.candidateLines.push(linedata);
+				// console.log(linedata);
 			});
 		}
 	});
-	shuffle(this.candidateLines);
+	// console.log(this.candidateLines);
+	// shuffle(this.candidateLines);
+	// console.log(this.candidateLines);
 };
 
 openingClass.prototype.getNextLine = function() {
@@ -143,6 +149,19 @@ openingClass.prototype.getNextLine = function() {
 			if (linedata.moves == candidatelinedata) {
 				if (linedata.timeDue < thetime || linedata.timeDue == openingObj.unseenLineTime) {
 					ret = candidatelinedata;
+					// console.log("candidatelinedata: " + candidatelinedata);
+					// console.log("candidatelineindex: " + candidatelineindex);
+
+
+					var key = JSON.parse(diagramIndexes[ecoPracticeLine][candidatelineindex]);
+					practiceLineID = key["id"];
+
+					var variationName = key["variationName"];
+					var lineName = key["lineName"];
+
+					$("#variationName").html(variationName);
+					$("#lineName").html(lineName);
+
 					return false; // break
 				}
 			}
@@ -392,6 +411,7 @@ openingClass.prototype.flipAndStart = function() {
 	timesHintAsked = 0;
 	if (chessy.history().length >= 1) {
 		updatedHistory = true; // don't allow the user to win lines after flipping
+		perfectLine = false;
 	}
 	chessy.flip();
 
@@ -655,6 +675,7 @@ function onDrop(source, target) {
 
 		showToast("warning", "Este não é o movimento correto.", "Atenção");
 		$("#badge-erros").text(mistakesCount);
+
 		pulsateElement("#badge-erros");
 
 		//sempre que o usuário errar o movimento, é dado uma dica à ele, e aumenta a contagem
@@ -927,9 +948,52 @@ function defineFinishedMessage(){
 			}
 		}
 
+		if(perfectLine == false){
+			strFinished += " mas não será computado como linha pefeita pois você utilizou o botão de inverter o tabuleiro";
+		}
+
 		strFinished += ".";
 
+		$("#badge-erros").text(0);
+		$("#badge-dicas-recebidas").text(0);
+
+		postResults();
+
+		// console.log("Perfect Line: "  + perfectLine);
+		// console.log("Hints: "+ timesHintAsked);
+		// console.log("Mistakes: " + mistakesCount);
+
 		return strFinished;
+}
+
+function postResults(){
+
+	var perfects = perfectLine == true ? 1 : 0;
+
+	$.ajax({
+			url: './action/practice-stats.php',
+			type: 'POST',
+			data: {studyID: $("#studyID").val(),
+						userID: $("#userID").val(),
+						practiceLineID: practiceLineID,
+						errors: mistakesCount,
+						tips: timesHintAsked,
+						perfects: perfects },
+			success: function (result) {
+				var response = JSON.parse(result);
+
+				if(response["status"] == "success"){
+					progress = response["progress"];
+				 // console.log(response);
+					// toastr.success('Saved changes!');
+				}else if(response["status"] == "error"){
+					// toastr.warning('Error. Please, try again later.');
+				}
+			}, error: function (result) {
+					// toastr.error('Error. Please, try again later.');
+			}
+	});
+
 }
 
 function millisecondsToString(ms) {

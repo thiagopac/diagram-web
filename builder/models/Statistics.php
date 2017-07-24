@@ -15,8 +15,6 @@ class Statistics {
 
 	public function getTotalOfPracticeSessionsForStudyAndUser($paramStudy, $paramUser){
 
-		StudyProgressPractice::$showDeleted = false;
-
 		$DB = fnDBConn();
 
 		$SQL = "SELECT SUM(OSPP.SESSIONS) AS SUM_TOTAL_PRACTICE_SESSIONS
@@ -34,8 +32,6 @@ AND OSPP.ID_USER = $paramUser";
 	}
 
 	public function getTotalOfPracticePerfectsForStudyAndUser($paramStudy, $paramUser){
-
-		StudyProgressPractice::$showDeleted = false;
 
 		$DB = fnDBConn();
 

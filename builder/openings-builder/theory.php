@@ -82,6 +82,8 @@
   $eco = new Eco();
   $arrEcos = $eco->getALlEcos();
 
+  $study->eco = $eco->getEcoForStudy($study->id);
+
   $variationsCount = count($study->variations);
 
   Line::$orderBy = " ORDER BY OSTL.DIN DESC";
@@ -482,13 +484,10 @@
                                 </div>
                                 <div class="form-group last">
                                   <div class="col-sm-12">
-                                    <div class="input-group">
-                                      <span style="visibility:hidden" class="input-group-addon"></span>
-                                      <div class="portlet-body">
-                                        <iframe name="iframeLine" id="iframeLine" onload="resizeIframe(this)" src="" scrolling="yes"
-                                          frameborder="0" border="0" cellspacing="0"
-                                          style="border-style: none;width: 100%; height: 610px;"></iframe>
-                                      </div>
+                                    <div class="portlet-body">
+                                      <iframe name="iframeLine" id="iframeLine" onload="resizeIframe(this)" src="" scrolling="yes"
+                                        frameborder="0" border="0" cellspacing="0"
+                                        style="border-style: none;width: 100%; height: 610px;"></iframe>
                                     </div>
                                   </div>
                                 </div>

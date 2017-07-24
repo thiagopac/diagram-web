@@ -36,7 +36,16 @@ function fnDBConn()
 	$erro = false;
 	$DBtmp = mysqli_connect($MYSQL_HOST, $MYSQL_LOGIN, $MYSQL_SENHA, $MYSQL_DATABASE,$MYSQL_PORTA) or $erro = true;
 
-	$DBtmp->set_charset("utf8");
+	if (mysqli_connect_errno()) {
+		fnLogText('(fnDBConn) '.mysqli_connect_errno(),true);
+    exit();
+	}
+
+	/* change character set to utf8 */
+	if (!$DBtmp->set_charset("utf8")) {
+		fnLogText('(set_charset) '.$DBtmp->error,true);
+    exit();
+	}
 
 	if ($erro)
 		{

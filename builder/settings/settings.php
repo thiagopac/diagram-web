@@ -67,7 +67,7 @@
                          <div class="form-group">
                             <label class="col-md-3 control-label">Site language</label>
                             <div class="col-md-5">
-                              <select class="form-control select2me" name="selectInterfaceLanguage">
+                              <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
                                  <option value="">Select...</option>
 
                                  <?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
@@ -103,7 +103,7 @@
                       <div class="form-group">
                          <label class="col-md-3 control-label">Theme</label>
                          <div class="col-md-5">
-                           <select class="form-control select2me" name="selectTheme">
+                           <select class="form-control select2me" id="theme" name="theme">
                               <option value="">Select...</option>
 
                               <?php foreach ($arrThemes as $key => $theme): ?>
@@ -123,7 +123,7 @@
    					</div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-              <button type="submit" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+              <button type="button" id="btnSaveSettings" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
             </div>
    					<!-- END Portlet PORTLET-->
           </form>
@@ -138,11 +138,58 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-   jQuery(document).ready(function() {
-   // initiate layout and plugins
-   Metronic.init(); // init metronic core components
-   Layout.init(); // init current layou
-   });
+jQuery(document).ready(function() {
+  // initiate layout and plugins
+  Metronic.init(); // init metronic core components
+  Layout.init(); // init current layou
+
+  $(document).ready(function () {
+    if(sessionStorage.getItem("Success")){
+        toastr.success(sessionStorage.getItem("Success"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Warning")){
+        toastr.warning(sessionStorage.getItem("Warning"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Info")){
+        toastr.info(sessionStorage.getItem("Info"));
+        sessionStorage.clear();
+    }
+
+    if(sessionStorage.getItem("Error")){
+        toastr.error(sessionStorage.getItem("Error"));
+        sessionStorage.clear();
+    }
+
+  });
+
+  $(document).ready(function () {
+        $("#btnSaveSettings").click(function () {
+            $.ajax({
+                url: './action/settings.php',
+                type: 'POST',
+                data: {interfaceLanguage: $("#interfaceLanguage").val(),
+                      theme: $("#theme").val()},
+                success: function (result) {
+                  var response = JSON.parse(result);
+
+                  if(response["status"] == "success"){
+                    sessionStorage.setItem("Success","Saved changes!");
+                    location.reload();
+                  }else if(response["status"] == "error"){
+                    toastr.warning('Error. Please, try again later.');
+                  }
+                }, error: function (result) {
+                    toastr.error('Error. Please, try again later.');
+                }
+            });
+        });
+    });
+
+});
 </script>
 </body>
 </html>
