@@ -35,7 +35,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Openings<small></small>
+            <?= $t->{'Openings'}; ?><small></small>
          </h3>
       </div>
    </div>
@@ -43,11 +43,11 @@
      <ul class="page-breadcrumb">
        <li>
           <i class="fa fa-home"></i>
-          <a href="#">Openings</a>
+          <a href="#"><?= $t->{'Openings'}; ?></a>
           <i class="fa fa-angle-right"></i>
        </li>
        <li>
-         <a href="./list.php">Study</a>
+         <a href="./list.php"><?= $t->{'Study'}; ?></a>
        </li>
      </ul>
    </div>
@@ -107,7 +107,7 @@
       <?php endif; ?>
 
       <div class="tile-body">
-        <h4><?=$study->name?></h4><small>By: <?=$study->author->fullName?></small>
+        <h4><?=$study->name?></h4><small><?= $t->{'By'}; ?>: <?=$study->author->fullName?></small>
            <!--  rate-->
            <div style="margin-top:10px;">
              <input id="input-1" name="input-1" class="rating" data-size="xs" data-min="0" data-max="5" value="<?=$studyRatingAverage?>" data-readonly="true" data-show-clear="false" data-show-caption="false">
@@ -118,7 +118,7 @@
           <?=$strProgress?>
         </div>
         <div class="number">
-           <small>Updated: <?=$study->dateUpdated?></small>
+           <small><?= $t->{'Updated'}; ?>: <?=$study->dateUpdated?></small>
         </div>
       </div>
     </div>

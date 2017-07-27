@@ -22560,7 +22560,7 @@ var pgnBase = function (boardId, configuration) {
                 $("select#" + buttonsId + "nag").multiselect({
                     header: false,
                     selectedList: 4,
-                    minWidth: 110,
+                    minWidth: 90,
                     checkAllText: "",
                     uncheckAllText: "Clean",
                     noneSelectedText: "Marks",

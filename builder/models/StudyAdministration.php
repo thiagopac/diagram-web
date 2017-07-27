@@ -7,13 +7,19 @@ class StudyAdministration {
 	public $id;
 	public $message;
 	public $dateCreated;
-	public $user;
-	public $study;
+	public $userID;
+	public $studyID;
 	public $read;
 	public $deleted;
 
+//object entities
+	public $user;
+	public $study;
+
 	static $showDeleted;
 	static $whereDeleted;
+
+	static $orderBy;
 
 	//construtor da classe
 	public function __construct($array){
@@ -25,13 +31,8 @@ class StudyAdministration {
 			$this->id = $array['OPENING_STUDY_ADMINISTRATION_ID'];
 			$this->message = $array['OPENING_STUDY_ADMINISTRATION_MESSAGE'];
 			$this->dateCreated = $array['OPENING_STUDY_ADMINISTRATION_DATE_CREATED'];
-
-			$user = new User();
-			$this->user = $user->getUserWithId($array['USER_ID']);
-
-			$study = new Study();
-			$this->study = $study->getStudyWithID($array['OPENING_STUDY_ID']);
-
+			$this->userID = $array['USER_ID'];
+			$this->studyID = $array['OPENING_STUDY_ID'];
 			$this->read = $array['OPENING_STUDY_ADMINISTRATION_READ'];
 
 			$this->deleted = $array['OPENING_STUDY_ADMINISTRATION_DELETED'];
@@ -60,6 +61,8 @@ class StudyAdministration {
 
 		$SQL = $SQL.self::$whereDeleted;
 
+		$SQL = $SQL.self::$orderBy;
+
 		$RESULT = fnDB_DO_SELECT($DB,$SQL);
 
 		$studyAdministration = new StudyAdministration($RESULT);
@@ -82,6 +85,8 @@ FROM OPENING_STUDY_ADMINISTRATION OSADM
 WHERE 1";
 
 		$SQL = $SQL.self::$whereDeleted;
+
+		$SQL = $SQL.self::$orderBy;
 
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
@@ -112,6 +117,8 @@ WHERE OS.ID_USER = $paramUser";
 
 		$SQL = $SQL.self::$whereDeleted;
 
+		$SQL = $SQL.self::$orderBy;
+
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
 		$arrStudyAdministrations = [];
@@ -140,6 +147,8 @@ WHERE OSADM.ID_OPENING_STUDY = $paramStudy";
 
 		$SQL = $SQL.self::$whereDeleted;
 
+		$SQL = $SQL.self::$orderBy;
+
 		$RESULT = fnDB_DO_SELECT_WHILE($DB,$SQL);
 
 		$arrSturyAdministrations = [];
@@ -150,6 +159,40 @@ WHERE OSADM.ID_OPENING_STUDY = $paramStudy";
 		}
 
 		return $arrSturyAdministrations;
+	}
+
+	public function insertStudyAdministration($paramStudyAdministration){
+		$DB = fnDBConn();
+
+		$SQL = "INSERT INTO OPENING_STUDY_ADMINISTRATION
+		(MESSAGE,
+		ID_USER,
+		ID_OPENING_STUDY)
+		VALUES('$paramStudyAdministration->message',
+		'$paramStudyAdministration->userID',
+		'$paramStudyAdministration->studyID')";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		// $paramStudyAdministration->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Novo Feedback criado.");
+
+		return $RET;
+	}
+
+	public function readStudyAdministration($paramStudyAdministration){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_ADMINISTRATION AS OSADM SET
+		OSADM.READ = 1
+WHERE OSADM.ID = '$paramStudyAdministration->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Feedback lido.");
 	}
 
 }

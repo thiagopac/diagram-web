@@ -66,7 +66,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Practice<small></small>
+            <?= $t->{'Practice'}; ?><small></small>
          </h3>
       </div>
    </div>
@@ -74,11 +74,11 @@
       <ul class="page-breadcrumb">
         <li>
            <i class="fa fa-home"></i>
-           <a href="#">Openings</a>
+           <a href="#"><?= $t->{'Openings'}; ?></a>
            <i class="fa fa-angle-right"></i>
         </li>
          <li>
-            <a href="./list.php">Builder</a>
+            <a href="./list.php"><?= $t->{'Builder'}; ?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
@@ -86,7 +86,7 @@
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="#">Practice</a>
+            <a href="#"><?= $t->{'Practice'}; ?></a>
          </li>
       </ul>
    </div>
@@ -103,7 +103,7 @@
                   <div class="portlet-title">
                      <div class="caption">
                         <i class="icon-bar-chart font-green-sharp hide"></i>
-                        <span class="caption-helper">OPENING:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->eco->name?></span>
+                          <span class="caption-helper"><?= $t->{'STUDY'}; ?>:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->name?></span>
                      </div>
                   </div>
                   <!-- end PROJECT HEAD -->
@@ -113,12 +113,12 @@
                           <div class="portlet light">
                              <div class="portlet-title">
                                 <div class="caption">
-                                   <span class="caption-subject bold uppercase"> Variations</span>
+                                   <span class="caption-subject bold uppercase"> <?= $t->{'Variations'}; ?></span>
                                 </div>
                              </div>
                              <div class="portlet-body">
                                <?php if (count($arrVariations) < 1): ?>
-                                <small>This study does not have any line yet.</small>
+                                <small><?= $t->{'This study does not have any line yet.'}; ?></small>
                               <?php else: ?>
                                 <div class="portlet-body">
                     							<div class="panel-group accordion" id="accordion3">
@@ -130,7 +130,7 @@
                     										<h4 class="panel-title">
                                           <?php $countLines = count($variation->lines); ?>
                     										<a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse_<?=$variation->id?>">
-                    										   <?=$variation->name ?> <i> <small style="color:lightgray">- <? echo $countLines; echo $countLines != 1 ? " Lines" : " Line"; ?></small></i>
+                    										   <?=$variation->name ?> <i> <small style="color:lightgray">- <? echo $countLines; echo " "; echo $strLines != 1 ? $t->{'Lines'} : $t->{'Line'}; ?></small></i>
                                         </a>
                     										</h4>
                     									</div>
@@ -142,7 +142,7 @@
                                           <li class="lineLink">
                                             <?php $countPracticeLines = count($line->practiceLines); $color = $countPracticeLines > 0 ? "" : "color:red"; ?>
                                             <h4 class="openModalLinePractice" data-toggle="modal" data-lineid="<?=$line->id?>">
-									                             <span style="<?=$color?>">&#8627; <?=$line->name ?></span> <i> <small style="color:lightgray">- <? echo $countPracticeLines; echo $countPracticeLines != 1 ? " Practice Lines" : " Practice Line"; ?></small></i> <i class="fa fa-plus-square pull-right"></i>
+									                             <span style="<?=$color?>">&#8627; <?=$line->name ?></span> <i> <small style="color:lightgray">- <? echo $countPracticeLines; echo " "; echo $strPracticeLines != 1 ? $t->{'Practice Lines'} : $t->{'Practice Line'}; ?></small></i> <i class="fa fa-plus-square pull-right"></i>
                                              </h4>
 							                            </li>
                                   <?php
@@ -151,6 +151,7 @@
 
                                       //retira os parêntesis de sublinhas e chaves de comentários dos PGNs
                                       $cleanPgn = preg_replace("~(?:(\()|(\[)|(\{))(?(1)(?>[^()]++|(?R))*\))(?(2)(?>[^][]++|(?R))*\])(?(3)(?>[^{}]++|(?R))*\})~","",$line->pgn);
+                                      $cleanPgn = preg_replace("/\s\s+/", " ", $cleanPgn); //retirar espaços duplos que podem ter ficado no PGN
                                   ?>
                                   <!--  -->
                                   <?php foreach ($line->practiceLines as $key => $practiceLine): ?>
@@ -179,7 +180,7 @@
                                       <ul class="" style="list-style-type: none !important;">
                                           <li class="practiceLineLink">
                                             <h5 class="openModalLinePractice" style="color: darkgray" data-toggle="modal" data-lineid="<?=$line->id?>" data-practicelinepgn="<?=$cleanPgn?>">
-                                               &#8627; <?=$cleanPgn ?> <small><i style="color: darkgray">(Suggested based on theoretical line)</i></small> <i class="fa fa-edit pull-right"></i>
+                                               &#8627; <?=$cleanPgn ?> <small><i style="color: darkgray"><?= $t->{'(Suggested based on theoretical line)'}; ?></i></small> <i class="fa fa-edit pull-right"></i>
                                              </h5>
                                           </li>
                                       </ul>
@@ -197,8 +198,8 @@
 <!--  -->
                   							 </div>
                     						</div>
-                                <span class="badge badge-roundless badge-danger">NOTE</span>
-                                <small>Click on any of the above Variations to expand and create a <strong>Practice Line</strong>. <strong>Lines</strong> that do not have any <strong>Practice Line</strong> will be marked in <strong><font color="red">red</font></strong>.</small>
+                                <span class="badge badge-roundless badge-danger"><?= $t->{'NOTE'}; ?></span>
+                                <small><?= $t->{"Click on any of the above Variations to expand and create a <strong>Practice Line</strong>. <strong>Lines</strong> that do not have any <strong>Practice Line</strong> will be marked in <strong><font color='red'>red</font></strong>."}; ?></small>
                               <?php endif; ?>
                              </div>
                           </div>
@@ -231,8 +232,8 @@
                   frameborder="0" border="0" cellspacing="0"
                   style="border-style: none;width: 100%; height: 400px;"></iframe>
               </div>
-              <span class="badge badge-roundless badge-danger">NOTE</span>
-              <small>To use an external PGN, paste it into the text field, then click the <i class="fa fa-pencil-square-o"></i> button.</small>
+              <span class="badge badge-roundless badge-danger"><?= $t->{'NOTE'}; ?></span>
+              <small><?= $t->{"To use an external PGN, paste it into the text field, then click the <i class='fa fa-pencil-square-o'></i> button."}; ?></small>
             </div>
           </div>
         </form>
@@ -284,10 +285,10 @@
             //  $('#practiceLinePGN').val($(this).data('practicelinepgn'));
 
              if($(this).data('practicelineid') != null){
-               $('#modalTitle').html("Edit Practice Line");
+               $('#modalTitle').html("<?= $t->{'Edit Practice Line'}; ?>");
                $('#btnDeletePracticeLine').show();
              }else{
-               $('#modalTitle').html("Add new Practice Line");
+               $('#modalTitle').html("<?= $t->{'Add new Practice Line'}; ?>");
                $('#btnDeletePracticeLine').hide();
              }
 
@@ -315,13 +316,13 @@
 
                      if(response["status"] == "success"){
                        //mostrar toaster após reload
-                       sessionStorage.setItem("Success","Saved changes!");
+                       sessionStorage.setItem("Success","<?= $t->{'Saved changes!'}; ?>");
                        location.reload();
                      }else if(response["status"] == "error"){
-                       toastr.warning('Error. Please, try again later.');
+                       toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                      }
                    }, error: function (result) {
-                       toastr.error('Error. Please, try again later.');
+                       toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                    }
                });
            });
@@ -338,13 +339,13 @@
 
                        if(response["status"] == "success"){
                          //mostrar toaster após reload
-                         sessionStorage.setItem("Success","Saved changes!");
+                         sessionStorage.setItem("Success","<?= $t->{'Saved changes!'}; ?>");
                          location.reload();
                        }else if(response["status"] == "error"){
-                         toastr.warning('Error. Please, try again later.');
+                         toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                        }
                      }, error: function (result) {
-                         toastr.error('Error. Please, try again later.');
+                         toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                      }
                  });
              });

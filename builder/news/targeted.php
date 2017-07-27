@@ -16,7 +16,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Targeted News <small></small>
+            <?= $t->{'Targeted News'}; ?> <small></small>
          </h3>
       </div>
    </div>
@@ -24,11 +24,11 @@
       <ul class="page-breadcrumb">
          <li>
             <i class="fa fa-home"></i>
-            <a href="#">News</a>
+            <a href="#"><?= $t->{'News'}; ?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="targeted.php">Targeted News</a>
+            <a href="targeted.php"><?= $t->{'Targeted News'}; ?></a>
          </li>
       </ul>
    </div>

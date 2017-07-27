@@ -82,8 +82,6 @@
   $eco = new Eco();
   $arrEcos = $eco->getALlEcos();
 
-  $study->eco = $eco->getEcoForStudy($study->id);
-
   $variationsCount = count($study->variations);
 
   Line::$orderBy = " ORDER BY OSTL.DIN DESC";
@@ -117,11 +115,11 @@
     <ul class="page-breadcrumb">
       <li>
          <i class="fa fa-home"></i>
-         <a href="#">Openings</a>
+         <a href="#"><?= $t->{'Openings'}; ?></a>
          <i class="fa fa-angle-right"></i>
       </li>
       <li>
-        <a href="./list.php">Builder</a>
+        <a href="./list.php"><?= $t->{'Builder'}; ?></a>
         <i class="fa fa-angle-right"></i>
       </li>
       <li>
@@ -129,7 +127,7 @@
         <i class="fa fa-angle-right"></i>
       </li>
       <li>
-        <a href="#">Theory</a>
+        <a href="#"><?= $t->{'Theory'}; ?></a>
       </li>
     </ul>
   </div>
@@ -144,7 +142,7 @@
           <div class="portlet light">
             <div class="portlet-title">
               <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
-                <span class="caption-subject font-green-sharp bold uppercase">Base Theory </span>
+                <span class="caption-subject font-green-sharp bold uppercase"><?= $t->{'Base Theory'}; ?> </span>
               </div>
             </div>
             <!--  BEGIN MENU APRENDIZADO -->
@@ -152,27 +150,27 @@
               <ul class="ver-inline-menu tabbable margin-bottom-10">
                 <li class="<?=$tbHistory?>">
                   <a data-toggle="tab" href="#tab_1">
-                  <i class="fa fa-birthday-cake"></i> History </a>
+                  <i class="fa fa-birthday-cake"></i> <?= $t->{'History'}; ?> </a>
                 </li>
                 <li class="<?=$tbGameStyle?>">
                   <a data-toggle="tab" href="#tab_2">
-                  <i class="fa fa-puzzle-piece"></i> Game style </a>
+                  <i class="fa fa-puzzle-piece"></i> <?= $t->{'Game Style'}; ?> </a>
                 </li>
                 <li class="<?=$tbMainGrandMasters?>">
                   <a data-toggle="tab" href="#tab_3">
-                  <i class="fa fa-users"></i> Main Grandmasters </a>
+                  <i class="fa fa-users"></i> <?= $t->{'Main Grandmasters'}; ?> </a>
                 </li>
                 <li class="<?=$tbVariations?>">
                   <a data-toggle="tab" href="#tab_4">
-                  <i class="fa fa-minus"></i> Variations </a>
+                  <i class="fa fa-minus"></i> <?= $t->{'Variations'}; ?> </a>
                 </li>
                 <li class="<?=$tbLines?>">
                   <a data-toggle="tab" href="#tab_5">
-                  <i class="fa fa-bars"></i> Lines </a>
+                  <i class="fa fa-bars"></i> <?= $t->{'Lines'}; ?> </a>
                 </li>
                 <li class="<?=$tbBibliography?>">
                   <a data-toggle="tab" href="#tab_6">
-                  <i class="fa fa-graduation-cap"></i> Bibliography </a>
+                  <i class="fa fa-graduation-cap"></i> <?= $t->{'Bibliography'}; ?> </a>
                 </li>
               </ul>
             </div>
@@ -187,7 +185,7 @@
             <div class="portlet-title">
               <div class="caption">
                 <i class="icon-bar-chart font-green-sharp hide"></i>
-                <span class="caption-helper">OPENING:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->eco->name?></span>
+                  <span class="caption-helper"><?= $t->{'STUDY'}; ?>:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->name?></span>
               </div>
             </div>
             <!-- end PROJECT HEAD -->
@@ -199,7 +197,7 @@
                       <div class="portlet light">
                         <div class="portlet-title">
                           <div class="caption">
-                            <span class="caption-subject bold uppercase"> History</span>
+                            <span class="caption-subject bold uppercase"> <?= $t->{'History'}; ?></span>
                           </div>
                         </div>
                         <div class="portlet-body">
@@ -220,7 +218,7 @@
                       <div class="portlet light">
                         <div class="portlet-title">
                           <div class="caption">
-                            <span class="caption-subject bold uppercase"> Game Style</span>
+                            <span class="caption-subject bold uppercase"> <?= $t->{'Game Style'}; ?></span>
                           </div>
                         </div>
                         <div class="portlet-body">
@@ -241,7 +239,7 @@
                       <div class="portlet light">
                         <div class="portlet-title">
                           <div class="caption">
-                            <span class="caption-subject bold uppercase"> Main Grandmasters</span>
+                            <span class="caption-subject bold uppercase"> <?= $t->{'Main Grandmasters'}; ?></span>
                           </div>
                         </div>
                         <div class="portlet-body">
@@ -262,27 +260,27 @@
                       <div class="portlet light">
                         <div class="portlet-title">
                           <div class="caption">
-                            <span class="caption-subject bold uppercase"> Variations</span>
+                            <span class="caption-subject bold uppercase"> <?= $t->{'Variations'}; ?></span>
                           </div>
                           <div class="actions">
-                            <a class="openModalVariation btn btn-lg btn-primary" data-toggle="modal"><i class="fa fa-plus"></i> NEW VARIATION</a>
+                            <a class="openModalVariation btn btn-lg btn-primary" data-toggle="modal"><i class="fa fa-plus"></i> <?= $t->{'NEW VARIATION'}; ?></a>
                           </div>
                         </div>
                         <div class="portlet-body">
                           <?php if ($variationsCount < 1): ?>
-                          <small>This study does not have any Variation yet.</small>
+                          <small><?= $t->{'This study does not have any Variation yet.'}; ?></small>
                           <?php else: ?>
                           <table class="table table-hover">
                             <thead>
                               <tr>
                                 <th>
-                                  Name
+                                  <?= $t->{'Name'}; ?>
                                 </th>
                                 <th>
-                                  ECO
+                                  <?= $t->{'ECO'}; ?>
                                 </th>
                                 <th>
-                                  Description
+                                  <?= $t->{'Description'}; ?>
                                 </th>
                               </tr>
                             </thead>
@@ -303,8 +301,8 @@
                               <?php endforeach; ?>
                             </tbody>
                           </table>
-                          <span class="badge badge-roundless badge-danger">NOTE</span>
-                          <small>Click on any of the above Variations to open editor mode.</small>
+                          <span class="badge badge-roundless badge-danger"><?= $t->{'NOTE'}; ?></span>
+                          <small><?= $t->{'Click on any of the above Variations to open editor mode.'}; ?></small>
                           <?php endif; ?>
                         </div>
                       </div>
@@ -314,7 +312,7 @@
                           <div class="modal-content">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                              <h4 class="modal-title">Opening Variation</h4>
+                              <h4 class="modal-title"><?= $t->{'Opening Variation'}; ?></h4>
                             </div>
                             <div class="modal-body form">
                               <form id="formVariation" name="formVariation" method="post" class="form-horizontal">
@@ -322,7 +320,7 @@
                                 <input type="hidden" id="variationID" name="variationID" value="" />
                                 <div class="form-body">
                                 <div class="form-group">
-                                  <label class="col-md-3 control-label">Name</label>
+                                  <label class="col-md-3 control-label"><?= $t->{'Name'}; ?></label>
                                   <div class="col-md-6">
                                     <div class="input-group">
                                       <span class="input-group-addon">
@@ -331,32 +329,32 @@
                                       <input type="text" id="variationName" name="variationName" class="form-control" value=""/>
                                     </div>
                                     <p class="help-block">
-                                      E.g: Advanced Variation<br>
+                                      <?= $t->{'E.g: Advanced Variation'}; ?><br>
                                     </p>
                                   </div>
                                 </div>
 
                                 <div class="form-group">
-                                  <label class="col-md-3 control-label">ECO Opening</label>
+                                  <label class="col-md-3 control-label"><?= $t->{'ECO Code'}; ?></label>
                                   <div class="col-md-6">
                                     <div class="input-group">
                                       <span class="input-group-addon">
                                       <i class="fa fa-tag"></i>
                                       </span>
                                       <select class="form-control select2me" name="variationEcoCode" id="variationEcoCode">
-                                         <option value="">Select...</option>
+                                         <option value=""><?= $t->{'Select...'}; ?></option>
                                          <?php foreach ($arrEcos as $key => $eco): ?>
                                            <option value="<?=$eco->id?>" <?=$selected?>>[<?=$eco->code?>] - <?=$eco->name?> (<?=$eco->line?>)</option>
                                          <?php endforeach; ?>
                                       </select>
                                     </div>
                                     <span class="help-block">
-                                    If you don't know what is the ECO code, please consider read <a href="https://en.wikipedia.org/wiki/List_of_chess_openings">this</a>.</span>
+                                    <?= $t->{"If you don`t know what is the ECO code, please consider read <a target='_blank' href='https://en.wikipedia.org/wiki/List_of_chess_openings'>this</a>."}; ?></span>
                                   </div>
                                 </div>
 
                                 <div class="form-group last">
-                                  <label class="col-md-3 control-label">Description</label>
+                                  <label class="col-md-3 control-label"><?= $t->{'Description'}; ?></label>
                                   <div class="col-md-6">
                                     <div class="input-group">
                                       <span class="input-group-addon">
@@ -386,27 +384,27 @@
                       <div class="portlet light">
                         <div class="portlet-title">
                           <div class="caption">
-                            <span class="caption-subject bold uppercase"> Lines</span>
+                            <span class="caption-subject bold uppercase"> <?= $t->{'Lines'}; ?></span>
                           </div>
                           <div class="actions">
-                            <a data-target="#modalLine" class="openModalLine btn btn-lg btn-primary"><i class="fa fa-plus"></i> NEW LINE</a>
+                            <a data-target="#modalLine" class="openModalLine btn btn-lg btn-primary"><i class="fa fa-plus"></i> <?= $t->{'NEW LINE'}; ?></a>
                           </div>
                         </div>
                         <div class="portlet-body">
                           <?php if ($linesCount < 1): ?>
-                          <small>This study does not have any Line yet.</small>
+                          <small><?= $t->{'This study does not have any Line yet.'}; ?></small>
                           <?php else :?>
                             <table class="table table-hover">
                               <thead>
                                 <tr>
                                   <th>
-                                    Name
+                                    <?= $t->{'Name'}; ?>
                                   </th>
                                   <th>
-                                    Variation
+                                    <?= $t->{'Variation'}; ?>
                                   </th>
                                   <th>
-                                    Description
+                                    <?= $t->{'Description'}; ?>
                                   </th>
                                 </tr>
                               </thead>
@@ -428,8 +426,8 @@
                               </tbody>
                             </table>
 
-                  <span class="badge badge-roundless badge-danger">NOTE</span>
-                  <small>Click on any of the above Lines to open editor mode.</small>
+                  <span class="badge badge-roundless badge-danger"><?= $t->{'NOTE'}; ?></span>
+                  <small><?= $t->{'Click on any of the above Lines to open editor mode.'}; ?></small>
 
                           <?php endif; ?>
                         </div>
@@ -440,7 +438,7 @@
 
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                              <h4 class="modal-title">Opening Line</h4>
+                              <h4 class="modal-title"><?= $t->{'Opening Line'}; ?></h4>
                             </div>
                             <div class="modal-body form">
                               <form id="formLine" method="post" class="form-horizontal form-row-seperated">
@@ -450,13 +448,13 @@
 
                                 <div class="form-group">
                                   <div class="col-sm-4">
-                                    <label class="control-label">Variation parent</label>
+                                    <label class="control-label"><?= $t->{'Variation parent'}; ?></label>
                                     <div class="input-group">
                                       <span class="input-group-addon">
                                       <i class="fa fa-minus"></i>
                                       </span>
                                       <select class="form-control select2me" id="lineVariationID" name="lineVariationID">
-                                        <option value="">Select...</option>
+                                        <option value=""><?= $t->{'Select...'}; ?></option>
                                         <?php foreach ($study->variations as $key => $variation): ?>
                                           <option value="<?=$variation->id?>"><?=$variation->name?></option>
                                         <?php endforeach; ?>
@@ -464,7 +462,7 @@
                                     </div>
                                   </div>
                                   <div class="col-sm-4">
-                                    <label class="control-label">Line name</label>
+                                    <label class="control-label"><?= $t->{'Line name'}; ?></label>
                                     <div class="input-group">
                                       <span class="input-group-addon">
                                       <i class="fa fa-tag"></i>
@@ -473,7 +471,7 @@
                                     </div>
                                   </div>
                                   <div class="col-sm-4">
-                                    <label class="control-label">Description</label>
+                                    <label class="control-label"><?= $t->{'Description'}; ?></label>
                                     <div class="input-group">
                                       <span class="input-group-addon">
                                       <i class="fa fa-info"></i>
@@ -505,7 +503,7 @@
                       <div class="portlet light">
                         <div class="portlet-title">
                           <div class="caption">
-                            <span class="caption-subject bold uppercase"> Bibliography</span>
+                            <span class="caption-subject bold uppercase"> <?= $t->{'Bibliography'}; ?></span>
                           </div>
                         </div>
                         <div class="portlet-body">
@@ -629,12 +627,12 @@
                     var response = JSON.parse(result);
 
                     if(response["status"] == "success"){
-                      toastr.success('Saved changes!');
+                      toastr.success('<?= $t->{'Saved changes!'}; ?>');
                     }else if(response["status"] == "error"){
-                      toastr.warning('Error. Please, try again later.');
+                      toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                     }
                   }, error: function (result) {
-                  		toastr.error('Error. Please, try again later.');
+                  		toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
               		}
               });
           });
@@ -652,12 +650,12 @@
                     var response = JSON.parse(result);
 
                     if(response["status"] == "success"){
-                      toastr.success('Saved changes!');
+                      toastr.success('<?= $t->{'Saved changes!'}; ?>');
                     }else if(response["status"] == "error"){
-                      toastr.warning('Error. Please, try again later.');
+                      toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                     }
                   }, error: function (result) {
-                  		toastr.error('Error. Please, try again later.');
+                  		toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
               		}
               });
           });
@@ -675,12 +673,12 @@
                     var response = JSON.parse(result);
 
                     if(response["status"] == "success"){
-                      toastr.success('Saved changes!');
+                      toastr.success('<?= $t->{'Saved changes!'}; ?>');
                     }else if(response["status"] == "error"){
-                      toastr.warning('Error. Please, try again later.');
+                      toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                     }
                   }, error: function (result) {
-                  		toastr.error('Error. Please, try again later.');
+                  		toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
               		}
               });
           });
@@ -701,13 +699,13 @@
 
                     if(response["status"] == "success"){
                       //mostrar toaster após reload
-                      sessionStorage.setItem("Success","Saved changes!");
+                      sessionStorage.setItem("Success","<?= $t->{'Saved changes!'}; ?>");
                       location.reload();
                     }else if(response["status"] == "error"){
-                      toastr.warning('Error. Please, try again later.');
+                      toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                     }
                   }, error: function (result) {
-                  		toastr.error('Error. Please, try again later.');
+                  		toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
               		}
               });
           });
@@ -729,13 +727,13 @@
 
     									if(response["status"] == "success"){
                         //mostrar toaster após reload
-                        sessionStorage.setItem("Success","Saved changes!");
+                        sessionStorage.setItem("Success","<?= $t->{'Saved changes!'}; ?>");
                         location.reload();
     									}else if(response["status"] == "error"){
-    										toastr.warning('Error. Please, try again later.');
+    										toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
     									}
                     }, error: function (result) {
-                    		toastr.error('Error. Please, try again later.');
+                    		toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                 		}
                 });
             });
@@ -753,12 +751,12 @@
                     var response = JSON.parse(result);
 
   									if(response["status"] == "success"){
-  										toastr.success('Saved changes!');
+  										toastr.success('<?= $t->{'Saved changes!'}; ?>');
   									}else if(response["status"] == "error"){
-  										toastr.warning('Error. Please, try again later.');
+  										toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
   									}
                   }, error: function (result) {
-                      toastr.error('Error. Please, try again later.');
+                      toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                   }
               });
           });

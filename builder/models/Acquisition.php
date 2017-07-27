@@ -131,5 +131,18 @@ WHERE OSACQ.ID = '$paramAcquisition->id'";
 		fnDB_LOG_AUDIT_ADD($DB,"Acquisition editada.");
 	}
 
+	public function deleteAcquisition($paramAcquisition){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE OPENING_STUDY_ACQUISITION AS OSACQ SET
+		OSACQ.DELETED = 1
+WHERE OSACQ.ID = '$paramAcquisition->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Apagou uma acquisition.");
+	}
+
 }
 ?>

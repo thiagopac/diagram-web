@@ -1,5 +1,4 @@
 <?
-  require_once ('../models/Theme.php');
   require_once ('../models/User.php');
   require_once ('../models/Theme.php');
 

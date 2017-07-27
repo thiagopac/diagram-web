@@ -2,7 +2,6 @@
   // #INCLUDES
   require_once ('../lib/config.php');
   require_once('../models/Study.php');
-  require_once('../models/Eco.php');
   require_once('../models/BaseTheory.php');
   require_once('../models/Variation.php');
   require_once('../models/Line.php');
@@ -46,10 +45,6 @@
   $studyProgressTheory = new StudyProgressTheory();
   $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $study->id);
 
-  $eco = new Eco();
-  $eco = $eco->getEcoForStudy($study->id);
-  $study->eco = $eco;
-
   //controlar o que irá aparecer de item de menu de estudo
   $showHistory = $study->baseTheory->theoryHistory->text != '' ? true : false;
   $showGameStyle = $study->baseTheory->theoryGameStyle->text != '' ? true : false;
@@ -74,7 +69,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Theory<small></small>
+            <?= $t->{'Theory'}; ?><small></small>
          </h3>
       </div>
    </div>
@@ -82,11 +77,11 @@
       <ul class="page-breadcrumb">
         <li>
            <i class="fa fa-home"></i>
-           <a href="#">Openings</a>
+           <a href="#"><?= $t->{'Openings'}; ?></a>
            <i class="fa fa-angle-right"></i>
         </li>
          <li>
-            <a href="./list.php">Study</a>
+            <a href="./list.php"><?= $t->{'Study'}; ?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
@@ -94,7 +89,7 @@
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="#">Theory</a>
+            <a href="#"><?= $t->{'Theory'}; ?></a>
          </li>
       </ul>
    </div>
@@ -103,7 +98,7 @@
    <div class="progress">
       <div class="progress-bar blue-hoki" id="progressBar" role="progressbar" aria-valuenow="<?=$progress?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$progress?>%">
          <span id="progressCount" style="color: <? $color = $progress < 5 ? "black" : "white"; echo $color; ?>">
-         <?=$progress?>% Complete </span>
+         <?=$progress?>% <?= $t->{'Complete'}; ?> </span>
       </div>
    </div>
    <div class="row">
@@ -114,7 +109,7 @@
                <div class="portlet light">
                   <div class="portlet-title">
                      <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
-                        <span class="caption-subject font-green-sharp bold uppercase">LEARNING </span>
+                        <span class="caption-subject font-green-sharp bold uppercase"><?= $t->{'LEARNING'}; ?> </span>
                      </div>
                      <div class="actions">
                         <div class="btn-group">
@@ -136,7 +131,7 @@
                               </li> -->
                               <li>
                                  <a href="details.php?s=<?=$study->id?>">
-                                 <i class="i"></i> Finish training </a>
+                                 <i class="i"></i> <?= $t->{'Finish training'}; ?> </a>
                               </li>
                            </ul>
                         </div>
@@ -180,7 +175,7 @@
                       <?php if ($showHistory == true): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_1">
-                           <i class="fa fa-birthday-cake"></i> History </a>
+                           <i class="fa fa-birthday-cake"></i> <?= $t->{'History'}; ?> </a>
                            <span class="after">
                            </span>
                         </li>
@@ -189,28 +184,28 @@
                       <?php if ($showGameStyle == true): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_2">
-                           <i class="fa fa-puzzle-piece"></i> Game Style </a>
+                           <i class="fa fa-puzzle-piece"></i> <?= $t->{'Game Style'}; ?> </a>
                         </li>
                       <?php endif; ?>
 
                       <?php if ($showMainGrandMasters): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_3">
-                           <i class="fa fa-users"></i> Main Grandmasters </a>
+                           <i class="fa fa-users"></i> <?= $t->{'Main Grandmasters'}; ?> </a>
                         </li>
                       <?php endif; ?>
 
                       <?php if ($showVariations): ?>
                         <li class="active">
                            <a data-toggle="tab" href="#tab_4">
-                           <i class="fa fa-bars"></i> Variations </a>
+                           <i class="fa fa-bars"></i> <?= $t->{'Variations'}; ?> </a>
                         </li>
                       <?php endif; ?>
 
                       <?php if ($showBibliography): ?>
                         <li>
                            <a data-toggle="tab" href="#tab_5">
-                           <i class="fa fa-graduation-cap"></i> Bibliography </a>
+                           <i class="fa fa-graduation-cap"></i> <?= $t->{'Bibliography'}; ?> </a>
                         </li>
                       <?php endif; ?>
 
@@ -227,7 +222,7 @@
                   <div class="portlet-title">
                      <div class="caption">
                         <i class="icon-bar-chart font-green-sharp hide"></i>
-                        <span class="caption-helper">OPENING:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->eco->name?></span>
+                        <span class="caption-helper"><?= $t->{'STUDY'}; ?>:</span> &nbsp; <span class="caption-subject font-green-sharp bold uppercase"><?=$study->name?></span>
                      </div>
                   </div>
                   <!-- end PROJECT HEAD -->
@@ -239,20 +234,8 @@
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
-                                          <span class="caption-subject bold uppercase"> History</span>
+                                          <span class="caption-subject bold uppercase"> <?= $t->{'History'}; ?></span>
                                        </div>
-                                       <!-- <div class="actions">
-                                          <div class="btn-group">
-                                             <div class="md-checkbox">
-                                                <input type="checkbox" id="checkbox-history" class="md-check" >
-                                                <label for="checkbox-history">
-                                                <span></span>
-                                                <span class="check"></span>
-                                                <span class="box"></span>
-                                                Mark as learned </label>
-                                             </div>
-                                          </div>
-                                       </div> -->
                                     </div>
                                     <div class="portlet-body">
                                        <div>
@@ -267,20 +250,8 @@
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
-                                          <span class="caption-subject bold uppercase"> Game Style</span>
+                                          <span class="caption-subject bold uppercase"> <?= $t->{'Game Style'}; ?></span>
                                        </div>
-                                       <!-- <div class="actions">
-                                          <div class="btn-group">
-                                             <div class="md-checkbox">
-                                                <input type="checkbox" id="checkbox-game-style" class="md-check" >
-                                                <label for="checkbox-game-style">
-                                                <span></span>
-                                                <span class="check"></span>
-                                                <span class="box"></span>
-                                                Mark as learned </label>
-                                             </div>
-                                          </div>
-                                       </div> -->
                                     </div>
                                     <div class="portlet-body">
                                        <div>
@@ -295,20 +266,8 @@
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
-                                          <span class="caption-subject bold uppercase"> Main Grandmasters</span>
+                                          <span class="caption-subject bold uppercase"> <?= $t->{'Main Grandmasters'}; ?></span>
                                        </div>
-                                       <!-- <div class="actions">
-                                          <div class="btn-group">
-                                             <div class="md-checkbox">
-                                                <input type="checkbox" id="checkbox-main-players" class="md-check" >
-                                                <label for="checkbox-main-players">
-                                                <span></span>
-                                                <span class="check"></span>
-                                                <span class="box"></span>
-                                                Mark as learned </label>
-                                             </div>
-                                          </div>
-                                       </div> -->
                                     </div>
                                     <div class="portlet-body">
                                        <div>
@@ -325,7 +284,7 @@
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
-                                          <span class="caption-subject bold uppercase"> VARIATIONS</span>
+                                          <span class="caption-subject bold uppercase"> <?= $t->{'VARIATIONS'}; ?></span>
                                        </div>
                                     </div>
                                     <div class="portlet-body">
@@ -366,7 +325,7 @@
                                                 <h4 style="cursor: pointer" class="openModalLine" id="<?=$line->variationID."_".$line->id?>" data-toggle="modal" data-studyid="<?=$study->id?>" data-varid="<?=$line->variationID?>" data-varname="<?=$variation->name?>" data-vartext="<?=$variation->text?>" data-lineid="<?=$line->id?>"
                                                   data-linetext="<?=$line->text?>" data-linename="<?=$line->name?>" data-progress="<?=$checked?>" data-pgn="<?=$line->pgn?>">
 
-    									                             <span>&#8627; <?=$line->name ?></span> <i style="<?=$colorChecked?>" class="<?=$iconChecked?> pull-right"></i><span style="color:lightgray; font-weight:lighter" class="small light pull-right">(Updated: <?=fnDateDBtoVisual($line->dateCreated)?>)</span>
+    									                             <span>&#8627; <?=$line->name ?></span> <i style="<?=$colorChecked?>" class="<?=$iconChecked?> pull-right"></i><span style="color:lightgray; font-weight:lighter" class="small light pull-right">(<?= $t->{'Updated'}; ?>: <?=fnDateDBtoVisual($line->dateCreated)?>)</span>
                                                  </h4>
     							                            </li>
                                             </ul>
@@ -391,7 +350,7 @@
 
                                        <div class="modal-header">
                                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                                         <h4 class="modal-title" id="lineNameTitle">Opening Line</h4>
+                                         <h4 class="modal-title" id="lineNameTitle"><?= $t->{'Opening Line'}; ?></h4>
                                        </div>
                                        <div class="modal-body form">
                                          <form class="form-horizontal form-row-seperated">
@@ -409,7 +368,7 @@
                                                                   <div class="panel-heading">
                                                                     <h4 class="panel-title">
                                                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse_variation" aria-expanded="false">
-                                                                    About <span id="variationName"></span> </a>
+                                                                    <?= $t->{'About'}; ?> <span id="variationName"></span> </a>
                                                                     </h4>
                                                                   </div>
                                                                   <div id="collapse_variation" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
@@ -424,7 +383,7 @@
                                                                   <div class="panel-heading">
                                                                     <h4 class="panel-title">
                                                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_line" aria-expanded="false">
-                                                                    About <span id="lineName"></span> </a>
+                                                                    <?= $t->{'About'}; ?> <span id="lineName"></span> </a>
                                                                     </h4>
                                                                   </div>
                                                                   <div id="collapse_line" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
@@ -440,7 +399,7 @@
                                                  <div class="portlet-body">
                                                    <iframe name="iframeLine" id="iframeLine" onload="resizeIframe(this)" src="" scrolling="yes"
                                                      frameborder="0" border="0" cellspacing="0"
-                                                     style="border-style: none;width: 100%; height: 500px;"></iframe>
+                                                     style="border-style: none;width: 100%; height: 420px;"></iframe>
                                                  </div>
 
 
@@ -455,7 +414,7 @@
                                                 <span></span>
                                                 <span class="check"></span>
                                                 <span class="box"></span>
-                                                Mark as learned </label>
+                                                <?= $t->{'Mark as learned'}; ?> </label>
                                              </div>
                                           </div>
 
@@ -474,7 +433,7 @@
                                  <div class="portlet light">
                                     <div class="portlet-title">
                                        <div class="caption">
-                                          <span class="caption-subject bold uppercase"> Bibliography</span>
+                                          <span class="caption-subject bold uppercase"> <?= $t->{'Bibliography'}; ?></span>
                                        </div>
                                     </div>
                                     <div class="portlet-body">
@@ -578,12 +537,12 @@
                  if(response["status"] == "success"){
                    progress = response["progress"];
                   // console.log(response);
-                   toastr.success('Saved changes!');
+                   toastr.success('<?= $t->{'Saved changes!'}; ?>');
                  }else if(response["status"] == "error"){
-                   toastr.warning('Error. Please, try again later.');
+                   toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                  }
                }, error: function (result) {
-                   toastr.error('Error. Please, try again later.');
+                   toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                }
            });
         });

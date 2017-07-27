@@ -3,7 +3,6 @@
    require_once ('../lib/config.php');
    require_once('../models/Study.php');
    require_once('../models/InterfaceLanguage.php');
-   require_once('../models/Eco.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ('openings-builder');
@@ -11,9 +10,6 @@
 
    $interfaceLanguage = new InterfaceLanguage();
    $arrInterfaceLanguages = $interfaceLanguage->getAllInterfaceLanguages();
-
-   $eco = new Eco();
-   $arrEcos = $eco->getALlEcos();
 
    ?>
 <!-- BEGIN CONTENT -->
@@ -24,7 +20,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Create new study <small></small>
+            <?= $t->{'Create new study'}; ?> <small></small>
          </h3>
       </div>
    </div>
@@ -32,15 +28,15 @@
       <ul class="page-breadcrumb">
         <li>
            <i class="fa fa-home"></i>
-           <a href="#">Openings</a>
+           <a href="#"><?= $t->{'Openings'}; ?></a>
            <i class="fa fa-angle-right"></i>
         </li>
          <li>
-            <a href="./list.php">Builder</a>
+            <a href="./list.php"><?= $t->{'Builder'}; ?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="create-study.php">Create study</a>
+            <a href="create-study.php"><?= $t->{'Create study'}; ?></a>
          </li>
       </ul>
    </div>
@@ -49,8 +45,8 @@
       <div class="portlet-title">
          <div class="caption">
             <i class="fa fa-bars font-green-sharp"></i>
-            <span class="caption-subject font-green-sharp bold uppercase">NEW STUDY</span>
-            <span class="caption-helper">All fields are required</span>
+            <span class="caption-subject font-green-sharp bold uppercase"><?= $t->{'NEW STUDY'}; ?></span>
+            <span class="caption-helper"><?= $t->{'All fields are required'}; ?></span>
          </div>
       </div>
       <div class="portlet-body form">
@@ -60,10 +56,10 @@
             <div class="form-body">
 
                <div class="form-group">
-                  <label class="col-md-3 control-label">Language</label>
+                  <label class="col-md-3 control-label"><?= $t->{'Language<'}; ?>/label>
                   <div class="col-md-6">
                      <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
-                        <option value="">Select...</option>
+                        <option value=""><?= $t->{'Select...'}; ?></option>
 
                         <?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
@@ -73,61 +69,45 @@
 
                      </select>
                      <span class="help-block">
-                     Select the language of this material. You can submit studies only in the supported languages. </span>
+                     <?= $t->{'Select the language of this material. You can submit studies only in the supported languages.'}; ?> </span>
                   </div>
                </div>
 
                <div class="form-group">
-                  <label class="col-md-3 control-label">Name</label>
+                  <label class="col-md-3 control-label"><?= $t->{'Name'}; ?></label>
                   <div class="col-md-6">
-                     <input type="text" class="form-control" placeholder="E.g: Caro-Kann for beginners" id="name" name="name">
+                     <input type="text" class="form-control" placeholder="<?= $t->{'E.g: Caro-Kann for beginners'}; ?>" id="name" name="name">
                      <span class="help-block">
-                     Use a small name for your study.</span>
+                     <?= $t->{'Use a small name for your study'}; ?>.</span>
                   </div>
                </div>
 
                <div class="form-group">
-                  <label class="col-md-3 control-label">Side</label>
+                  <label class="col-md-3 control-label"><?= $t->{'Side'}; ?></label>
                   <div class="col-md-6">
                      <select class="form-control" id="side" name="side">
-                        <option value="">Choose the side</option>
-                        <option value="W">White</option>
-                        <option value="B">Black</option>
+                        <option value=""><?= $t->{'Choose the side'}; ?></option>
+                        <option value="W"><?= $t->{'White'}; ?></option>
+                        <option value="B"><?= $t->{'Black'}; ?></option>
                      </select>
                      <span class="help-block">
-                     Both sides are <strong>NOT</strong> supported at this moment. </span>
+                     <?= $t->{'Both sides are <strong>NOT</strong> supported at this moment.'}; ?> </span>
                   </div>
                </div>
 
                <div class="form-group">
-                  <label class="col-md-3 control-label">ECO Opening</label>
+                  <label class="col-md-3 control-label"><?= $t->{'About this <strong>STUDY</strong>'}; ?></label>
                   <div class="col-md-6">
-                     <select class="form-control select2me" id="eco" name="eco">
-                        <option value="">Select...</option>
-                        <?php foreach ($arrEcos as $key => $eco): ?>
-
-                          <option value="<?=$eco->id?>">[<?=$eco->code?>] - <?=$eco->name?> (<?=$eco->line?>)</option>
-
-                        <?php endforeach; ?>
-                     </select>
-                     <span class="help-block">
-                     If you don't know what is the ECO code, please consider read <a href="https://en.wikipedia.org/wiki/List_of_chess_openings">this</a>.</span>
-                  </div>
-               </div>
-
-               <div class="form-group">
-                  <label class="col-md-3 control-label">About this <strong>STUDY</strong></label>
-                  <div class="col-md-6">
-                     <textarea name="about" id="about" class="form-control" rows="6" placeholder="E.g: This study consists of the preparation of the most popular lines of the Caro-Kann defense. The lines prepared here are able to match the position quickly, guaranteeing a solid position, a very balanced half game, giving the black player the chance to reach the final with good advantages. All lines of this study were taken from Play the Caro-Kann, by International Master Jovanka Houska."></textarea>
+                     <textarea name="about" id="about" class="form-control" rows="6" placeholder=""></textarea>
                      <span class="help-block">
                        <div id="countAbout" class="pull-right"></div>
-                     Describe the main details of your <strong>STUDY</strong>. </span>
+                     <?= $t->{'Describe the main details of your <strong>STUDY</strong>.'}; ?> </span>
                   </div>
                </div>
 
                <div class="row">
-                  <span class="badge badge-roundless badge-danger">NOTE</span>
-                  <small>By clicking on <strong>CREATE</strong> below, you can start the basis of your study, with theory and practice. Just proceed if you are sure that you have completed this step.</small>
+                  <span class="badge badge-roundless badge-danger"><?= $t->{'NOTE'}; ?></span>
+                  <small><?= $t->{'By clicking on <strong>CREATE</strong> below, you can start the basis of your study, with theory and practice. Just proceed if you are sure that you have completed this step.'}; ?></small>
                </div>
 
             </div>
@@ -135,8 +115,8 @@
             <div class="form-actions">
                <div class="row">
                   <div class="col-md-offset-3 col-md-9">
-                     <button type="submit" class="btn green">Create</button>
-                     <button type="button" class="btn default">Cancel</button>
+                     <button type="submit" class="btn green"><?= $t->{'Create'}; ?></button>
+                     <button type="button" class="btn default"><?= $t->{'Cancel'}; ?></button>
                   </div>
                </div>
             </div>
@@ -154,14 +134,6 @@
    // initiate layout and plugins
    Metronic.init(); // init metronic core components
    Layout.init(); // init current layou
-
-  //  $('#about').on("keydown",function(event) {
-  //    var l = $(this).val().length;
-  //    var left = 1000 - l;
-  //    $('#countAbout').html('<span class="label label-success">'+ left + ' / 1000' +'</span>');
-  //    $('#countAbout').show();
-   //
-  //  });
 
    var FormValidation = function () {
 
@@ -182,9 +154,6 @@
                    side: {
                        required: true
                    },
-                   eco: {
-                       required: true
-                   },
                    about: {
                        required: true,
                        minlength: 20
@@ -195,7 +164,7 @@
                },
 
                invalidHandler: function (event, validator) { //display error alert on form submit
-                   toastr.error("You have some form errors. Please check below.");
+                   toastr.error("<?= $t->{'You have some form errors. Please check below.'}; ?>");
                },
 
                highlight: function (element) { // hightlight error inputs
@@ -221,7 +190,6 @@
                      data: {interfaceLanguage: $("#interfaceLanguage").val(),
                            name: $("#name").val(),
                            side: $("#side").val(),
-                           eco: $("#eco").val(),
                            about: $("#about").val()},
                      success: function (result) {
 
@@ -229,13 +197,13 @@
 
                        if(response["status"] == "success"){
                          var insertedID = response["studyID"];
-                         sessionStorage.setItem("Success","Your study was successfully created!");
+                         sessionStorage.setItem("Success","<?= $t->{'Your study was successfully created!'}; ?>");
                          window.location.replace("./details.php?s="+insertedID);
                        }else{
-                         toastr.error('Error. Please, try again later.');
+                         toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                        }
                      }, error: function (result) {
-                         toastr.error('Error. Please, try again later.');
+                         toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                      }
                  });
 

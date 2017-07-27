@@ -6,7 +6,7 @@
    require_once ('../models/User.php');
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ('settings');
+   fnInicia_Sessao ('settings-appearance');
    include('../imports/header.php');
 
    $userID = $_SESSION['USER']['ID'];
@@ -30,7 +30,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Settings <small></small>
+            <?= $t->{'Settings'}; ?> <small></small>
          </h3>
       </div>
    </div>
@@ -38,7 +38,11 @@
       <ul class="page-breadcrumb">
          <li>
             <i class="fa fa-home"></i>
-            <a href="#">Settings</a>
+            <a href="#"><?= $t->{'Settings'}; ?></a>
+            <i class="fa fa-angle-right"></i>
+         </li>
+         <li>
+            <a href="./settings.php"><?= $t->{'Appearance'}; ?></a>
          </li>
       </ul>
    </div>
@@ -54,7 +58,7 @@
    					<div class="portlet">
    						<div class="portlet-title">
    							<div class="caption">
-   								General
+   								<?= $t->{'General'}; ?>
    							</div>
    							<div class="tools">
    								<a href="javascript:;" class="collapse" data-original-title="" title="">
@@ -65,10 +69,10 @@
                 <div class="portlet-body form">
                       <div class="form-body">
                          <div class="form-group">
-                            <label class="col-md-3 control-label">Site language</label>
+                            <label class="col-md-3 control-label"><?= $t->{'Site language'}; ?></label>
                             <div class="col-md-5">
                               <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
-                                 <option value="">Select...</option>
+                                 <option value=""><?= $t->{'Select...'}; ?></option>
 
                                  <?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
@@ -91,7 +95,7 @@
    					<div class="portlet">
    						<div class="portlet-title">
    							<div class="caption">
-   								Layout
+   								<?= $t->{'Layout'}; ?>
    							</div>
    							<div class="tools">
    								<a href="javascript:;" class="collapse" data-original-title="" title="">
@@ -101,10 +105,10 @@
    						<div class="portlet-body">
                    <div class="form-body">
                       <div class="form-group">
-                         <label class="col-md-3 control-label">Theme</label>
+                         <label class="col-md-3 control-label"><?= $t->{'Theme'}; ?></label>
                          <div class="col-md-5">
                            <select class="form-control select2me" id="theme" name="theme">
-                              <option value="">Select...</option>
+                              <option value=""><?= $t->{'Select...'}; ?></option>
 
                               <?php foreach ($arrThemes as $key => $theme): ?>
 
@@ -177,13 +181,13 @@ jQuery(document).ready(function() {
                   var response = JSON.parse(result);
 
                   if(response["status"] == "success"){
-                    sessionStorage.setItem("Success","Saved changes!");
+                    sessionStorage.setItem("Success","<?= $t->{'Saved changes!'}; ?>");
                     location.reload();
                   }else if(response["status"] == "error"){
-                    toastr.warning('Error. Please, try again later.');
+                    toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                   }
                 }, error: function (result) {
-                    toastr.error('Error. Please, try again later.');
+                    toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                 }
             });
         });

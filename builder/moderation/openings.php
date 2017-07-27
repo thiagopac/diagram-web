@@ -32,7 +32,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Openings <small></small>
+					<?= $t->{'Openings'}; ?> <small></small>
 					</h3>
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
@@ -41,11 +41,11 @@
 				 <ul class="page-breadcrumb">
 					 <li>
 							<i class="fa fa-home"></i>
-							<a href="#">Moderation</a>
+							<a href="#"><?= $t->{'Moderation'}; ?></a>
 							<i class="fa fa-angle-right"></i>
 					 </li>
 						<li>
-							 <a href="./openings.php">Openings</a>
+							 <a href="./openings.php"><?= $t->{'Openings'}; ?></a>
 						</li>
 				 </ul>
 			</div>
@@ -70,16 +70,22 @@
 										 #
 									</th>
 									<th>
-										 Name
+										 <?= $t->{'Name'}; ?>
 									</th>
 									<th>
-										Author
+										<?= $t->{'Author'}; ?>
 									</th>
 									<th>
-										Status
+										<?= $t->{'Status'}; ?>
 									</th>
 									<th>
-										Actions
+										<?= $t->{'Updated'}; ?>
+									</th>
+									<th>
+										<?= $t->{'Deleted'}; ?>
+									</th>
+									<th>
+										<?= $t->{'Actions'}; ?>
 									</th>
 								</tr>
 								</thead>
@@ -96,16 +102,19 @@
 											<?=$study->name?>
 										</td>
 										<td>
-											 <? $study->author = $user->getUserWithId($study->authorID); echo $study->author->fullName?>
+											 <?$study->author = $user->getUserWithId($study->authorID); echo $study->author->fullName?>
 										</td>
 										<td>
-											 <? $study->active == "0" ? $status = "<span style='color:red'><strong>INACTIVE</strong></span>" : $status = "Active"; echo $status; ?>
+											 <?$study->active == "0" ? $status = "<span style='color:red'><strong>".$t->{'INACTIVE'}."</strong></span>" : $status = $t->{'Active'}; echo $status; ?>
 										</td>
 										<td>
 											<?=$study->dateUpdated?>
 										</td>
 										<td>
-											 <a href="edit-opening.php?s=<?=$study->id?>">Editar</a> | <a href="../exec/?e=adm_del&s=<?=$study->id?>" class="confirmation">Apagar</a>
+											 <?=$strDeleted = $study->deleted == 1 ? $t->{'YES'} : $t->{'NO'} ;?>
+										</td>
+										<td>
+											 <a href="edit-opening.php?s=<?=$study->id?>"><?= $t->{'Edit'}; ?></a> | <a id="<?=$study->id?>" class="deleteStudy"><?= $t->{'Delete'}; ?></a>
 										</td>
 									</tr>
 									<?
@@ -124,88 +133,156 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-        jQuery(document).ready(function() {
-           // initiate layout and plugins
-			Metronic.init(); // init metronic core components
-			Layout.init(); // init current layout
-			QuickSidebar.init() // init quick sidebar
-      // ComponentsFormTools.init();
-        });
+jQuery(document).ready(function() {
+// initiate layout and plugins
+	Metronic.init(); // init metronic core components
+	Layout.init(); // init current layout
 
-    $('.confirmation').on('click', function () {
-        return confirm('Tem certeza?');
-    });
+	$(document).ready(function () {
+		if(sessionStorage.getItem("Success")){
+				toastr.success(sessionStorage.getItem("Success"));
+				sessionStorage.clear();
+		}
 
-		var table = $('#table_openings');
+		if(sessionStorage.getItem("Warning")){
+				toastr.warning(sessionStorage.getItem("Warning"));
+				sessionStorage.clear();
+		}
 
-		// begin first table
-		table.dataTable({
+		if(sessionStorage.getItem("Info")){
+				toastr.info(sessionStorage.getItem("Info"));
+				sessionStorage.clear();
+		}
 
-				// Internationalisation. For more info refer to http://datatables.net/manual/i18n
-				"language": {
-						"aria": {
-								"sortAscending": ": activate to sort column ascending",
-								"sortDescending": ": activate to sort column descending"
+		if(sessionStorage.getItem("Error")){
+				toastr.error(sessionStorage.getItem("Error"));
+				sessionStorage.clear();
+		}
+
+	});
+
+	$(document).ready(function () {
+		$(".deleteStudy").click(function () {
+
+			var buttonTapped = $(this);
+
+			bootbox.dialog({
+					message: "<?= $t->{'Are you sure?'}; ?>",
+					title: "<?= $t->{'Attention'}; ?>",
+					buttons: {
+						main: {
+							label: "<?= $t->{'YES'}; ?>",
+							className: "green",
+							callback: function() {
+
+								$.ajax({
+										url: './action/del-study.php',
+										type: 'POST',
+										data: {study: buttonTapped.attr('id')},
+										success: function (result) {
+											var response = JSON.parse(result);
+
+											if(response["status"] == "success"){
+												//mostrar toaster após reload
+												sessionStorage.setItem("Success","<?= $t->{'Saved changes!'}; ?>");
+												location.reload();
+											}else if(response["status"] == "error"){
+												toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
+											}
+										}, error: function (result) {
+												toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
+										}
+								});
+
+							}
 						},
-						"emptyTable": "No data available in table",
-						"info": "Showing _START_ to _END_ of _TOTAL_ entries",
-						"infoEmpty": "No entries found",
-						"infoFiltered": "(filtered1 from _MAX_ total entries)",
-						"lengthMenu": "Show _MENU_ entries",
-						"search": "Search:",
-						"zeroRecords": "No matching records found"
-				},
+						danger: {
+							label: "<?= $t->{'NO'}; ?>",
+							className: "red",
+							callback: function() {
 
-				// Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
-				// setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
-				// So when dropdowns used the scrollable div should be removed.
-				// "dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
-
-				"bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
-
-				"columns": [{
-						"orderable": true
-				}, {
-						"orderable": true
-				}, {
-						"orderable": true
-				}, {
-						"orderable": true
-				}, {
-						"orderable": true
-				}, {
-						"orderable": false
-				}],
-				"lengthMenu": [
-						[20, 50, 100, -1],
-						[20, 50, 100, "All"] // change per page values here
-				],
-				// set the initial value
-				"pageLength": 20,
-				"pagingType": "bootstrap_full_number",
-				"language": {
-						"search": "Search: ",
-						"lengthMenu": "  _MENU_ records",
-						"paginate": {
-								"previous":"Prev",
-								"next": "Next",
-								"last": "Last",
-								"first": "First"
+							}
 						}
-				},
-				"columnDefs": [{  // set default column settings
-						'orderable': false,
-						'targets': [0]
-				}, {
-						"searchable": false,
-						"targets": [0]
-				}],
-				"order": [
-						[1, "asc"]
-				] // set first column as a default sort by asc
-		});
+					}
+			});
 
- </script>
+		});
+	});
+
+	var table = $('#table_openings');
+
+	// begin first table
+	table.dataTable({
+
+			// Internationalisation. For more info refer to http://datatables.net/manual/i18n
+			"language": {
+					"aria": {
+							"sortAscending": ": activate to sort column ascending",
+							"sortDescending": ": activate to sort column descending"
+					},
+					"emptyTable": "<?= $t->{'No data available in table'}; ?>",
+					"info": "<?= $t->{'Showing'}; ?> _START_ <?= $t->{'to'}; ?> _END_ <?= $t->{'of'}; ?> _TOTAL_ <?= $t->{'entries'}; ?>",
+					"infoEmpty": "<?= $t->{'No entries found'}; ?>",
+					"infoFiltered": "(filtered1 from _MAX_ total entries)",
+					"lengthMenu": "Show _MENU_ entries",
+					"search": "<?= $t->{'Search'}; ?>:",
+					"zeroRecords": "<?= $t->{'No matching records found'}; ?>"
+			},
+
+			// Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+			// setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
+			// So when dropdowns used the scrollable div should be removed.
+			// "dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+
+			"bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
+
+			"columns": [{
+					"orderable": true
+			}, {
+					"orderable": true
+			}, {
+					"orderable": true
+			}, {
+					"orderable": true
+			}, {
+					"orderable": true
+			}, {
+					"orderable": true
+			}, {
+					"orderable": false
+			}],
+			"lengthMenu": [
+					[20, 50, 100, -1],
+					[20, 50, 100, "All"] // change per page values here
+			],
+			// set the initial value
+			"pageLength": 20,
+			"pagingType": "bootstrap_full_number",
+			"language": {
+					"search": "<?= $t->{'Search'}; ?>: ",
+					"lengthMenu": "  _MENU_ <?= $t->{'records'}; ?>",
+					"paginate": {
+							"previous":"<?= $t->{'Prev'}; ?>",
+							"next": "<?= $t->{'Next'}; ?>",
+							"last": "<?= $t->{'Last'}; ?>",
+							"first": "<?= $t->{'First'}; ?>"
+					}
+			},
+			"columnDefs": [{  // set default column settings
+					'orderable': false,
+					'targets': [0]
+			}, {
+					"searchable": false,
+					"targets": [0]
+			}],
+			"order": [
+					[1, "asc"]
+			] // set first column as a default sort by asc
+	});
+
+});
+
+</script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

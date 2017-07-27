@@ -252,18 +252,15 @@ function fnHeaderLogin()
 	}
 
 # RETORNO DADOS DO USUARIO NO LOGIN
-function fnDB_USER_INFO($DB,$strLogin,$strPass)
-	{
+function fnDB_USER_INFO($DB,$strLogin,$strPass) {
 	global $DATABASE_NAME;
 	$error = false;
 
-
-	$strSQL = "SELECT ID, FIRSTNAME, LASTNAME, LOGIN, GRANTS, ID_TYPE_USER
+	$strSQL = "SELECT ID, FIRSTNAME, LASTNAME, LOGIN, GRANTS, ID_TYPE_USER, ID_COUNTRY, ID_THEME, ID_INTERFACE_LANGUAGE
 				FROM $DATABASE_NAME.USER
 				WHERE LOGIN = '$strLogin'
 				AND PASSWORD = '$strPass'
 				AND STATUS=1";
-
 
 	$qy = mysqli_query($DB, $strSQL) or $error = true;
 

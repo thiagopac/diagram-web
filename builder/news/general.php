@@ -16,7 +16,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            General News <small></small>
+            <?= $t->{'General New'}; ?>s <small></small>
          </h3>
       </div>
    </div>
@@ -24,11 +24,11 @@
       <ul class="page-breadcrumb">
          <li>
             <i class="fa fa-home"></i>
-            <a href="#">News</a>
+            <a href="#"><?= $t->{'News'}; ?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="general.php">General News</a>
+            <a href="general.php"><?= $t->{'General News'}; ?></a>
          </li>
       </ul>
    </div>

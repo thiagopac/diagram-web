@@ -44,7 +44,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Edit Acquisition <small></small>
+					<?= $t->{'Edit Acquisition'}; ?> <small></small>
 					</h3>
 
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -54,15 +54,15 @@
 				 <ul class="page-breadcrumb">
 					 <li>
 							<i class="fa fa-home"></i>
-							<a href="#">Moderation</a>
+							<a href="#"><?= $t->{'Moderation'}; ?></a>
 							<i class="fa fa-angle-right"></i>
 					 </li>
 						<li>
-							 <a href="./acquisitions.php">Acquisitions</a>
+							 <a href="./acquisitions.php"><?= $t->{'Acquisitions'}; ?></a>
 							 <i class="fa fa-angle-right"></i>
 						</li>
 						<li>
-							 <a href="edit-acquisition.php?a=<?=$acquisition->id?>">Edit Acquisition</a>
+							 <a href="edit-acquisition.php?a=<?=$acquisition->id?>"><?= $t->{'Edit Acquisition'}; ?></a>
 						</li>
 				 </ul>
 			</div>
@@ -70,7 +70,7 @@
 
 					<div class="portlet gren">
 						<div class="portlet-title">
-							<div class="caption">Acquisition Details</div>
+							<div class="caption"><?= $t->{'Acquisition Details'}; ?></div>
 							</div>
 
 						<div class="portlet-body form">
@@ -85,11 +85,11 @@
 									</div>
 									<? } ?>
 									<div class="form-group">
-										<label class="control-label col-md-3">User</span>
+										<label class="control-label col-md-3"><?= $t->{'User'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											 <select class="form-control select2me" id="user" name="user">
-													<option value="">Select...</option>
+													<option value=""><?= $t->{'Select...'}; ?></option>
 													<?php foreach ($arrUser as $key => $user): ?>
 
 														<?php $selected = ($acquisition->userID == $user->id) ? "selected" : null ;?>
@@ -101,11 +101,11 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Study</span>
+										<label class="control-label col-md-3"><?= $t->{'Study'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											 <select class="form-control select2me" id="studyID" name="studyID">
-													<option value="">Select...</option>
+													<option value=""><?= $t->{'Select...'}; ?></option>
 													<?php foreach ($arrStudies as $key => $study): ?>
 
 														<?php $selected = ($study->id == $acquisition->studyID) ? "selected" : null ;?>
@@ -117,7 +117,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Date</span>
+										<label class="control-label col-md-3"><?= $t->{'Date'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
@@ -127,37 +127,37 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Approved</span>
+										<label class="control-label col-md-3"><?= $t->{'Approved'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
 												<select class="form-control" id="active" name="active">
 													<?php $selectedInactive = ($acquisition->active == "0") ? "selected" : null;?>
 													<?php $selectedActive = ($acquisition->active == "1") ? "selected" : null;?>
-													 <option value="0" <?=$selectedInactive?>>NO</option>
-													 <option value="1" <?=$selectedActive?>>YES</option>
+													 <option value="0" <?=$selectedInactive?>><?= $t->{'NO'}; ?></option>
+													 <option value="1" <?=$selectedActive?>><?= $t->{'YES'}; ?></option>
 												</select>
 											</div>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Deleted</span>
+										<label class="control-label col-md-3"><?= $t->{'Deleted'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
 												<select class="form-control" id="deleted" name="deleted">
 													<?php $selectedInactive = ($acquisition->deleted == "0") ? "selected" : null;?>
 													<?php $selectedActive = ($acquisition->deleted == "1") ? "selected" : null;?>
-													 <option value="0" <?=$selectedInactive?>>NO</option>
-													 <option value="1" <?=$selectedActive?>>YES</option>
+													 <option value="0" <?=$selectedInactive?>><?= $t->{'NO'}; ?></option>
+													 <option value="1" <?=$selectedActive?>><?= $t->{'YES'}; ?></option>
 												</select>
 											</div>
 										</div>
 									</div>
 
 								<div class="modal-footer">
-									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
+									<button type="button" onclick="history.go(-1)" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
 									<button type="submit" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
@@ -201,7 +201,7 @@ jQuery(document).ready(function() {
 								},
 
 								invalidHandler: function (event, validator) { //display error alert on form submit
-										toastr.error("You have some form errors. Please check below.");
+										toastr.error("<?= $t->{'You have some form errors. Please check below.'}; ?>");
 								},
 
 								highlight: function (element) { // hightlight error inputs
@@ -234,9 +234,9 @@ jQuery(document).ready(function() {
 												var response = JSON.parse(result);
 
 												if(response["status"] == "success"){
-													toastr.success('Saved changes!');
+													toastr.success('<?= $t->{'Saved changes!'}; ?>');
 												}else if(response["status"] == "error"){
-													toastr.warning('Error. Please, try again later.');
+													toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
 												}
 											}
 									});

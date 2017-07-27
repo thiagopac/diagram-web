@@ -61,18 +61,6 @@ class User {
 			$this->themeID = $array['THEME_ID'];
 
 			$this->fullName = $this->firstName." ".$this->lastName;
-
-			// $country = new Country();
-			// $this->country = $country->getCountryWithID($array['COUNTRY_ID']);
-			//
-			// $language = new Language();
-			// $this->language = $language->getLanguageWithID($array['LANGUAGE_ID']);
-			//
-			// $interfaceLanguage = new InterfaceLanguage();
-			// $this->interfaceLanguage = $interfaceLanguage->getInterfaceLanguageWithID($array['INTERFACE_LANGUAGE_ID']);
-			//
-			// $theme = new Theme();
-			// $this->theme = $theme->getThemeWithID($array['THEME_ID']);
 		}
   }
 
@@ -195,6 +183,21 @@ WHERE U.ID_TYPE_USER = 1";
 		return $arrUsers;
 	}
 
+	public function getInterfaceLanguageForUserWithId($paramUser){
+
+		$DB = fnDBConn();
+
+		$SQL = "SELECT U.ID_INTERFACE_LANGUAGE AS INTERFACE_LANGUAGE_ID
+FROM USER AS U
+WHERE U.ID = $paramUser";
+
+		$SQL = $SQL.self::$whereDeleted;
+
+		$RESULT = fnDB_DO_SELECT($DB,$SQL);
+
+		return $RESULT["INTERFACE_LANGUAGE_ID"];
+	}
+
 	public function getUserWithId($paramUser){
 
 		$DB = fnDBConn();
@@ -264,6 +267,82 @@ WHERE U.ID = '$paramUser->id'";
 
 		//Adiciona registro na tabela de auditoria
 	  fnDB_LOG_AUDIT_ADD($DB,"O usuário atualizou os Dados de Usuário.");
+
+		return $RET;
+	}
+
+	public function deleteUser($paramUser){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE USER AS U SET
+		U.DELETED = 1
+WHERE U.ID = '$paramUser->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Apagou um usuário.");
+
+		return $RET;
+	}
+
+	public function updateSelfProfile($paramUser){
+		$DB = fnDBConn();
+
+		$SQL = "UPDATE USER AS U SET
+		U.FIRSTNAME = '$paramUser->firstName',
+		U.LASTNAME = '$paramUser->lastName',
+		U.ELO_FIDE = '$paramUser->eloFide',
+		U.BIRTHDAY = '$paramUser->birthday',
+		U.ID_COUNTRY = '$paramUser->countryID',
+		U.ID_LANGUAGE = '$paramUser->languageID'
+WHERE U.ID = '$paramUser->id'";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"O usuário atualizou seu perfil.");
+
+		return $RET;
+	}
+
+	public function insertUser($paramUser){
+		$DB = fnDBConn();
+
+		$SQL = "INSERT INTO USER
+		(FIRSTNAME,
+		LASTNAME,
+		LOGIN,
+		ELO_FIDE,
+		GRANTS,
+		BIRTHDAY,
+		ID_COUNTRY,
+		ID_LANGUAGE,
+		ID_THEME,
+		ID_INTERFACE_LANGUAGE,
+		STATUS,
+		ID_TYPE_USER,
+		DELETED)
+		VALUES('$paramUser->firstName',
+		'$paramUser->lastName',
+		'$paramUser->login',
+		'$paramUser->eloFide',
+		'$paramUser->grants',
+		'$paramUser->birthday',
+		'$paramUser->countryID',
+		'$paramUser->languageID',
+		'$paramUser->themeID',
+		'$paramUser->interfaceLanguageID',
+		'$paramUser->status',
+		'$paramUser->typeUser',
+		'$paramUser->deleted')";
+
+		$RET = fnDB_DO_EXEC($DB,$SQL);
+
+		// $paramUser->id = $RET[1]; //esse array retorna na posição 0 o número de linhas afetadas pelo update e na posição 1 o id do regitro inserido
+
+		//Adiciona registro na tabela de auditoria
+		fnDB_LOG_AUDIT_ADD($DB,"Novo usuário criado.");
 
 		return $RET;
 	}

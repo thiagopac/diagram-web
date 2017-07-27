@@ -37,7 +37,6 @@
   $user->themeID = $themeID;
   $user->interfaceLanguageID = $interfaceLanguageID;
   $user->status = $status;
-  $user->password = $password;
   $user->typeUser = $typeUser;
   $user->deleted = $deleted;
 

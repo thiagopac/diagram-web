@@ -16,14 +16,14 @@
           404
        </div>
        <div class="details">
-         <h3>Oops! You're lost.</h3>
+         <h3><?= $t->{'Oops! You`re lost.'}; ?></h3>
          <p>
-            We can not find the page you're looking for.<br/>
-            You may have accessed a non-existent page or content belonging to the other person.<br/>
+            <?= $t->{'We can not find the page you`re looking for.'}; ?><br/>
+            <?= $t->{'You may have accessed a non-existent page or content belonging to the other person.'}; ?><br/>
             <br/>
            <a onclick="window.history.go(-1)">
-           Return </a>
-           to the last page you were on.
+           <?= $t->{'Return'}; ?> </a>
+           <?= $t->{'to the last page you were on.'}; ?>
          </p>
        </div>
      </div>

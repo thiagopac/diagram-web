@@ -66,25 +66,6 @@ WHERE 1";
 		return $arrEcos;
 	}
 
-	public function getEcoForStudy($paramStudy){
-
-		$DB = fnDBConn();
-
-		$SQL = "SELECT OE.ID AS OPENING_STUDY_ECO_ID,
-       OE.CODE AS OPENING_STUDY_ECO_CODE,
-       OE.NAME AS OPENING_STUDY_ECO_NAME,
-       OE.LINE AS OPENING_STUDY_ECO_LINE
-FROM OPENING_ECO AS OE
-INNER JOIN OPENING_STUDY AS OS ON OS.ID_OPENING_ECO = OE.ID
-WHERE OS.ID = $paramStudy";
-
-		$RESULT = fnDB_DO_SELECT($DB,$SQL);
-
-		$eco = new Eco($RESULT);
-
-		return $eco;
-	}
-
 	public function getEcoForVariation($paramVariation){
 
 		$DB = fnDBConn();

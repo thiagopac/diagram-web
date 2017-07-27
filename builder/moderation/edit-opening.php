@@ -6,7 +6,6 @@
 	require_once('../models/Price.php');
 	require_once('../models/PaymentSystem.php');
 	require_once('../models/InterfaceLanguage.php');
-	require_once('../models/Eco.php');
 
 	if (empty($_REQUEST['s'])){
 		header('Location: ./');
@@ -31,14 +30,11 @@
 	if ($study->monetization->price->value != 0.00) {
 		$study->currencyAndPrice = $study->monetization->currency->symbol.' '.$study->monetization->price->value;
 	}else{
-		$study->currencyAndPrice = "FREE";
+		$study->currencyAndPrice = $t->{'FREE'};;
 	}
 
 	$interfaceLanguage = new InterfaceLanguage();
 	$arrInterfaceLanguages = $interfaceLanguage->getAllInterfaceLanguages();
-
-	$eco = new Eco();
-	$arrEcos = $eco->getALlEcos();
 
 	$currency = new Currency();
 	$arrCurrencies = $currency->getAllCurrencies();
@@ -60,7 +56,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Edit Opening <small></small>
+					<?= $t->{'Edit Opening'}; ?> <small></small>
 					</h3>
 
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -70,15 +66,15 @@
 				 <ul class="page-breadcrumb">
 					 <li>
 							<i class="fa fa-home"></i>
-							<a href="#">Moderation</a>
+							<a href="#"><?= $t->{'Moderation'}; ?></a>
 							<i class="fa fa-angle-right"></i>
 					 </li>
 						<li>
-							 <a href="./openings.php">Openings</a>
+							 <a href="./openings.php"><?= $t->{'Openings'}; ?></a>
 							 <i class="fa fa-angle-right"></i>
 						</li>
 						<li>
-							 <a href="edit-opening.php?s=<?=$study->id?>">Edit Opening</a>
+							 <a href="edit-opening.php?s=<?=$study->id?>"><?= $t->{'Edit Opening'}; ?></a>
 						</li>
 				 </ul>
 			</div>
@@ -86,10 +82,7 @@
 
 					<div class="portlet gren">
 						<div class="portlet-title">
-							<div class="caption">Master Data</div>
-							<div class="tools">
-									<a href="" class="collapse" data-original-title="" title=""></a>
-								</div>
+							<div class="caption"><?= $t->{'Master Data'}; ?></div>
 							</div>
 
 						<div class="portlet-body form">
@@ -100,7 +93,7 @@
 								<div class="form-body">
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Name</label>
+										<label class="control-label col-md-3"><?= $t->{'Name'}; ?></label>
 										<div class="col-md-6">
 											<div class="input-icon right">
 												<input type="text" class="form-control" id="name" name="name" value="<?=$study->name?>">
@@ -108,10 +101,10 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-3">Language</label>
+										<label class="control-label col-md-3"><?= $t->{'Language'}; ?></label>
 										<div class="col-md-6">
 											 <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
-													<option value="">Select...</option>
+													<option value=""><?= $t->{'Select...'}; ?></option>
 													<?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
 														<?php $selected = ($interfaceLanguage->id == $study->interfaceLanguageID) ? "selected" : null ;?>
@@ -122,62 +115,47 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-3">About this <strong>STUDY</strong></span>
+										<label class="control-label col-md-3"><?= $t->{'About this <strong>STUDY</strong>'}; ?></span>
 										</label>
 										<div class="col-md-6">
 											<div class="input-icon right">
-												<textarea id="about" name="about" maxlength="250" class="form-control" rows="4"><?=$study->aboutStudy?></textarea>
+												<textarea id="about" name="about" class="form-control" rows="4"><?=$study->aboutStudy?></textarea>
 											</div>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-md-3">Side</span>
+										<label class="control-label col-md-3"><?= $t->{'Side'}; ?></span>
 										</label>
 										<div class="col-md-6">
 											 <select class="form-control" id="side" name="side">
 												 <?php $selectedW = ($study->side == "W") ? "selected" : null;?>
 												 <?php $selectedB = ($study->side == "B") ? "selected" : null;?>
-													<option value="W" <?=$selectedW?>>White</option>
-													<option value="B" <?=$selectedB?>>Black</option>
-											 </select>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3">ECO Opening</span>
-										</label>
-										<div class="col-md-6">
-											 <select class="form-control select2me" id="eco" name="eco">
-													<option value="">Select...</option>
-													<?php foreach ($arrEcos as $key => $eco): ?>
-
-														<?php $selected = ($eco->id == $study->ecoID) ? "selected" : null ;?>
-
-														<option value="<?=$eco->id?>" <?=$selected?>>[<?=$eco->code?>] - <?=$eco->name?> (<?=$eco->line?>)</option>
-													<?php endforeach; ?>
+													<option value="W" <?=$selectedW?>><?= $t->{'White'}; ?></option>
+													<option value="B" <?=$selectedB?>><?= $t->{'Black'}; ?></option>
 											 </select>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Status</label>
+										<label class="control-label col-md-3"><?= $t->{'Status'}; ?></label>
 										<div class="col-md-6">
 											<select class="form-control" id="active" name="active">
 												<?php $inactive = ($study->active == "0") ? "selected" : null;?>
 												<?php $active = ($study->active == "1") ? "selected" : null;?>
-												 <option value="0" <?=$inactive?>>Inactive</option>
-												 <option value="1" <?=$active?>>Active</option>
+												 <option value="0" <?=$inactive?>><?= $t->{'Inactive'}; ?></option>
+												 <option value="1" <?=$active?>><?= $t->{'Active'}; ?></option>
 											</select>
 										</div>
 									</div>
 
 									<div class="form-group last">
-										<label class="control-label col-md-3">Deleted</label>
+										<label class="control-label col-md-3"><?= $t->{'Deleted'}; ?></label>
 										<div class="col-md-6">
 											<select class="form-control" id="deleted" name="deleted">
 												<?php $notDeleted = ($study->deleted == "0") ? "selected" : null;?>
 												<?php $deleted = ($study->deleted == "1") ? "selected" : null;?>
-												 <option value="0" <?=$notDeleted?>>NO</option>
-												 <option value="1" <?=$deleted?>>YES</option>
+												 <option value="0" <?=$notDeleted?>><?= $t->{'NO'}; ?></option>
+												 <option value="1" <?=$deleted?>><?= $t->{'YES'}; ?></option>
 											</select>
 										</div>
 									</div>
@@ -185,17 +163,17 @@
 								</div>
 
 								<div class="modal-footer">
-									<button type="button" class="btn btn-danger" title="Cancel"><i class="fa fa-close"></i></button>
-									<button type="submit" id="btnSaveStudy" class="btn btn-primary"  title="Save"><i class="fa fa-floppy-o"></i></button>
+									<button type="button" onclick="history.go(-1)" class="btn btn-danger" title="Cancel"><i class="fa fa-close"></i></button>
+									<button type="submit" id="btnSaveStudy" class="btn btn-primary" title="Save"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
 							<!-- END FORM-->
 
 							<br />
 							<center>
-								<a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> Edit THEORY</a>
-								<a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> Edit PRACTICE</a>
-								<a href="#modalEditPayment" class="btn btn-lg btn-success" data-toggle="modal"><i class="fa fa-file-text-o"></i> Edit PAYMENT</a>
+								<a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> <?= $t->{'Edit THEORY'}; ?></a>
+								<a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> <?= $t->{'Edit PRACTICE'}; ?></a>
+								<a href="#modalEditPayment" class="btn btn-lg btn-success" data-toggle="modal"><i class="fa fa-file-text-o"></i> <?= $t->{'Edit PAYMENT'}; ?></a>
 						  </center>
 						</div>
 					</div>
@@ -205,7 +183,7 @@
 							<div class="modal-content">
 								<div class="modal-header">
 									<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-										<h4 class="modal-title">Editing Payment - <strong><?=$study->name?></strong></h4>
+										<h4 class="modal-title"><?= $t->{'Editing Payment'}; ?> - <strong><?=$study->name?></strong></h4>
 								</div>
 								<div class="modal-body">
 									<div class="portlet-body form">
@@ -213,10 +191,10 @@
 										 <form action="details.php" class="form-horizontal">
 												<div class="form-body">
 													 <div class="form-group">
-															<label class="col-md-3 control-label">Currency</label>
+															<label class="col-md-3 control-label"><?= $t->{'Currency'}; ?></label>
 															<div class="col-md-6">
 																 <select class="form-control select2me" name="currency">
-																		<option value="">Select...</option>
+																		<option value=""><?= $t->{'Select...'}; ?></option>
 																		<?php foreach ($arrCurrencies as $key => $currency): ?>
 
 																			<?php $selected = ($currency->id == $study->monetization->currency->id) ? "selected" : null ;?>
@@ -227,10 +205,10 @@
 															</div>
 													 </div>
 													 <div class="form-group">
-															<label class="col-md-3 control-label">Price</label>
+															<label class="col-md-3 control-label"><?= $t->{'Price'}; ?></label>
 															<div class="col-md-6">
 																 <select class="form-control select2me" name="options2">
-																		<option value="">Select...</option>
+																		<option value=""><?= $t->{'Select...'}; ?></option>
 																		<?php foreach ($arrPrices as $key => $price): ?>
 
 																			<?php $selected = ($price->id == $study->monetization->price->id) ? "selected" : null ;?>
@@ -241,10 +219,10 @@
 															</div>
 													 </div>
 													 <div class="form-group">
-															<label class="col-md-3 control-label">Payment System</label>
+															<label class="col-md-3 control-label"><?= $t->{'Payment System'}; ?></label>
 															<div class="col-md-6">
 																 <select class="form-control select2me" name="options2">
-																		<option value="">Select...</option>
+																		<option value=""><?= $t->{'Select...'}; ?></option>
 																		<?php foreach ($arrPaymentSystems as $key => $paymentSystem): ?>
 
 																			 <?php $selected = ($paymentSystem->id == $study->monetization->detailsPayment->paymentSystem->id) ? "selected" : null ;?>
@@ -255,24 +233,24 @@
 															</div>
 													 </div>
 													 <div class="form-group">
-															<label class="col-md-3 control-label">Payment URL</label>
+															<label class="col-md-3 control-label"><?= $t->{'Payment URL'}; ?></label>
 															<div class="col-md-6">
 																 <input type="text" class="form-control" value="<?=$study->monetization->detailsPayment->url?>" maxlength="50" name="defaultconfig" id="text_name" placeholder="E.g: https://pag.ae/seuCodigo (Using PagSeguro)">
 																 <span class="help-block">
-																 Put the direct link to the item payment.</span>
+																 <?= $t->{'Put the direct link to the item payment.'}; ?></span>
 															</div>
 													 </div>
 													 <div class="form-group">
-															<label class="col-md-3 control-label">Payment message to users</label>
+															<label class="col-md-3 control-label"><?= $t->{'Payment message to users'}; ?></label>
 															<div class="col-md-6">
 																 <textarea id="textarea_opening" maxlength="250" class="form-control" rows="6"><?=$study->monetization->detailsPayment->text?></textarea>
 																 <span class="help-block">
-																 Thank your students, encourage them to collaborate to maintain the excellent level of excellence in the quality of this material.</span>
+																 <?= $t->{'Thank your students, encourage them to collaborate to maintain the excellent level of excellence in the quality of this material.'}; ?></span>
 															</div>
 													 </div>
 													 <div class="row">
-															<span class="badge badge-roundless badge-danger">NOTE</span>
-															<small>By clicking on <strong>SAVE</strong> below, your study will be marked as EDITED for publishing revision.</small>
+															<span class="badge badge-roundless badge-danger"><?= $t->{'NOTE'}; ?></span>
+															<small><?= $t->{'By clicking on <strong>SAVE</strong> below, your study will be marked as EDITED for publishing revision.'}; ?></small>
 													 </div>
 												</div>
 										 </form>
@@ -280,8 +258,8 @@
 									</div>
 								</div>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-									<button type="button" class="btn btn-primary" title="Save" data-dismiss="modal"><i class="fa fa-floppy-o"></i></button>
+									<button type="button" onclick="history.go(-1)" class="btn btn-danger" title="Cancel"><i class="fa fa-close"></i></button>
+									<button type="button" class="btn btn-primary" title="Save"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</div>
 						</div>
@@ -332,9 +310,6 @@ jQuery(document).ready(function() {
 										side: {
 												required: true
 										},
-										eco: {
-												required: true
-										},
 										about: {
 												required: true
 										},
@@ -347,7 +322,7 @@ jQuery(document).ready(function() {
 								},
 
 								invalidHandler: function (event, validator) { //display error alert on form submit
-										toastr.error("You have some form errors. Please check below.");
+										toastr.error("<?= $t->{'You have some form errors. Please check below.'}; ?>");
 								},
 
 								highlight: function (element) { // hightlight error inputs
@@ -374,7 +349,6 @@ jQuery(document).ready(function() {
 															interfaceLanguage: $("#interfaceLanguage").val(),
 															name: $("#name").val(),
 															side: $("#side").val(),
-															eco: $("#eco").val(),
 															about: $("#about").val(),
 															active: $("#active").val(),
 															deleted: $("#deleted").val()},
@@ -383,12 +357,12 @@ jQuery(document).ready(function() {
 													var response = JSON.parse(result);
 
 													if(response["status"] == "success"){
-														toastr.success('Saved changes!');
+														toastr.success('<?= $t->{'Saved changes!'}; ?>');
 													}else{
-														toastr.error('Error. Please, try again later.');
+														toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
 													}
 												}, error: function (result) {
-														toastr.error('Error. Please, try again later.');
+														toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
 												}
 										});
 

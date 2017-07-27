@@ -1,11 +1,11 @@
 <?
-   // #INCLUDES
    require_once ('../lib/config.php');
 
    // CONTROLE SESSAO
    fnInicia_Sessao ('dashboard');
+
    include('../imports/header.php');
-   ?>
+?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 <div class="page-content">

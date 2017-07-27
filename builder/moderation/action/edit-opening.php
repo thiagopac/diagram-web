@@ -12,7 +12,6 @@
   $id = trim(addslashes($_REQUEST['id']));
   $name = trim(addslashes($_REQUEST['name']));
   $side = trim(addslashes($_REQUEST['side']));
-  $ecoID = trim(addslashes($_REQUEST['eco']));
   $about = trim(addslashes($_REQUEST['about']));
   $active = trim(addslashes($_REQUEST['active']));
   $deleted = trim(addslashes($_REQUEST['deleted']));
@@ -23,7 +22,6 @@
   $study->interfaceLanguageID = $interfaceLanguageID;
   $study->name = $name;
   $study->side = $side;
-  $study->ecoID = $ecoID;
   $study->aboutStudy = $about;
   $study->authorID = $userID;
   $study->active = $active;

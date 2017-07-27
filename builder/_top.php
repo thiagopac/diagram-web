@@ -25,7 +25,7 @@
 					<ul class="dropdown-menu">
 						<li>
 							<a href="../">
-							<i class="icon-key"></i> Log Out </a>
+							<i class="icon-key"></i> <?= $t->{'Log Out'}; ?> </a>
 						</li>
 					</ul>
 				</li>

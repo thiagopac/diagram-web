@@ -11,7 +11,6 @@
   $interfaceLanguageID = trim(addslashes($_REQUEST['interfaceLanguage']));
 	$name = trim(addslashes($_REQUEST['name']));
   $side = trim(addslashes($_REQUEST['side']));
-  $ecoID = trim(addslashes($_REQUEST['eco']));
   $about = trim(addslashes($_REQUEST['about']));
 
   $study = new Study();
@@ -19,7 +18,6 @@
   $study->interfaceLanguageID = $interfaceLanguageID;
   $study->name = $name;
   $study->side = $side;
-  $study->ecoID = $ecoID;
   $study->aboutStudy = $about;
   $study->authorID = $userID;
 

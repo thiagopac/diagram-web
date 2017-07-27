@@ -55,14 +55,14 @@
   if ($study->monetization->price->value != 0.00) {
     $study->currencyAndPrice = $study->monetization->currency->symbol.' '.$study->monetization->price->value;
   }else{
-    $study->currencyAndPrice = "FREE";
+    $study->currencyAndPrice = $t->{'FREE'};;
   }
 
   $studyRating = new StudyRating();
   $studyRating = $studyRating->getStudyRatingForStudyAndUser($paramStudy, $userID);
   $studyRatingCount = $studyRating->getCountStudyRatingForStudy($paramStudy);
 
-  $userHasNotRated = $studyRating->id == NULL ? "true" : "false";
+  $userHasNotRated = $studyRating->id == NULL ? true : false;
 
   $studyProgressTheory = new StudyProgressTheory();
   $progress = $studyProgressTheory->getTotalProgressStudyProgressTheoryForUserAndStudy($userID, $paramStudy);
@@ -90,11 +90,11 @@
      <ul class="page-breadcrumb">
        <li>
           <i class="fa fa-home"></i>
-          <a href="#">Openings</a>
+          <a href="#"><?= $t->{'Openings'}; ?></a>
           <i class="fa fa-angle-right"></i>
        </li>
        <li>
-         <a href="./list.php">Study</a>
+         <a href="./list.php"><?= $t->{'Study'}; ?></a>
          <i class="fa fa-angle-right"></i>
        </li>
        <li>
@@ -104,19 +104,19 @@
      <div class="page-toolbar">
        <div class="btn-group pull-right">
          <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
-         Actions <i class="fa fa-angle-down"></i>
+         <?= $t->{'Actions'}; ?> <i class="fa fa-angle-down"></i>
          </button>
          <ul class="dropdown-menu pull-right" role="menu">
            <li>
-             <a id="restartTheoryStats" href="#">Restart theoretical statistics</a>
+             <a id="restartTheoryStats" href="#"><?= $t->{'Restart theoretical statistics'}; ?></a>
            </li>
            <li>
-             <a id="restartPracticeStats" href="#">Restart practical statistics</a>
+             <a id="restartPracticeStats" href="#"><?= $t->{'Restart practical statistics'}; ?></a>
            </li>
            <li class="divider">
            </li>
            <li>
-             <a href="list.php">Back to start</a>
+             <a href="list.php"><?= $t->{'Back to start'}; ?></a>
            </li>
          </ul>
        </div>
@@ -135,7 +135,7 @@
            <ul class="list-unstyled profile-nav">
              <li>
                <div class="easy-pie-chart">
-                 <div class="number opening" data-percent="<?=$progress?>" style="width:200px;padding-top:60px;">
+                 <div class="number opening" data-percent="<?=$progress?>" style="width:200px;padding-top:60px;padding-bottom:130px;display:inline-block;">
                    <h1><?=$progress?><small>%</small></h1>
                  </div>
                </div>
@@ -156,7 +156,7 @@
                    <i class="fa fa-briefcase"></i> <?=$study->author->fullName?>
                  </li>
                  <li>
-                   <i class="fa fa-list-ol"></i> <?=$variationsCount ?> Var. | <?=$linesCount ?> Lines
+                   <i class="fa fa-list-ol"></i> <?=$variationsCount ?> Var. | <?=$linesCount ?> <?= $t->{'Lines'}; ?>
                  </li>
                  <li>
                    <i class="fa fa-usd"></i> <?=$study->currencyAndPrice?>
@@ -177,9 +177,11 @@
                       $readOnly = 'false';
                     }else{
                       $readOnly = 'true';
+                      $userHasNotRated = false;
                     }
+
                 ?>
-                <p><small><i>(<?=$studyRatingCount ?> <?=$studyRatingCount == 1 ? "review" : "reviews";?>)</i></small></p>
+                <p><small><i>(<?=$studyRatingCount ?> <?=$studyRatingCount == 1 ? $t->{'review'} : $t->{'reviews'} ;?>)</i></small></p>
                <form>
                  <p>
                    <input type="hidden" id="studyID" value="<?=$study->id?>">
@@ -189,83 +191,15 @@
               </form>
               <br/>
                 <?php if ($userOwnsStudy == true || $userIsAuthorStudy == true): ?>
-                  <a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki"><i class="fa fa-graduation-cap"></i> THEORY</a>
-                  <a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo"><i class="fa fa-bolt"></i> PRACTICE</a>
+
+
+                    <a href="theory.php?s=<?=$study->id?>" class="btn btn-lg blue-hoki col-md-4 col-xs-5"><i class="fa fa-graduation-cap"></i> <?= $t->{'THEORY'}; ?> </a>
+                    <a href="practice.php?s=<?=$study->id?>" class="btn btn-lg red-sunglo col-md-4 col-xs-5"><i class="fa fa-bolt"></i> <?= $t->{'PRACTICE'}; ?> </a>
                   <!-- <a href="#modalPurchase" class="btn btn-lg btn-success" title="Donate" data-toggle="modal"><i class="fa fa-usd"></i> DONATE </a> -->
                <?php else: ?>
-                  <a href="#modalPurchase" class="btn btn-lg btn-success" title="Buy" data-toggle="modal"><i class="fa fa-usd"></i> BUY </a>
+                  <a href="#modalPurchase" class="btn btn-lg btn-success col-md-4 col-xs-12" title="Buy" data-toggle="modal"><i class="fa fa-usd"></i> <?= $t->{'BUY'}; ?> </a>
                <?php endif; ?>
-             </div>
-
-             <div id="modalPurchase" class="modal fade bs-modal-lg" role="dialog" aria-hidden="true">
-               <div class="modal-dialog modal-md">
-                 <div class="modal-content">
-                   <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                     <h4 class="modal-title">Purchase <?=$study->name?></h4>
-                   </div>
-                   <div class="modal-body">
-
-                     <ul class="chats">
-                     									<li class="in">
-                     										<!-- <img class="avatar" alt="" src="../../assets/admin/layout/img/avatar1.jpg"/> -->
-                     										<div class="message">
-                     											<span class="arrow">
-                     											</span>
-                     											<label>
-                     											<?=$study->author->fullName?> </label>
-                     											<span class="body">
-                     											<p><?=$study->monetization->detailsPayment->text?></span></p>
-                     										</div>
-                     									</li>
-                     								</ul>
-
-                                    <div class="portlet light">
-                        							<!-- STAT -->
-                        							<div class="row list-separated profile-stat">
-                        								<div class="col-md-4 col-sm-4 col-xs-6">
-                        									<div class="uppercase profile-stat-title">
-                        										 <?=$variationsCount?>
-                        									</div>
-                        									<div class="uppercase profile-stat-text">
-                        										 Variations
-                        									</div>
-                        								</div>
-                        								<div class="col-md-4 col-sm-4 col-xs-6">
-                        									<div class="uppercase profile-stat-title">
-                        										 <?=$linesCount?>
-                        									</div>
-                        									<div class="uppercase profile-stat-text">
-                        										 Lines
-                        									</div>
-                        								</div>
-                        								<div class="col-md-4 col-sm-4 col-xs-6">
-                        									<div class="uppercase profile-stat-title">
-                        										 <?=$study->currencyAndPrice?>
-                        									</div>
-                        									<div class="uppercase profile-stat-text">
-                        										 Investment
-                        									</div>
-                        								</div>
-                        							</div>
-                        							<!-- END STAT -->
-                        							<div>
-                        								<h4 class="profile-desc-title"><?=$study->typePayment?></h4>
-                        								<span class="profile-desc-text"> Please make the payment through the url below. </span>
-                        								<div class="margin-top-20 profile-desc-link">
-                        									<i class="fa fa-usd"></i>
-                        									<a href="<?=$study->monetization->detailsPayment->url?>" target="_blank"><?=$study->monetization->detailsPayment->url?></a>
-                        								</div>
-                        							</div>
-                        						</div>
-                                    <span class="label label-danger"><small>Attention</small></span>
-                                    <span> <small>After payment confirmation, your purchase will be activated as soon as possible.</small></span>
-                   </div>
-                   <div class="modal-footer">
-                     <button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
-                   </div>
-                 </div>
-               </div>
+               <br/><br/><br/>
              </div>
 
              <!--end col-md-8-->
@@ -273,28 +207,28 @@
                <div class="portlet sale-summary">
                  <div class="portlet-title">
                    <div class="caption">
-                      Statistics
+                      <?= $t->{'Statistics'}; ?>
                    </div>
                  </div>
                  <div class="portlet-body">
                    <ul class="list-unstyled">
                      <li>
                        <span class="sale-info">
-                       TOTAL PRACTICE SESSIONS <i class="fa fa-img-up"></i>
+                       <?= $t->{'TOTAL PRACTICE SESSIONS'}; ?> <i class="fa fa-img-up"></i>
                        </span>
                        <span class="sale-num">
                        <?=$totalPracticeSessions;?>  </span>
                      </li>
                      <li>
                        <span class="sale-info">
-                       PRACTICE PERFECT LINES <i class="fa fa-img-up"></i>
+                       <?= $t->{'PRACTICE PERFECT LINES'}; ?> <i class="fa fa-img-up"></i>
                        </span>
                        <span class="sale-num">
                        <?=$totalPracticePerfects;?>  </span>
                      </li>
                      <li>
                        <span class="sale-info">
-                       TOTAL LINES PRACTICED  <i class="fa fa-img-down"></i>
+                       <?= $t->{'TOTAL LINES PRACTICED'}; ?>  <i class="fa fa-img-down"></i>
                        </span>
                        <span class="sale-num">
                        <?=$totalLinesPracticed?>% </span>
@@ -313,6 +247,77 @@
      </div>
    </div>
 <!-- END CONTENT -->
+</div>
+
+<div id="modalPurchase" class="modal fade bs-modal-lg" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title"><?= $t->{'Purchase'}; ?> <?=$study->name?></h4>
+      </div>
+      <div class="modal-body">
+
+        <ul class="chats">
+                         <li class="in">
+                           <!-- <img class="avatar" alt="" src="../../assets/admin/layout/img/avatar1.jpg"/> -->
+                           <div class="message">
+                             <span class="arrow">
+                             </span>
+                             <label>
+                             <?=$study->author->fullName?> </label>
+                             <span class="body">
+                             <p><?=$study->monetization->detailsPayment->text?></span></p>
+                           </div>
+                         </li>
+                       </ul>
+
+                       <div class="portlet light">
+                         <!-- STAT -->
+                         <div class="row list-separated profile-stat">
+                           <div class="col-md-4 col-sm-4 col-xs-6">
+                             <div class="uppercase profile-stat-title">
+                                <?=$variationsCount?>
+                             </div>
+                             <div class="uppercase profile-stat-text">
+                                <?= $t->{'Variations'}; ?>
+                             </div>
+                           </div>
+                           <div class="col-md-4 col-sm-4 col-xs-6">
+                             <div class="uppercase profile-stat-title">
+                                <?=$linesCount?>
+                             </div>
+                             <div class="uppercase profile-stat-text">
+                                <?= $t->{'Lines'}; ?>
+                             </div>
+                           </div>
+                           <div class="col-md-4 col-sm-4 col-xs-6">
+                             <div class="uppercase profile-stat-title">
+                                <?=$study->currencyAndPrice?>
+                             </div>
+                             <div class="uppercase profile-stat-text">
+                                <?= $t->{'Investment'}; ?>
+                             </div>
+                           </div>
+                         </div>
+                         <!-- END STAT -->
+                         <div>
+                           <h4 class="profile-desc-title"><?=$study->typePayment?></h4>
+                           <span class="profile-desc-text"> <?= $t->{'Please make the payment through the url below.'}; ?> </span>
+                           <div class="margin-top-20 profile-desc-link">
+                             <i class="fa fa-usd"></i>
+                             <a href="<?=$study->monetization->detailsPayment->url?>" target="_blank"><?=$study->monetization->detailsPayment->url?></a>
+                           </div>
+                         </div>
+                       </div>
+                       <span class="label label-danger"><small><?= $t->{'Attention'}; ?></small></span>
+                       <span> <small><?= $t->{'After payment confirmation, your purchase will be activated as soon as possible'}; ?>.</small></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" title="Cancel" data-dismiss="modal"><i class="fa fa-close"></i></button>
+      </div>
+    </div>
+  </div>
 </div>
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
@@ -372,12 +377,12 @@ jQuery(document).ready(function() {
               if(response["status"] == "success"){
                 progress = response["progress"];
                // console.log(response);
-                toastr.success('Your rating has been saved!');
+                toastr.success('<?= $t->{'Your rating has been saved!'}; ?>');
               }else if(response["status"] == "error"){
-                toastr.warning('Error. Please, try again later.');
+                toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
               }
             }, error: function (result) {
-                toastr.error('Error. Please, try again later.');
+                toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
             }
         });
      });
@@ -386,11 +391,11 @@ jQuery(document).ready(function() {
    $(document).ready(function () {
          $("#restartTheoryStats").click(function () {
            bootbox.dialog({
-               message: "Are you sure you want to restart statistics? You will not be able to reverse this action!",
-               title: "Restart theoretical stats",
+               message: "<?= $t->{'Are you sure you want to restart statistics? You will not be able to reverse this action!'}; ?>",
+               title: "<?= $t->{'Restart theoretical stats'}; ?>",
                buttons: {
                  main: {
-                   label: "YES",
+                   label: "<?= $t->{'YES'}; ?>",
                    className: "green",
                    callback: function() {
 
@@ -404,20 +409,20 @@ jQuery(document).ready(function() {
 
                            if(response["status"] == "success"){
                              //mostrar toaster após reload
-                             sessionStorage.setItem("Success","Your theoretical statistics were restarted!");
+                             sessionStorage.setItem("Success","<?= $t->{'Your theoretical statistics were restarted!'}; ?>");
                              location.reload();
                            }else if(response["status"] == "error"){
-                             toastr.warning('Error. Please, try again later.');
+                             toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                            }
                          }, error: function (result) {
-                             toastr.error('Error. Please, try again later.');
+                             toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                          }
                      });
 
                    }
                  },
                  danger: {
-                   label: "NO",
+                   label: "<?= $t->{'NO'}; ?>",
                    className: "red",
                    callback: function() {
 
@@ -432,11 +437,11 @@ jQuery(document).ready(function() {
      $(document).ready(function () {
            $("#restartPracticeStats").click(function () {
              bootbox.dialog({
-                 message: "Are you sure you want to restart statistics? You will not be able to reverse this action!",
-                 title: "Restart practical stats",
+                 message: "<?= $t->{'Are you sure you want to restart statistics? You will not be able to reverse this action!'}; ?>",
+                 title: "<?= $t->{'Restart practical stats'}; ?>",
                  buttons: {
                    main: {
-                     label: "YES",
+                     label: "<?= $t->{'YES'}; ?>",
                      className: "green",
                      callback: function() {
 
@@ -450,20 +455,20 @@ jQuery(document).ready(function() {
 
                              if(response["status"] == "success"){
                                //mostrar toaster após reload
-                               sessionStorage.setItem("Success","Your practical statistics were restarted!");
+                               sessionStorage.setItem("Success","<?= $t->{'Your practical statistics were restarted!'}; ?>");
                                location.reload();
                              }else if(response["status"] == "error"){
-                               toastr.warning('Error. Please, try again later.');
+                               toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
                              }
                            }, error: function (result) {
-                               toastr.error('Error. Please, try again later.');
+                               toastr.error('<?= $t->{'Error. Please, try again later.'}; ?>');
                            }
                        });
 
                      }
                    },
                    danger: {
-                     label: "NO",
+                     label: "<?= $t->{'NO'}; ?>",
                      className: "red",
                      callback: function() {
 

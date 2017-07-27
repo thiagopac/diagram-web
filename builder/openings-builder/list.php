@@ -27,7 +27,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Openings Builder<small></small>
+            <?= $t->{'Openings Builder'}; ?><small></small>
          </h3>
       </div>
    </div>
@@ -35,11 +35,11 @@
      <ul class="page-breadcrumb">
        <li>
           <i class="fa fa-home"></i>
-          <a href="#">Openings</a>
+          <a href="#"><?= $t->{'Openings'}; ?></a>
           <i class="fa fa-angle-right"></i>
        </li>
        <li>
-         <a href="./list.php">Builder</a>
+         <a href="./list.php"><?= $t->{'Builder'}; ?></a>
        </li>
      </ul>
    </div>
@@ -52,7 +52,7 @@
    					<div class="portlet">
    						<div class="portlet-title">
    							<div class="caption">
-   								Your openings
+   								<?= $t->{'Your openings'}; ?>
    							</div>
    							<div class="tools">
    								<a href="javascript:;" class="collapse" data-original-title="" title="">
@@ -62,8 +62,7 @@
    						<div class="portlet-body">
                 <div class="tiles">
 
-                  <?foreach($arrStudies as $KEY => $study){ ?> <!-- INCÍCIO foreach  -->
-                    <!-- INÍCIO VIEW OBJETO ESTUDO -->
+                  <?foreach($arrStudies as $KEY => $study){ ?>
 
                     <?php
                         $studyRating = new StudyRating();
@@ -76,7 +75,7 @@
                     <div class="tile double bg-red-sunglo double">
 
                       <div class="tile-body">
-                        <h4><?=$study->name?></h4><small>By: <?=$study->author->fullName?></small>
+                        <h4 style="line-height: 16px; !important"><?=$study->name?></h4><small><?= $t->{'By'}; ?>: <?=$study->author->fullName?></small>
                         <p>
                           <!--  rate-->
                           <div style="margin-top:10px;">
@@ -86,7 +85,7 @@
                       </div>
                       <div class="tile-object">
                         <div class="number">
-                           <small>Updated: <?=$study->dateUpdated?></small>
+                           <small><?= $t->{'Updated'}; ?>: <?=$study->dateUpdated?></small>
                         </div>
                       </div>
                     </div>
@@ -96,7 +95,7 @@
                   <?}?> <!-- FIM foreach  -->
 
                   <?php if (count($arrStudies) < 1): ?>
-                    <p class="text-center">You have not created any studies yet.</p>
+                    <p class="text-center"><?= $t->{'You have not created any studies yet.'}; ?></p>
                   <?php endif; ?>
 
                  </div>
@@ -122,7 +121,7 @@
                        <a href="create-study.php">
                          <div class="tile double bg-green-meadow">
                            <div class="tile-body">
-                             <h3>New opening study</h3>
+                             <h3 style="line-height: 22px; !important"><?= $t->{'New opening study'}; ?></h3>
 
                            </div>
                            <div class="tile-object">
@@ -151,17 +150,6 @@
    // initiate layout and plugins
    Metronic.init(); // init metronic core components
    Layout.init(); // init current layou
-
-   $("#rateYo").rateYo({
-      starWidth: "20px",
-      normalFill: "#6a6a6a",
-      ratedFill: "#ffffff",
-      rating: 4.5,
-      halfStar: true,
-      readOnly: true
-    }).on("rateyo.set", function (e, data) {
-                console.log("The rating is set to " + data.rating + "!");
-    });
 
    });
 </script>

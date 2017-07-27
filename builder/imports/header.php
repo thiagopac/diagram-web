@@ -1,3 +1,19 @@
+<?
+  require_once ('../models/User.php');
+  require_once ('../models/Theme.php');
+  require_once ('../internationalization/Translate.php');
+
+  $t = new Translate();
+
+  $userID = $_SESSION['USER']['ID'];
+  $user = new User();
+  $user = $user->getUserWithId($userID);
+
+  $theme = new Theme();
+  $theme = $theme->getThemeWithID($user->themeID);
+
+  $user->theme = $theme;
+?>
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <!--<![endif]-->
@@ -24,9 +40,8 @@
 		<div class="page-header-inner container">
 			<!-- BEGIN LOGO -->
 			<div class="page-logo">
-				<a href="../dashboard/"> <img
-					src="../../assets/admin/layout/img/logo.png" alt="logo"
-					class="logo-default" />
+				<a href="../dashboard/dashboard.php">
+					<img src="<?=$absolutepath?>assets/admin/layout/img/<?=$user->theme->file?>_logo.png" alt="logo" class="logo-default" />
 				</a>
 				<div class="menu-toggler sidebar-toggler">
 					<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->

@@ -20,6 +20,7 @@
 	$MSG = addslashes($_REQUEST['msg']);
 	$paramUser  = (int)$_REQUEST['u'];
 
+	User::$showDeleted = true;
 	$user = new User();
 	$user = $user->getUserWithId($paramUser);
 
@@ -47,7 +48,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					Edit User <small></small>
+					<?= $t->{'Edit User'}; ?> <small></small>
 					</h3>
 
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -57,15 +58,15 @@
 				 <ul class="page-breadcrumb">
 					 <li>
 							<i class="fa fa-home"></i>
-							<a href="#">Moderation</a>
+							<a href="#"><?= $t->{'Moderation'}; ?></a>
 							<i class="fa fa-angle-right"></i>
 					 </li>
 						<li>
-							 <a href="./users.php">Users</a>
+							 <a href="./users.php"><?= $t->{'Users'}; ?></a>
 							 <i class="fa fa-angle-right"></i>
 						</li>
 						<li>
-							 <a href="edit-user.php?u=<?=$user->id?>">Edit User</a>
+							 <a href="edit-user.php?u=<?=$user->id?>"><?= $t->{'Edit User'}; ?></a>
 						</li>
 				 </ul>
 			</div>
@@ -73,7 +74,7 @@
 
 					<div class="portlet gren">
 						<div class="portlet-title">
-							<div class="caption">User Details</div>
+							<div class="caption"><?= $t->{'User Details'}; ?></div>
 							</div>
 
 						<div class="portlet-body form">
@@ -83,7 +84,7 @@
 								<div class="form-body">
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Full Name</label>
+										<label class="control-label col-md-3"><?= $t->{'Full Name'}; ?></label>
 										<div class="col-md-2">
 											<div class="input-icon right">
 												<input type="text" class="form-control" id="firstName" name="firstName" aria-required="true" aria-invalid="false" value="<?=$user->firstName?>">
@@ -98,7 +99,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Login</span>
+										<label class="control-label col-md-3"><?= $t->{'Login'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
@@ -108,7 +109,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">ELO Fide</span>
+										<label class="control-label col-md-3"><?= $t->{'ELO Fide'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
@@ -118,7 +119,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Grants</span>
+										<label class="control-label col-md-3"><?= $t->{'Grants'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
@@ -128,20 +129,20 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Birthday</span>
+										<label class="control-label col-md-3"><?= $t->{'Birthday'}; ?></span>
 										</label>
 										<div class="col-md-3">
 											<input class="form-control form-control-inline input-medium date-picker" id="birthday" name="birthday" size="16" type="text" value="<?=fnDateDBtoVisual($user->birthday)?>"/>
 											<span class="help-block">
-											Month / Day / Year </span>
+											<?= $t->{'Month / Day / Year'}; ?> </span>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Country</label>
+										<label class="control-label col-md-3"><?= $t->{'Country'}; ?></label>
 										<div class="col-md-5">
 											 <select class="form-control select2me" id="country" name="country">
-													<option value="">Select...</option>
+													<option value=""><?= $t->{'Select...'}; ?></option>
 													<?php foreach ($arrCountries as $key => $country): ?>
 
 														<?php $selected = ($country->id == $user->countryID) ? "selected" : null ;?>
@@ -153,10 +154,10 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Language</label>
+										<label class="control-label col-md-3"><?= $t->{'Language'}; ?></label>
 										<div class="col-md-5">
 											 <select class="form-control select2me" id="language" name="language">
-													<option value="">Select...</option>
+													<option value=""><?= $t->{'Select...'}; ?></option>
 													<?php foreach ($arrLanguages as $key => $language): ?>
 
 														<?php $selected = ($language->id == $user->languageID) ? "selected" : null ;?>
@@ -168,10 +169,10 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Theme</label>
+										<label class="control-label col-md-3"><?= $t->{'Theme'}; ?></label>
 										<div class="col-md-5">
 											 <select class="form-control select2me" id="theme" name="theme">
-													<option value="">Select...</option>
+													<option value=""><?= $t->{'Select...'}; ?></option>
 													<?php foreach ($arrThemes as $key => $theme): ?>
 
 														<?php $selected = ($theme->id == $user->themeID) ? "selected" : null ;?>
@@ -183,10 +184,10 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">Interface Language</label>
+										<label class="control-label col-md-3"><?= $t->{'Interface Language'}; ?></label>
 										<div class="col-md-5">
 											 <select class="form-control select2me" id="interfaceLanguage" name="interfaceLanguage">
-													<option value="">Select...</option>
+													<option value=""><?= $t->{'Select...'}; ?></option>
 													<?php foreach ($arrInterfaceLanguages as $key => $interfaceLanguage): ?>
 
 														<?php $selected = ($interfaceLanguage->id == $user->interfaceLanguageID) ? "selected" : null ;?>
@@ -198,50 +199,49 @@
 									</div>
 
 									<div class="form-group">
-										<label class="control-label col-md-3">User status</span>
+										<label class="control-label col-md-3"><?= $t->{'User status'}; ?></span>
 										</label>
 										<div class="col-md-5">
 											<div class="input-icon right">
 												<select class="form-control" id="status" name="status">
 													<?php $selectedInactive = ($user->status == "0") ? "selected" : null;?>
 													<?php $selectedActive = ($user->status == "1") ? "selected" : null;?>
-													 <option value="0" <?=$selectedInactive?>>Inactive</option>
-													 <option value="1" <?=$selectedActive?>>Active</option>
+													 <option value="0" <?=$selectedInactive?>><?= $t->{'Inactive'}; ?></option>
+													 <option value="1" <?=$selectedActive?>><?= $t->{'Active'}; ?></option>
 												</select>
 											</div>
 										</div>
 									</div>
 
 									<div class="form-group last password-strength">
-										<label class="control-label col-md-3">Role</label>
+										<label class="control-label col-md-3"><?= $t->{'Role'}; ?></label>
 										<div class="col-md-5">
 											<select class="form-control" id="typeUser" name="typeUser">
 												<?php $selectedActive = ($user->typeUser == "1") ? "selected" : null;?>
 												<?php $selectedInactive = ($user->typeUser == "2") ? "selected" : null;?>
-												 <option value="1" <?=$selectedActive?>>Admin</option>
-												 <option value="2" <?=$selectedInactive?>>User</option>
+												 <option value="1" <?=$selectedActive?>><?= $t->{'Admin'}; ?></option>
+												 <option value="2" <?=$selectedInactive?>><?= $t->{'User'}; ?></option>
 											</select>
 										</div>
 									</div>
-								</div>
 
-								<div class="form-group">
-									<label class="control-label col-md-3">Deleted</span>
-									</label>
-									<div class="col-md-5">
-										<div class="input-icon right">
-											<select class="form-control" id="deleted" name="deleted">
-												<?php $selectedInactive = ($user->deleted == "0") ? "selected" : null;?>
-												<?php $selectedActive = ($user->deleted == "1") ? "selected" : null;?>
-												 <option value="0" <?=$selectedInactive?>>NO</option>
-												 <option value="1" <?=$selectedActive?>>YES</option>
-											</select>
+									<div class="form-group">
+										<label class="control-label col-md-3"><?= $t->{'Deleted'}; ?></span>
+										</label>
+										<div class="col-md-5">
+												<select class="form-control" id="deleted" name="deleted">
+													<?php $selectedInactive = ($user->deleted == "0") ? "selected" : null;?>
+													<?php $selectedActive = ($user->deleted == "1") ? "selected" : null;?>
+													 <option value="0" <?=$selectedInactive?>><?= $t->{'NO'}; ?></option>
+													 <option value="1" <?=$selectedActive?>><?= $t->{'YES'}; ?></option>
+												</select>
 										</div>
 									</div>
+
 								</div>
 
 								<div class="modal-footer">
-									<button type="button" class="btn btn-danger" title="Cancel"><i class="fa fa-close"></i></button>
+									<button type="button" onclick="history.go(-1)" class="btn btn-danger" title="Cancel"><i class="fa fa-close"></i></button>
 									<button type="submit" class="btn btn-primary" title="Save"><i class="fa fa-floppy-o"></i></button>
 								</div>
 							</form>
@@ -326,7 +326,7 @@ jQuery(document).ready(function() {
 								},
 
 								invalidHandler: function (event, validator) { //display error alert on form submit
-										toastr.error("You have some form errors. Please check below.");
+										toastr.error("<?= $t->{'You have some form errors. Please check below.'}; ?>");
 								},
 
 								highlight: function (element) { // hightlight error inputs
@@ -368,9 +368,9 @@ jQuery(document).ready(function() {
 												var response = JSON.parse(result);
 
 												if(response["status"] == "success"){
-													toastr.success('Saved changes!');
+													toastr.success('<?= $t->{'Saved changes!'}; ?>');
 												}else if(response["status"] == "error"){
-													toastr.warning('Error. Please, try again later.');
+													toastr.warning('<?= $t->{'Error. Please, try again later.'}; ?>');
 												}
 											}
 									});

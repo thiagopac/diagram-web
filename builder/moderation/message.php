@@ -2,6 +2,7 @@
    // #INCLUDES
    require_once ('../lib/config.php');
    require_once('../models/StudyAdministration.php');
+   require_once('../models/Study.php');
 
    if (empty($_REQUEST['m'])){
      header('Location: ./');
@@ -9,7 +10,7 @@
  	 }
 
    // CONTROLE SESSAO
-   fnInicia_Sessao ( 'moderation-inbox');
+   fnInicia_Sessao ('moderation-inbox');
 
    #BUSCAR TODAS AS VARIÁVEIS GET
    $paramMessage = $_REQUEST['m'];
@@ -19,6 +20,9 @@
 
    $studyAdministration = new StudyAdministration();
    $studyAdministration = $studyAdministration->getStudyAdministrationWithIDForUser($paramMessage, $paramUser);
+
+   $study = new Study();
+  $studyAdministration->study = $study->getStudyWithID($studyAdministration->studyID);
 
    if ($studyAdministration->id == NULL){
      header('Location: ./');
@@ -35,7 +39,7 @@
    <div class="row">
       <div class="col-md-12">
          <h3 class="page-title">
-            Administration Message <small></small>
+            <?= $t->{'Administration Message'}; ?> <small></small>
          </h3>
       </div>
    </div>
@@ -43,15 +47,15 @@
       <ul class="page-breadcrumb">
          <li>
             <i class="fa fa-home"></i>
-            <a href="#">Moderation</a>
+            <a href="#"><?= $t->{'Moderation'}; ?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="inbox.php">Inbox</a>
+            <a href="inbox.php"><?= $t->{'Inbox'}; ?></a>
             <i class="fa fa-angle-right"></i>
          </li>
          <li>
-            <a href="message.php?m=<?=$paramMessage?>">Message</a>
+            <a href="message.php?m=<?=$paramMessage?>"><?= $t->{'Message'}; ?></a>
          </li>
       </ul>
    </div>
@@ -59,22 +63,23 @@
    <div class="portlet light">
       <div class="portlet-body form">
          <!-- BEGIN FORM-->
-         <form action="details.php" class="form-horizontal">
+         <form class="form-horizontal">
+           <input type="hidden" id="studyAdministrationID" name="studyAdministrationID" value="<?=$paramMessage?>">
             <div class="form-body">
                <div class="form-group">
-                  <label class="col-md-3 control-label">Study</label>
+                  <label class="col-md-3 control-label"><?= $t->{'Study'}; ?></label>
                   <div class="col-md-6">
                      <p class="form-control-static"><?=$studyAdministration->study->name?></p>
                   </div>
                </div>
                <div class="form-group">
-                  <label class="col-md-3 control-label">Sent date</label>
+                  <label class="col-md-3 control-label"><?= $t->{'Sent date'}; ?></label>
                   <div class="col-md-6">
                      <p class="form-control-static"><?=$studyAdministration->dateCreated?></p>
                   </div>
                </div>
                <div class="form-group">
-                  <label class="col-md-3 control-label">Message</label>
+                  <label class="col-md-3 control-label"><?= $t->{'Message'}; ?></label>
                   <div class="col-md-6">
                      <p class="form-control-static"><?=$studyAdministration->message?></p>
                   </div>
@@ -83,7 +88,7 @@
             <div class="form-actions">
                <div class="row">
                   <div class="col-md-offset-3 col-md-9">
-                     <button type="button" class="btn default" onclick="window.history.go(-1)">Back</button>
+                     <button type="button" class="btn default" onclick="window.history.go(-1)"><?= $t->{'Back'}; ?></button>
                   </div>
                </div>
             </div>
@@ -96,45 +101,24 @@
 <? include('../imports/footer.php'); ?>
 <? include('../imports/metronic_core.php'); ?>
 <script>
-   jQuery(document).ready(function() {
-   // initiate layout and plugins
-   Metronic.init(); // init metronic core components
-   Layout.init(); // init current layou
+jQuery(document).ready(function() {
+  // initiate layout and plugins
+  Metronic.init(); // init metronic core components
+  Layout.init(); // init current layou
 
+  var read = <?=$studyAdministration->read  ?>
 
-   var ComponentsFormTools = function () {
+  if (read == 0){
+    $.ajax({
+        url: './action/read-feedback.php',
+        type: 'POST',
+        data: {studyAdministrationID: $("#studyAdministrationID").val()},
+        success: function (result) {
+        }
+    });
+  }
 
-       var handleBootstrapMaxlength = function() {
-           $('#text_name').maxlength({
-               limitReachedClass: "label label-danger",
-           })
-
-           $('#textarea_opening').maxlength({
-               limitReachedClass: "label label-danger",
-               alwaysShow: true,
-               placement: 'bottom-right'
-
-           });
-
-           $('#textarea_study').maxlength({
-               limitReachedClass: "label label-danger",
-               alwaysShow: true,
-               placement: 'bottom-right'
-           });
-
-           $('#maxlength_placement').maxlength({
-               limitReachedClass: "label label-danger",
-               alwaysShow: true,
-               placement: Metronic.isRTL() ? 'top-right' : 'top-left'
-           });
-       }
-
-       handleBootstrapMaxlength();
-
-   }();
-
-
-   });
+});
 </script>
 </body>
 </html>

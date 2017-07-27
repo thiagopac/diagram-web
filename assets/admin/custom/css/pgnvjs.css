@@ -26,7 +26,7 @@ div.buttons > i.button.default, div.edit > i.button.default {
     color: #656565;
     margin: 5px;
     padding: 4px;
-    width: 45px;
+    width: 37px;
     height: 20px;
     text-align: center;
     border: solid lightgrey 1px;
@@ -405,7 +405,7 @@ div.pgn {
 
 .chesscom .outerBoard {
     float: left;
-    width: 390px;
+    width: 344px;
 }
 
 .movesOuterScroller {

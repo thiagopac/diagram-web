@@ -32,7 +32,7 @@
 				<li class="last <? if ($MENU_ATIVO == 'dashboard') echo 'active'; ?>">
 					<a href="<?=$rootpath?>/dashboard/dashboard.php">
 					<i class="icon-home"></i>
-					<span class="title">Dashboard</span>
+					<span class="title"><?= $t->{'Dashboard'}; ?></span>
 					<span class="selected"></span>
 					</a>
 				</li>
@@ -41,55 +41,54 @@
 				<li class="last <? if (($MENU_ATIVO == 'news-general') || ($MENU_ATIVO == 'news-targeted')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/news/">
 					<i class="icon-book-open"></i>
-					<span class="title">News</span>
+					<span class="title"><?= $t->{'News'}; ?></span>
 					<span class="selected"></span>
 					</a>
           <ul class="sub-menu">
             <? if (fnVerifica_Grant('news-targeted')) { ?>
             <li class="<? if ($MENU_ATIVO == 'news-targeted') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/news/targeted.php"><i class="fa fa-angle-right"></i>Targeted News</a>
+              <a href="<?=$rootpath?>/news/targeted.php"><i class="fa fa-angle-right"></i><?= $t->{'Targeted News'}; ?></a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('news-general')) { ?>
             <li class="<? if ($MENU_ATIVO == 'news-general') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/news/general.php"><i class="fa fa-angle-right"></i>General News</a>
+              <a href="<?=$rootpath?>/news/general.php"><i class="fa fa-angle-right"></i><?= $t->{'General News'}; ?></a>
             </li>
             <? } ?>
           </ul>
 				</li>
 				<? } ?>
 				<? if (fnVerifica_Grant('moderation')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'moderation') echo 'active'; ?>">
         <li class="last <? if (($MENU_ATIVO == 'moderation') || ($MENU_ATIVO == 'moderation-users') || ($MENU_ATIVO == 'moderation-openings')  || ($MENU_ATIVO == 'moderation-inbox') || ($MENU_ATIVO == 'moderation-feedback') || ($MENU_ATIVO == 'moderation-acquisitions')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/moderation/">
 					<i class="icon-lock-open"></i>
-					<span class="title">Moderation</span>
+					<span class="title"><?= $t->{'Moderation'}; ?></span>
 					<span class="selected"></span>
 					</a>
           <ul class="sub-menu">
             <? if (fnVerifica_Grant('moderation-users')) { ?>
             <li class="<? if ($MENU_ATIVO == 'moderation-users') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/moderation/users.php"><i class="fa fa-angle-right"></i>Users</a>
+              <a href="<?=$rootpath?>/moderation/users.php"><i class="fa fa-angle-right"></i><?= $t->{'Users'}; ?></a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('moderation-openings')) { ?>
             <li class="<? if ($MENU_ATIVO == 'moderation-openings') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/moderation/openings.php"><i class="fa fa-angle-right"></i>Openings</a>
+              <a href="<?=$rootpath?>/moderation/openings.php"><i class="fa fa-angle-right"></i><?= $t->{'Openings'}; ?></a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('moderation-inbox')) { ?>
             <li class="<? if ($MENU_ATIVO == 'moderation-inbox') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/moderation/inbox.php"><i class="fa fa-angle-right"></i>Inbox</a>
+              <a href="<?=$rootpath?>/moderation/inbox.php"><i class="fa fa-angle-right"></i><?= $t->{'Inbox'}; ?></a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('moderation-feedback')) { ?>
             <li class="<? if ($MENU_ATIVO == 'moderation-feedback') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/moderation/feedback.php"><i class="fa fa-angle-right"></i>Feedback</a>
+              <a href="<?=$rootpath?>/moderation/feedback.php"><i class="fa fa-angle-right"></i><?= $t->{'Feedback'}; ?></a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('moderation-acquisitions')) { ?>
             <li class="<? if ($MENU_ATIVO == 'moderation-acquisitions') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/moderation/acquisitions.php"><i class="fa fa-angle-right"></i>Acquisitions</a>
+              <a href="<?=$rootpath?>/moderation/acquisitions.php"><i class="fa fa-angle-right"></i><?= $t->{'Acquisitions'}; ?></a>
             </li>
             <? } ?>
           </ul>
@@ -99,36 +98,48 @@
 				<li class="last <? if ($MENU_ATIVO == 'audit') echo 'active'; ?>">
 					<a href="<?=$rootpath?>/audit/list.php">
 					<i class="icon-briefcase"></i>
-					<span class="title">Audit</span>
+					<span class="title"><?= $t->{'Audit'}; ?></span>
 					<span class="selected"></span>
 					</a>
 				</li>
 				<? } ?>
 				<? if (fnVerifica_Grant('settings')) { ?>
-				<li class="last <? if ($MENU_ATIVO == 'settings') echo 'active'; ?>">
-					<a href="<?=$rootpath?>/settings/settings.php">
+				<li class="last <? if (($MENU_ATIVO == 'settings') || ($MENU_ATIVO == 'settings-appearance') || ($MENU_ATIVO == 'settings-profile')) echo 'active'; ?>">
+					<a href="<?=$rootpath?>/settings/">
 					<i class="icon-settings"></i>
-					<span class="title">Settings</span>
+					<span class="title"><?= $t->{'Settings'}; ?></span>
 					<span class="selected"></span>
 					</a>
+          <ul class="sub-menu">
+            <? if (fnVerifica_Grant('settings-appearance')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'settings-appearance') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/settings/settings.php"><i class="fa fa-angle-right"></i><?= $t->{'Appearance'}; ?></a>
+            </li>
+            <? } ?>
+            <? if (fnVerifica_Grant('settings-profile')) { ?>
+            <li class="<? if ($MENU_ATIVO == 'settings-profile') echo 'active'; ?>">
+              <a href="<?=$rootpath?>/settings/profile.php"><i class="fa fa-angle-right"></i><?= $t->{'Profile'}; ?></a>
+            </li>
+            <? } ?>
+          </ul>
 				</li>
 				<? } ?>
         <? if (fnVerifica_Grant('openings')) { ?>
 				<li class="last <? if (($MENU_ATIVO == 'openings') || ($MENU_ATIVO == 'openings-builder')) echo 'active'; ?>">
 					<a href="<?=$rootpath?>/openings/">
 					<i class="icon-book-open"></i>
-					<span class="title">Openings</span>
+					<span class="title"><?= $t->{'Openings'}; ?></span>
 					<span class="selected"></span>
 					</a>
           <ul class="sub-menu">
             <? if (fnVerifica_Grant('openings')) { ?>
             <li class="<? if ($MENU_ATIVO == 'openings') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/openings/list.php"><i class="fa fa-angle-right"></i>Study</a>
+              <a href="<?=$rootpath?>/openings/list.php"><i class="fa fa-angle-right"></i><?= $t->{'Study'}; ?></a>
             </li>
             <? } ?>
             <? if (fnVerifica_Grant('openings-builder')) { ?>
             <li class="<? if ($MENU_ATIVO == 'openings-builder') echo 'active'; ?>">
-              <a href="<?=$rootpath?>/openings-builder/list.php"><i class="fa fa-angle-right"></i>Builder</a>
+              <a href="<?=$rootpath?>/openings-builder/list.php"><i class="fa fa-angle-right"></i><?= $t->{'Builder'}; ?></a>
             </li>
             <? } ?>
           </ul>
